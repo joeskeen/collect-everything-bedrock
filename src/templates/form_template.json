@@ -1,0 +1,44 @@
+{
+    "form_title": "Collection Browser",
+    "form_body": "Choose a category to view:",
+    "categories": [
+        {
+            "name": "Blocks",
+            "icon": "texture/ui/block_icon",
+            "data": "blocks"
+        },
+        {
+            "name": "Entities",
+            "icon": "texture/ui/entity_icon",
+            "data": "entities"
+        },
+        {
+            "name": "Biomes",
+            "icon": "texture/ui/biome_icon",
+            "data": "biomes"
+        }
+    ],
+    "views": [
+        {
+            "name": "Alphabetical",
+            "data": "alpha",
+            "description": "Sort A to Z"
+        },
+        {
+            "name": "Grouped",
+            "data": "grouped",
+            "description": "Group by category"
+        },
+        {
+            "name": "Completed First",
+            "data": "completed",
+            "description": "Show collected first"
+        },
+        {
+            "name": "Incomplete First",
+            "data": "incomplete",
+            "description": "Show missing first"
+        }
+    ],
+    "settings_button": "Settings"
+}

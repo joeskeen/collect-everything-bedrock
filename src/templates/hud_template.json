@@ -1,0 +1,40 @@
+{
+    "userinterface": {
+        "hud_collect_everything": {
+            "type": "panel",
+            "size": [120, 60],
+            "offset": [10, 10],
+            "anchor_from": "top_left",
+            "anchor_to": "top_left",
+            "controls": [
+                {
+                    "collect_blocks_label": {
+                        "type": "text",
+                        "offset": [0, 0],
+                        "text": "Blocks: @collected_blocks@ / @total_blocks@",
+                        "color": [255, 255, 255, 255],
+                        "font_size": "small"
+                    }
+                },
+                {
+                    "collect_entities_label": {
+                        "type": "text",
+                        "offset": [0, 15],
+                        "text": "Entities: @collected_entities@ / @total_entities@",
+                        "color": [255, 255, 255, 255],
+                        "font_size": "small"
+                    }
+                },
+                {
+                    "collect_biomes_label": {
+                        "type": "text",
+                        "offset": [0, 30],
+                        "text": "Biomes: @collected_biomes@ / @total_biomes@",
+                        "color": [255, 255, 255, 255],
+                        "font_size": "small"
+                    }
+                }
+            ]
+        }
+    }
+}
