@@ -40,38 +40,6 @@ This is a work-in-progress project. We plan to improve the UI/UX over time, incl
 - mcfunction (commands)
 - Vanilla resource/behavior packs (enumeration source)
 
-## Project Structure
-
-```
-collect-everything/
-├── src/
-│   ├── scripts/          # Runtime TypeScript (Bedrock Script API)
-│   │   ├── main.ts
-│   │   ├── add-on.ts
-│   │   ├── player/      # Per-player services
-│   │   │   ├── player-collection.service.ts
-│   │   │   ├── player-command.service.ts
-│   │   │   ├── player-notifier.service.ts
-│   │   │   ├── player-storage.service.ts
-│   │   │   └── collectors/   # Category collectors
-│   │   └── shared/      # Shared utilities
-│   ├── bp/              # Behavior pack source
-│   │   ├── manifest.json
-│   │   └── features.json
-│   └── rp/              # Resource pack source
-│       ├── manifest.json
-│       └── texts/
-├── tools/               # Build-time generators
-│   ├── enumerate_*.js    # Registry enumerators
-│   ├── generate_forms.js
-│   ├── generate_scoreboards.js
-│   └── compute_metrics.js
-├── packs/               # Generated output (BP + RP)
-├── world/               # Symlink to test world
-├── build.sh             # Build pipeline
-└── README.md
-```
-
 ## Setup
 
 ### Prerequisites
