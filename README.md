@@ -2,7 +2,7 @@
 
 <img src="./src/bp/pack_icon.png" width="128" height="128" alt="Collect Everything Icon" />
 
-A Minecraft Bedrock add-on that tracks your world exploration across six categories. Inspired by [Knafy's Collect Everything](https://modrinth.com/mod/collect-everything) mod for Java Edition.
+A Minecraft Bedrock add-on that tracks your world exploration across multiple categories. Inspired by [Knafy's Collect Everything](https://modrinth.com/mod/collect-everything) mod for Java Edition.
 
 ## What Gets Tracked
 
@@ -37,7 +37,6 @@ This is a work-in-progress project. We plan to improve the UI/UX over time, incl
 - Bedrock Script API 2.7.0 (runtime logic)
 - TypeScript (source)
 - JSON (data/registries, forms)
-- mcfunction (commands)
 - Vanilla resource/behavior packs (enumeration source)
 
 ## Setup
