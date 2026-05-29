@@ -11,20 +11,21 @@ FUNCTIONS_DIR="$PACKS_DIR/bp/functions"
 echo "=== Collect Everything Build ==="
 echo "Project: $PROJECT_DIR"
 
-echo "[1/8] Cleaning old generated packs and dist..."
+echo "[1/9] Cleaning old generated packs, dist, and manifest..."
 rm -rf "$PACKS_DIR"
+rm -rf "$PROJECT_DIR/dist"
 
-echo "[2/8] Copying base behavior pack structure to stage..."
+echo "[2/9] Copying base behavior pack structure to stage..."
 mkdir -p "$DATA_DIR"
 mkdir -p "$FUNCTIONS_DIR"
 mkdir -p "$PACKS_DIR/bp/scripts"
 cp -r "$SRC_DIR/bp/"* "$PACKS_DIR/bp/"
 
-echo "[3/8] Copying base resource pack structure to stage..."
+echo "[3/9] Copying base resource pack structure to stage..."
 mkdir -p "$PACKS_DIR/rp"
 cp -r "$SRC_DIR/rp/"* "$PACKS_DIR/rp/"
 
-echo "[4/8] Running enumerators..."
+echo "[4/9] Running enumerators..."
 node "$TOOLS_DIR/enumerate_blocks.js"
 node "$TOOLS_DIR/enumerate_items.js"
 node "$TOOLS_DIR/enumerate_enchantments.js"
@@ -32,17 +33,23 @@ node "$TOOLS_DIR/enumerate_entities.js"
 node "$TOOLS_DIR/enumerate_biomes.js"
 node "$TOOLS_DIR/enumerate_effects.js"
 
-echo "[5/8] Generating UI forms..."
+echo "[5/9] Generating UI forms..."
 node "$TOOLS_DIR/generate_forms.js"
 
-echo "[6/8] Generating scoreboards..."
+echo "[6/9] Generating scoreboards..."
 node "$TOOLS_DIR/generate_scoreboards.js"
 
-echo "[7/8] Generating metrics..."
+echo "[7/9] Generating metrics..."
 node "$TOOLS_DIR/compute_metrics.js"
 
-echo "[8/8] Building scripts..."
+echo "[8/9] Building scripts..."
 npx tsc
+
+echo "[9/9] Creating .mcaddon package..."
+mkdir -p "$PROJECT_DIR/dist"
+cd "$PACKS_DIR"
+zip -r "$PROJECT_DIR/dist/CollectEverything_1.0.0.mcaddon" bp rp
+cd "$PROJECT_DIR"
 
 echo ""
 echo "=== Copying to test world ==="
