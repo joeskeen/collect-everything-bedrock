@@ -7,6 +7,7 @@ SRC_DIR="$PROJECT_DIR/src"
 PACKS_DIR="$PROJECT_DIR/packs"
 DATA_DIR="$PACKS_DIR/bp/data"
 FUNCTIONS_DIR="$PACKS_DIR/bp/functions"
+VERSION=$(node -e "const v=require('./src/bp/manifest.json').header.version; console.log(Array.isArray(v)?v.join('.'):v)")
 
 echo "=== Collect Everything Build ==="
 echo "Project: $PROJECT_DIR"
@@ -47,8 +48,35 @@ npx tsc
 
 echo "[9/9] Creating .mcaddon package..."
 mkdir -p "$PROJECT_DIR/dist"
+mkdir -p "$PACKS_DIR/CollectEverything/behavior_packs/CollectEverything"
+mkdir -p "$PACKS_DIR/CollectEverything/resource_packs/CollectEverything"
+cp -r "$PACKS_DIR/bp/"* "$PACKS_DIR/CollectEverything/behavior_packs/CollectEverything/"
+cp -r "$PACKS_DIR/rp/"* "$PACKS_DIR/CollectEverything/resource_packs/CollectEverything/"
+node -e "
+const bp = require('./src/bp/manifest.json');
+const rp = require('./src/rp/manifest.json');
+const addonManifest = {
+  format_version: 2,
+  header: {
+    name: bp.header.name,
+    description: 'Add-on containing both behavior and resource packs',
+    uuid: bp.header.uuid,
+    version: bp.header.version,
+    min_engine_version: bp.header.min_engine_version
+  },
+  modules: [
+    bp.modules.find(m => m.type === 'data'),
+    rp.modules.find(m => m.type === 'resources')
+  ].filter(Boolean),
+  dependencies: [
+    { uuid: rp.header.uuid, version: rp.header.version }
+  ]
+};
+const fs = require('fs');
+fs.writeFileSync('$PACKS_DIR/CollectEverything/manifest.json', JSON.stringify(addonManifest, null, 2));
+"
 cd "$PACKS_DIR"
-zip -r "$PROJECT_DIR/dist/CollectEverything_1.0.0.mcaddon" bp rp
+zip -r "$PROJECT_DIR/dist/CollectEverything_${VERSION}.mcaddon" CollectEverything
 cd "$PROJECT_DIR"
 
 echo ""
