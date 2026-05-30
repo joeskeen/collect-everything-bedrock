@@ -64,3 +64,5 @@ ln -s ~/.var/app/io.mrarm.mcpelauncher/data/mcpelauncher/games/com.mojang/minecr
 1. Open MCPE Launcher
 2. Load your test world
 3. Run `/reload`
+
+## Sponsor this add-on to include your name in an upcoming easter-egg!
