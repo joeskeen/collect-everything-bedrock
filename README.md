@@ -2,6 +2,8 @@
 
 <img src="./src/bp/pack_icon.png" width="128" height="128" alt="Collect Everything Icon" />
 
+[![Sponsor this project](https://img.shields.io/github/sponsors/joeskeen?label=Sponsors)](https://github.com/sponsors/joeskeen)
+
 A Minecraft Bedrock add-on that tracks your world exploration across multiple categories. Inspired by [Knafy's Collect Everything](https://modrinth.com/mod/collect-everything) mod for Java Edition.
 
 ## What Gets Tracked
@@ -39,7 +41,7 @@ This is a work-in-progress project. We plan to improve the UI/UX over time, incl
 - JSON (data/registries, forms)
 - Vanilla resource/behavior packs (enumeration source)
 
-## Setup
+## Developer Setup
 
 ### Prerequisites
 

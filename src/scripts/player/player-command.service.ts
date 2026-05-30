@@ -39,7 +39,7 @@ export class PlayerCommandService {
       {
         name: "collecteverything:reset",
         description: "Clear all collection progress",
-        permissionLevel: CommandPermissionLevel.Admin,
+        permissionLevel: CommandPermissionLevel.Any,
       },
       (origin: CustomCommandOrigin) => this.onReset(origin)
     );
