@@ -2,7 +2,7 @@
 
 <img src="./src/bp/pack_icon.png" width="128" height="128" alt="Collect Everything Icon" />
 
-[![Sponsor this project](https://img.shields.io/github/sponsors/joeskeen?label=Sponsors)](https://github.com/sponsors/joeskeen)
+[![Sponsor this project](https://img.shields.io/github/sponsors/joeskeen?label=Sponsors&logo=githubsponsors)](https://github.com/sponsors/joeskeen)
 
 A Minecraft Bedrock add-on that tracks your world exploration across multiple categories. Inspired by [Knafy's Collect Everything](https://modrinth.com/mod/collect-everything) mod for Java Edition.
 
