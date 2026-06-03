@@ -75,8 +75,8 @@ const addonManifest = {
 const fs = require('fs');
 fs.writeFileSync('$PACKS_DIR/CollectEverything/manifest.json', JSON.stringify(addonManifest, null, 2));
 "
-cd "$PACKS_DIR"
-zip -r "$PROJECT_DIR/dist/CollectEverything_${VERSION}.mcaddon" CollectEverything
+cd "$PACKS_DIR/CollectEverything"
+zip -r "$PROJECT_DIR/dist/CollectEverything_${VERSION}.mcaddon" .
 cd "$PROJECT_DIR"
 
 echo ""
