@@ -29,7 +29,8 @@
   "exclude": [
     "lib",
     "dist",
-    "node_modules"
+    "node_modules",
+    "**/*.spec.ts"
   ],
   "compileOnSave": false
 }
