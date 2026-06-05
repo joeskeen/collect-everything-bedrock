@@ -1,3 +1,7 @@
 node_modules
 dist
 lib
+.env
+.env.local
+.env.*.local
+env.d.ts

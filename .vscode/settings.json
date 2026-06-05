@@ -24,9 +24,13 @@
     "**/.DS_Store": true,
   },
   "cSpell.words": [
+    "enablemcloopback",
+    "enablemcpreviewloopback",
     "gametest",
     "gametests",
-    "mcaddon"
+    "Knarfy's",
+    "mcaddon",
+    "varlock"
   ],
   "editor.tabSize": 2,
   "eslint.experimental.useFlatConfig": true

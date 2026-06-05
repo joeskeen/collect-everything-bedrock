@@ -8,16 +8,18 @@ import {
   copyTask,
   coreLint,
   mcaddonTask,
-  setupEnvironment,
   ZipTaskParameters,
   STANDARD_CLEAN_PATHS,
   DEFAULT_CLEAN_DIRECTORIES,
-  getOrThrowFromProcess,
   watchTask,
+  updateWorldTask,
 } from "@minecraft/core-build-tasks";
 import path from "path";
-setupEnvironment(path.resolve(__dirname, ".env"));
-const projectName = getOrThrowFromProcess("PROJECT_NAME");
+import { name as projectName, version as projectVersion } from './package.json';
+import 'varlock/auto-load';
+
+process.env.PROJECT_NAME = projectName;
+
 const bundleTaskOptions: BundleTaskParameters = {
   entryPoint: path.join(__dirname, "./scripts/main.ts"),
   external: ["@minecraft/server", "@minecraft/server-ui"],
@@ -33,7 +35,7 @@ const copyTaskOptions: CopyTaskParameters = {
 };
 const mcaddonTaskOptions: ZipTaskParameters = {
   ...copyTaskOptions,
-  outputFile: `./dist/packages/${projectName}.mcaddon`,
+  outputFile: `./dist/packages/${projectName}-v${projectVersion}.mcaddon`,
 };
 task("lint", coreLint(["scripts/**/*.ts"], argv().fix));
 task("typescript", tscTask());
