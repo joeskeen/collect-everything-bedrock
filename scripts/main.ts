@@ -1,11 +1,5 @@
 import { world, system } from "@minecraft/server";
 
-function mainTick() {
-  if (system.currentTick % 100 === 0) {
-    world.sendMessage("Hello starter! Tick: " + system.currentTick);
-  }
-
-  system.run(mainTick);
+export function do_something() {
+  return true;
 }
-
-system.run(mainTick);
