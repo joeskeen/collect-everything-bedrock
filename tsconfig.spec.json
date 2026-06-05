@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "rootDir": "./scripts",
+    "types": ["vitest/globals"]
+  },
+  "include": [
+    "scripts/**/*.spec.ts"
+  ]
+}
