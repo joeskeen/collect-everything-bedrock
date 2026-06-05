@@ -4,23 +4,10 @@
   "productName": "Minecraft TypeScript Starter Project",
   "description": "Inspired by Knarfy's Collect Everything mod for Java Edition, this add-on allows you to collect everything in Minecraft Bedrock Edition.",
   "private": true,
-  "devDependencies": {
-    "@minecraft/core-build-tasks": "5.5.0",
-    "@typescript-eslint/eslint-plugin": "8.60.1",
-    "concurrently": "^10.0.3",
-    "eslint-plugin-minecraft-linting": "2.0.10",
-    "just-scripts": "2.6.0",
-    "prettier": "3.8.3",
-    "source-map": "0.7.4",
-    "ts-node": "10.9.1",
-    "typescript": "5.5.4",
-    "varlock": "^1.5.0",
-    "vitest": "4.1.8"
-  },
   "scripts": {
     "watch": "npx concurrently -n 'build,test' --kill-others-on-fail \"npm run watch:deploy\" \"npm run watch:test\"",
     "watch:deploy": "just-scripts local-deploy --watch",
-    "watch:test": "vitest",
+    "watch:test": "vitest --watch --clearScreen=false",
     "lint": "just-scripts lint",
     "build": "just-scripts build",
     "build:production": "just-scripts build --production",
@@ -36,6 +23,22 @@
     "@minecraft/math": "2.2.11",
     "@minecraft/server": "2.0.0",
     "@minecraft/server-ui": "2.0.0",
-    "@minecraft/vanilla-data": "1.21.90"
+    "@minecraft/vanilla-data": "1.21.90",
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.10.0"
+  },
+  "devDependencies": {
+    "@minecraft/core-build-tasks": "5.5.0",
+    "@typescript-eslint/eslint-plugin": "8.60.1",
+    "concurrently": "^10.0.3",
+    "eslint-plugin-minecraft-linting": "2.0.10",
+    "just-scripts": "2.6.0",
+    "kinda-type": "^1.0.4",
+    "prettier": "3.8.3",
+    "source-map": "0.7.4",
+    "ts-node": "10.9.1",
+    "typescript": "5.5.4",
+    "varlock": "^1.5.0",
+    "vitest": "4.1.8"
   }
 }

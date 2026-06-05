@@ -21,10 +21,11 @@
     "baseUrl": "behavior_packs/",
     "listFiles": false,
     "noEmitHelpers": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "preserveWatchOutput": true
   },
   "include": [
-    "scripts/**/*"
+    "scripts/main.ts"
   ],
   "exclude": [
     "lib",

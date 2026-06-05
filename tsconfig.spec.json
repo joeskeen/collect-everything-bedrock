@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "skipLibCheck": true,
     "rootDir": "./scripts",
     "types": ["vitest/globals"]
   },
