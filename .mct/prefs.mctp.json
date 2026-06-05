@@ -1,0 +1,220 @@
+{
+  "dataType": 1,
+  "variants": {},
+  "storageBasePath": "",
+  "contentsModified": "2026-06-05T19:16:16.425Z",
+  "created": "2026-06-05T19:16:14.605Z",
+  "lastOpened": "2026-06-05T19:16:16.427Z",
+  "dataStorageRelativePath": "/Collect Everything!/",
+  "editPreference": 0,
+  "name": "Collect Everything!",
+  "title": "Collect Everything!",
+  "description": "Inspired by Knarfy's Collect Everything mod for Java Edition, this add-on allows you to collect everything in Minecraft Bedrock Edition.",
+  "defaultBehaviorPackUniqueId": "89f3b6d9-10e4-4cdd-8ed0-1992bed5db2a",
+  "defaultResourcePackUniqueId": "2ac02747-d782-4331-87fc-01df059ce353",
+  "defaultScriptModuleUniqueId": "d50c6449-4973-49b7-a7fa-6767cf654e50",
+  "defaultDataUniqueId": "900163be-9be7-42e9-a7a1-c2fcd57463bb",
+  "focus": 0,
+  "items": [
+    {
+      "itemType": 164,
+      "variants": {},
+      "projectPath": "/README.md",
+      "storageType": 0,
+      "creationType": 0,
+      "tags": [],
+      "name": "README.md",
+      "isInWorld": false
+    },
+    {
+      "itemType": 59,
+      "variants": {},
+      "projectPath": "/package.json",
+      "storageType": 0,
+      "creationType": 1,
+      "tags": [],
+      "name": "package.json",
+      "isInWorld": false
+    },
+    {
+      "itemType": 58,
+      "variants": {},
+      "projectPath": "/tsconfig.json",
+      "storageType": 0,
+      "creationType": 0,
+      "tags": [],
+      "name": "tsconfig.json",
+      "isInWorld": false
+    },
+    {
+      "itemType": 109,
+      "variants": {},
+      "projectPath": "/behavior_packs/collect-everythi/",
+      "storageType": 1,
+      "creationType": 0,
+      "tags": [],
+      "name": "starter",
+      "isInWorld": false
+    },
+    {
+      "itemType": 5,
+      "variants": {},
+      "projectPath": "/behavior_packs/collect-everythi/manifest.json",
+      "storageType": 0,
+      "creationType": 0,
+      "tags": [
+        "behaviorpackmanifest"
+      ],
+      "name": "manifest.json",
+      "isInWorld": false
+    },
+    {
+      "itemType": 103,
+      "variants": {},
+      "projectPath": "/behavior_packs/collect-everythi/pack_icon.png",
+      "storageType": 0,
+      "creationType": 0,
+      "tags": [],
+      "name": "pack_icon.png",
+      "isInWorld": false
+    },
+    {
+      "itemType": 110,
+      "variants": {},
+      "projectPath": "/resource_packs/collect-everythi/",
+      "storageType": 1,
+      "creationType": 0,
+      "tags": [],
+      "name": "starter",
+      "isInWorld": false
+    },
+    {
+      "itemType": 14,
+      "variants": {},
+      "projectPath": "/resource_packs/collect-everythi/manifest.json",
+      "storageType": 0,
+      "creationType": 0,
+      "tags": [
+        "resourcepackmanifest"
+      ],
+      "name": "manifest.json",
+      "isInWorld": false
+    },
+    {
+      "itemType": 103,
+      "variants": {},
+      "projectPath": "/resource_packs/collect-everythi/pack_icon.png",
+      "storageType": 0,
+      "creationType": 0,
+      "tags": [],
+      "name": "pack_icon.png",
+      "isInWorld": false
+    },
+    {
+      "itemType": 13,
+      "variants": {},
+      "projectPath": "/scripts/main.ts",
+      "storageType": 0,
+      "creationType": 0,
+      "tags": [],
+      "name": "main.ts",
+      "isInWorld": false
+    },
+    {
+      "itemType": 121,
+      "variants": {},
+      "projectPath": "/.env",
+      "storageType": 0,
+      "creationType": 1,
+      "tags": [],
+      "name": ".env"
+    },
+    {
+      "itemType": 122,
+      "variants": {},
+      "projectPath": "/.prettierrc.json",
+      "storageType": 0,
+      "creationType": 1,
+      "tags": [],
+      "name": ".prettierrc.json"
+    },
+    {
+      "itemType": 119,
+      "variants": {},
+      "projectPath": "/just.config.ts",
+      "storageType": 0,
+      "creationType": 1,
+      "tags": [],
+      "name": "just.config.ts"
+    },
+    {
+      "itemType": 120,
+      "variants": {},
+      "projectPath": "/eslint.config.mjs",
+      "storageType": 0,
+      "creationType": 1,
+      "tags": [],
+      "name": "eslint.config.mjs"
+    },
+    {
+      "itemType": 75,
+      "variants": {},
+      "projectPath": "/.vscode/launch.json",
+      "storageType": 0,
+      "creationType": 1,
+      "tags": [],
+      "name": "launch.json"
+    },
+    {
+      "itemType": 77,
+      "variants": {},
+      "projectPath": "/.vscode/settings.json",
+      "storageType": 0,
+      "creationType": 1,
+      "tags": [],
+      "name": "settings.json"
+    },
+    {
+      "itemType": 76,
+      "variants": {},
+      "projectPath": "/.vscode/tasks.json",
+      "storageType": 0,
+      "creationType": 1,
+      "tags": [],
+      "name": "tasks.json"
+    },
+    {
+      "itemType": 78,
+      "variants": {},
+      "projectPath": "/.vscode/extensions.json",
+      "storageType": 0,
+      "creationType": 1,
+      "tags": [],
+      "name": "extensions.json"
+    }
+  ],
+  "projectFolderTitle": "collect-everything-bedrock",
+  "originalGitHubOwner": "microsoft",
+  "originalGitHubRepoName": "minecraft-scripting-samples",
+  "originalGitHubFolder": "/ts-starter",
+  "originalGalleryId": "tsStarter",
+  "creator": "Joe Skeen",
+  "shortName": "collect-everything-bedrock",
+  "track": 0,
+  "defaultBehaviorPackVersion": [
+    1,
+    0,
+    0
+  ],
+  "versionMajor": 1,
+  "versionMinor": 0,
+  "versionPatch": 0,
+  "defaultResourcePackVersion": [
+    1,
+    0,
+    0
+  ],
+  "previewImageBase64": "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",
+  "collapsedStoragePaths": [],
+  "gitHubReferences": []
+}
