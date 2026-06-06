@@ -1,6 +1,6 @@
 import type { Player, System, World } from "@minecraft/server";
 import { autoInjectable, inject, singleton } from "tsyringe";
-import { SYSTEM_TOKEN, WORLD_TOKEN } from "../global-tokens";
+import { SYSTEM_TOKEN, WORLD_TOKEN } from "../shared/global-tokens";
 import { PlayerManager } from "./player-manager";
 
 @singleton()

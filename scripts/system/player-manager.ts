@@ -1,9 +1,10 @@
 import type { System, World } from "@minecraft/server";
 import { singleton, inject, DependencyContainer, container } from "tsyringe";
-import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../global-tokens";
+import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../shared/global-tokens";
 import { Logger } from "../shared/logging/logger";
 import { PlayerCollection } from "../player/player-collection";
 import { WOOD_SWORD } from "../shared/emoji";
+import { BLUE, BOLD } from "../shared/format-codes";
 
 const PLAYER_INITIALIZATION_DELAY_TICKS = 100;
 
@@ -30,7 +31,7 @@ export class PlayerManager {
   }
 
   async initializePlayer(playerName: string) {
-    this.logger.log(`${WOOD_SWORD} Player joined: ${playerName}`);
+    this.logger.log(`${WOOD_SWORD} Player joined: ${BOLD + BLUE + playerName}`);
 
     // if you try to get a player before they are fully loaded you will get an error
     await new Promise((resolve) => this.system.runTimeout(() => resolve(undefined), PLAYER_INITIALIZATION_DELAY_TICKS));
@@ -44,12 +45,17 @@ export class PlayerManager {
       this.logger.warn(`Player ${playerName} is already initialized.`);
       return;
     }
-    const playerContainer = container.createChildContainer();
-    playerContainer.register(PLAYER_TOKEN, { useValue: player });
-    this.players.set(playerName, playerContainer);
-    const collection = playerContainer.resolve(PlayerCollection);
-    collection.run();
-    this.logger.log(`Player ${playerName} initialized successfully.`);
+
+    try {
+      const playerContainer = container.createChildContainer();
+      playerContainer.register(PLAYER_TOKEN, { useValue: player });
+      this.players.set(playerName, playerContainer);
+      const collection = playerContainer.resolve(PlayerCollection);
+      collection.run();
+      this.logger.log(`Player ${playerName} initialized successfully.`);
+    } catch (err) {
+      this.logger.error(`Error initializing ${playerName}:`, err);
+    }
   }
 
   removePlayer(playerName: string) {

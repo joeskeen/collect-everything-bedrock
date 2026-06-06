@@ -21,7 +21,7 @@
   },
   "files.exclude": {
     "**/.git": true,
-    "**/.DS_Store": true,
+    "**/.DS_Store": true
   },
   "cSpell.words": [
     "enablemcloopback",
@@ -31,7 +31,8 @@
     "Knarfy's",
     "mcaddon",
     "tsyringe",
-    "varlock"
+    "varlock",
+    "minecoin"
   ],
   "editor.tabSize": 2,
   "eslint.experimental.useFlatConfig": true

@@ -2,7 +2,7 @@ import "./polyfills";
 import { container } from "tsyringe";
 import { system, world } from "@minecraft/server";
 import { CollectEverythingAddOn } from "./system/collect-everything-add-on";
-import { SYSTEM_TOKEN, WORLD_TOKEN } from "./global-tokens";
+import { SYSTEM_TOKEN, WORLD_TOKEN } from "./shared/global-tokens";
 import { getLogSettings, LOG_SETTINGS_TOKEN } from "./shared/logging/log-settings";
 import { Logger } from "./shared/logging/logger";
 import { CRAFTING_TABLE } from "./shared/emoji";

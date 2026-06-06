@@ -1,5 +1,5 @@
 import { Lifecycle, scoped, inject } from "tsyringe";
-import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../../global-tokens";
+import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../global-tokens";
 import { LOG_SETTINGS_TOKEN, LogSettings } from "./log-settings";
 import type { Player, System, World } from "@minecraft/server";
 import { BLUE, DARK_AQUA, DARK_GRAY, GRAY, MINECOIN_GOLD, RED, RESET } from "../format-codes";
