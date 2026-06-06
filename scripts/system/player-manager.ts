@@ -1,12 +1,12 @@
 import type { System, World } from "@minecraft/server";
 import { singleton, inject, DependencyContainer, container } from "tsyringe";
-import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../shared/global-tokens";
+import { PLAYER_SESSION_TOKEN, PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../shared/global-tokens";
 import { Logger } from "../shared/logging/logger";
 import { PlayerCollection } from "../player/player-collection";
+import { PlayerNotifier } from "../player/player-notifier";
 import { WOOD_SWORD } from "../shared/emoji";
 import { BLUE, BOLD } from "../shared/format-codes";
-
-const PLAYER_INITIALIZATION_DELAY_TICKS = 100;
+import { PLAYER_INITIALIZATION_DELAY_TICKS } from "../shared/ticks";
 
 @singleton()
 export class PlayerManager {
@@ -48,10 +48,16 @@ export class PlayerManager {
 
     try {
       const playerContainer = container.createChildContainer();
-      playerContainer.register(PLAYER_TOKEN, { useValue: player });
+      playerContainer.registerInstance(PLAYER_TOKEN, player);
+      playerContainer.registerInstance(PLAYER_SESSION_TOKEN, { startTick: this.system.currentTick });
       this.players.set(playerName, playerContainer);
+
+      const notifier = playerContainer.resolve(PlayerNotifier);
+      notifier.run();
+
       const collection = playerContainer.resolve(PlayerCollection);
       collection.run();
+
       this.logger.log(`Player ${playerName} initialized successfully.`);
     } catch (err) {
       this.logger.error(`Error initializing ${playerName}:`, err);
@@ -67,5 +73,9 @@ export class PlayerManager {
     playerContainer.dispose();
     this.players.delete(playerName);
     this.logger.log(`Player ${playerName} removed successfully.`);
+  }
+
+  getPlayerContainer(playerName: string) {
+    return this.players.get(playerName);
   }
 }

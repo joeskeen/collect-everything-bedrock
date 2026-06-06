@@ -1,15 +1,18 @@
-import type { Player, System, World } from "@minecraft/server";
-import { autoInjectable, inject, singleton } from "tsyringe";
-import { SYSTEM_TOKEN, WORLD_TOKEN } from "../shared/global-tokens";
+import { inject, singleton } from "tsyringe";
 import { PlayerManager } from "./player-manager";
+import { CommandManager } from "./command-manager";
+import type { StartupEvent } from "@minecraft/server";
 
 @singleton()
 export class CollectEverythingAddOn {
   constructor(
-    @inject(WORLD_TOKEN) private world: World,
-    @inject(SYSTEM_TOKEN) private system: System,
-    @inject(PlayerManager) private playerManager: PlayerManager
+    @inject(PlayerManager) private playerManager: PlayerManager,
+    @inject(CommandManager) private commandManager: CommandManager
   ) {}
+
+  startUp(event: StartupEvent) {
+    this.commandManager.onStartUp(event);
+  }
 
   run() {
     this.playerManager.run();

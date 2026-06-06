@@ -32,7 +32,8 @@
     "mcaddon",
     "tsyringe",
     "varlock",
-    "minecoin"
+    "minecoin",
+    "collecteverything"
   ],
   "editor.tabSize": 2,
   "eslint.experimental.useFlatConfig": true

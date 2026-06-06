@@ -13,9 +13,12 @@ container.register(SYSTEM_TOKEN, { useValue: system });
 container.register(WORLD_TOKEN, { useValue: world });
 const logger = container.resolve(Logger);
 
+logger.log(`${CRAFTING_TABLE} ${AQUA}Initializing Collect Everything Add-On...`);
+const addOn = container.resolve(CollectEverythingAddOn);
+system.beforeEvents.startup.subscribe((event) => {
+  addOn.startUp(event);
+});
 system.run(() => {
-  logger.log(`${CRAFTING_TABLE} ${AQUA}Initializing Collect Everything Add-On...`);
-  const addOn = container.resolve(CollectEverythingAddOn);
   try {
     addOn.run();
     logger.log("Collect Everything Add-On initialized successfully.");

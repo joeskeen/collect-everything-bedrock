@@ -1,23 +1,27 @@
-import { container, inject, injectAll, Lifecycle, registry, scoped } from "tsyringe";
-import { PLAYER_TOKEN } from "../shared/global-tokens";
-import type { Player } from "@minecraft/server";
+import { inject, injectAll, Lifecycle, registry, scoped } from "tsyringe";
 import { Logger } from "../shared/logging/logger";
-import { COLLECT_FN, CollectFn, COLLECTORS_TOKEN } from "./collection-tokens";
+import { COLLECTOR, COLLECTORS_TOKEN, Collector, THEME } from "./collection-constants";
 import { Runnable } from "../shared/runnable";
 import { BiomeCollector } from "./collectors/biome.collector";
+import { PlayerNotifier } from "./player-notifier";
+import { SOLID_STAR } from "../shared/emoji";
+import { formatId } from "../shared/formatting";
+import { BOLD } from "../shared/format-codes";
+import { capitalCase } from "change-case";
 
 @registry([
-  { token: COLLECT_FN, useValue: { collect: () => {} } },
+  { token: COLLECTOR, useValue: { collect: () => {} } as Collector },
   { token: COLLECTORS_TOKEN, useClass: BiomeCollector },
 ])
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerCollection {
   constructor(
     @inject(Logger) private logger: Logger,
-    @inject(COLLECT_FN) collectFn: { collect: CollectFn },
+    @inject(COLLECTOR) collector: Collector,
+    @inject(PlayerNotifier) private readonly playerNotifier: PlayerNotifier,
     @injectAll(COLLECTORS_TOKEN) private readonly collectors: Runnable[]
   ) {
-    collectFn.collect = this.onCollect.bind(this);
+    collector.collect = this.onCollect.bind(this);
   }
   run() {
     // TODO: load collection from storage
@@ -25,7 +29,13 @@ export class PlayerCollection {
     this.logger.log(`Collection initialized.`);
   }
 
-  onCollect(what: string) {
-    this.logger.log(`COLLECTED: ${what}`);
+  onCollect(category: string, what: string) {
+    // TODO: check if already collected and return if so
+    // TODO: save collection to storage
+    const fullMessage = `${SOLID_STAR} ${THEME[category] ?? ""}Collected ${capitalCase(category)}: ${BOLD}${formatId(what)}`;
+    this.logger.log(fullMessage);
+    this.playerNotifier.toast(fullMessage);
   }
+
+  getCollection() {}
 }

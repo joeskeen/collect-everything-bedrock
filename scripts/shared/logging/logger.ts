@@ -50,7 +50,11 @@ export class Logger {
       console.log(fullMessage);
     }
     if (this.settings().logToChat) {
-      this.world.sendMessage(fullMessage);
+      try {
+        this.world.sendMessage(fullMessage);
+      } catch (err) {
+        console.warn(`can't send world message in early execution: ${fullMessage}`);
+      }
     }
   }
 }

@@ -3,7 +3,7 @@ import { Runnable } from "../../shared/runnable";
 import { Disposable } from "../../shared/disposable";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import type { Player, System } from "@minecraft/server";
-import { COLLECT_FN, CollectFn } from "../collection-tokens";
+import { BIOME, COLLECTOR, Collector } from "../collection-constants";
 import { Logger } from "../../shared/logging/logger";
 
 const BIOME_POLLING_INTERVAL_TICKS = 50;
@@ -17,7 +17,7 @@ export class BiomeCollector implements Runnable, Disposable {
     @inject(Logger) private readonly logger: Logger,
     @inject(SYSTEM_TOKEN) private readonly system: System,
     @inject(PLAYER_TOKEN) private readonly player: Player,
-    @inject(COLLECT_FN) private readonly collectFn: { collect: CollectFn }
+    @inject(COLLECTOR) private readonly collector: Collector
   ) {}
 
   run() {
@@ -37,8 +37,7 @@ export class BiomeCollector implements Runnable, Disposable {
       if (fullBiomeId === this.lastBiome) return;
 
       this.lastBiome = fullBiomeId;
-      this.logger.log(`Current biome: ${fullBiomeId}`);
-      this.collectFn.collect(`biome:${fullBiomeId}`);
+      this.collector.collect(BIOME, fullBiomeId);
     }
   }
 }

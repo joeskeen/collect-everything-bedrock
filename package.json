@@ -24,6 +24,7 @@
     "@minecraft/server": "2.7.0",
     "@minecraft/server-ui": "2.0.0",
     "@minecraft/vanilla-data": "1.21.90",
+    "change-case": "^5.4.4",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.10.0"
   },
