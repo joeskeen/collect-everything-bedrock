@@ -5,7 +5,7 @@ import { PlayerCollectionService } from "./player-collection.service.js";
 import { PlayerNotifierService } from "./player-notifier.service.js";
 import { formatCollectedId } from "../shared/format-id.js";
 import { CommandPermissionLevel, CustomCommandParamType } from "@minecraft/server";
-import { TOTAL_BIOMES, TOTAL_BLOCKS, TOTAL_EFFECTS, TOTAL_ENTITIES, TOTAL_ENCHANTMENTS, TOTAL_ITEMS } from '../dynamic/computed-metrics.js';
+import { TOTAL_BIOMES, TOTAL_BLOCKS, TOTAL_EFFECTS, TOTAL_ENTITIES, TOTAL_ENCHANTMENTS, TOTAL_ITEMS } from '../generated/computed-metrics.js';
 import type { PlayerManager } from "../add-on.js";
 import type { CustomCommandOrigin } from "@minecraft/server";
 

@@ -110,23 +110,32 @@ describe('formatEntityId', () => {
 });
 
 describe('formatCollectedId', () => {
-  it('should route item IDs', () => {
-    expect(formatCollectedId('item:minecraft:diamond')).toBe('Diamond');
+  it('should route item IDs with prefix', () => {
+    expect(formatCollectedId('item:minecraft:diamond')).toBe('Item: Diamond');
   });
 
-  it('should route biome IDs', () => {
-    expect(formatCollectedId('biome:minecraft:desert')).toBe('Desert');
+  it('should route biome IDs with prefix', () => {
+    expect(formatCollectedId('biome:minecraft:desert')).toBe('Biome: Desert');
   });
 
-  it('should route enchantment IDs', () => {
-    expect(formatCollectedId('enchantment:minecraft:sharpness:2')).toBe('Sharpness II');
+  it('should route enchantment IDs with prefix', () => {
+    expect(formatCollectedId('enchantment:minecraft:sharpness:2')).toBe('Enchantment: Sharpness II');
   });
 
-  it('should route effect IDs', () => {
-    expect(formatCollectedId('effect:minecraft:strength:1')).toBe('Strength II');
+  it('should route effect IDs with prefix', () => {
+    expect(formatCollectedId('effect:minecraft:strength:1')).toBe('Effect: Strength II');
   });
 
-  it('should route entity IDs', () => {
-    expect(formatCollectedId('entity:minecraft:wolf')).toBe('Wolf');
+  it('should route entity IDs with prefix', () => {
+    expect(formatCollectedId('entity:minecraft:wolf')).toBe('Entity: Wolf');
+  });
+
+  it('should format colored sheep', () => {
+    expect(formatCollectedId('entity:minecraft:sheep:color:0')).toBe('Entity: Sheep White');
+    expect(formatCollectedId('entity:minecraft:sheep:color:14')).toBe('Entity: Sheep Red');
+  });
+
+  it('should format tropical fish with dual colors', () => {
+    expect(formatCollectedId('entity:minecraft:tropicalfish:color:1:color2:4')).toBe('Entity: Tropicalfish Orange/Yellow');
   });
 });

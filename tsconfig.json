@@ -5,7 +5,7 @@
     "moduleResolution": "nodenext",
     "rootDir": "src/scripts",
     "strict": true,
-    "outDir": "packs/bp/scripts",
+    "outDir": "packs/bp/scripts"
   },
   "files": ["src/scripts/main.ts"],
   "exclude": ["node_modules"]

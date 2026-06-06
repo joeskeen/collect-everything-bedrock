@@ -2,3 +2,5 @@ node_modules
 dist
 packs
 world
+generated
+tools/.vanilla_cache

@@ -12,41 +12,46 @@ VERSION=$(node -e "const v=require('./src/bp/manifest.json').header.version; con
 echo "=== Collect Everything Build ==="
 echo "Project: $PROJECT_DIR"
 
-echo "[1/9] Cleaning old generated packs, dist, and manifest..."
+echo "[1/10] Cleaning old generated packs, dist, and manifest..."
 rm -rf "$PACKS_DIR"
 rm -rf "$PROJECT_DIR/dist"
 
-echo "[2/9] Copying base behavior pack structure to stage..."
+echo "[2/10] Generating curated data..."
+node "$TOOLS_DIR/compile_curated.js"
+
+echo "[3/10] Copying base behavior pack structure to stage..."
 mkdir -p "$DATA_DIR"
 mkdir -p "$FUNCTIONS_DIR"
 mkdir -p "$PACKS_DIR/bp/scripts"
 cp -r "$SRC_DIR/bp/"* "$PACKS_DIR/bp/"
 
-echo "[3/9] Copying base resource pack structure to stage..."
+echo "[4/10] Copying base resource pack structure to stage..."
 mkdir -p "$PACKS_DIR/rp"
 cp -r "$SRC_DIR/rp/"* "$PACKS_DIR/rp/"
 
-echo "[4/9] Running enumerators..."
+echo "[5/10] Running enumerators..."
 node "$TOOLS_DIR/enumerate_blocks.js"
-node "$TOOLS_DIR/enumerate_items.js"
 node "$TOOLS_DIR/enumerate_enchantments.js"
 node "$TOOLS_DIR/enumerate_entities.js"
 node "$TOOLS_DIR/enumerate_biomes.js"
 node "$TOOLS_DIR/enumerate_effects.js"
+node "$TOOLS_DIR/enumerate_loot_tables.js"
+node "$TOOLS_DIR/enumerate_recipes.js"
+node "$TOOLS_DIR/enumerate_items.js"
 
-echo "[5/9] Generating UI forms..."
+echo "[6/10] Generating UI forms..."
 node "$TOOLS_DIR/generate_forms.js"
 
-echo "[6/9] Generating scoreboards..."
+echo "[7/10] Generating scoreboards..."
 node "$TOOLS_DIR/generate_scoreboards.js"
 
-echo "[7/9] Generating metrics..."
+echo "[8/10] Generating metrics..."
 node "$TOOLS_DIR/compute_metrics.js"
 
-echo "[8/9] Building scripts..."
+echo "[9/10] Building scripts..."
 npx tsc
 
-echo "[9/9] Creating .mcaddon package..."
+echo "[10/10] Creating .mcaddon package..."
 mkdir -p "$PROJECT_DIR/dist"
 mkdir -p "$PACKS_DIR/CollectEverything/behavior_packs/CollectEverything"
 mkdir -p "$PACKS_DIR/CollectEverything/resource_packs/CollectEverything"
@@ -87,8 +92,8 @@ if [ -L "$PROJECT_DIR/world" ]; then
     rm -rf "$WORLD_DIR/resource_packs/CollectEverything"
     mkdir -p "$WORLD_DIR/behavior_packs/CollectEverything"
     mkdir -p "$WORLD_DIR/resource_packs/CollectEverything"
-    cp -r "$PACKS_DIR/bp/"* "$WORLD_DIR/behavior_packs/CollectEverything/"
-    cp -r "$PACKS_DIR/rp/"* "$WORLD_DIR/resource_packs/CollectEverything/"
+    cp -rT "$PACKS_DIR/bp/" "$WORLD_DIR/behavior_packs/CollectEverything/"
+    cp -rT "$PACKS_DIR/rp/" "$WORLD_DIR/resource_packs/CollectEverything/"
     echo "Copied to: $WORLD_DIR/behavior_packs/CollectEverything"
 elif [ -L "$PROJECT_DIR/world" ]; then
     echo "Error: world/ is a symlink but points to wrong target."

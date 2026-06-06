@@ -14,14 +14,20 @@ VERSION_ARRAY=$(echo "$VERSION" | sed 's/\./, /g')
 echo "Setting version to $VERSION"
 
 # Update bp manifest (string format: "0.1.2")
+# Only update header and modules versions, not dependencies (@minecraft/server etc)
 if [ -f "src/bp/manifest.json" ]; then
-    sed -i "s/\"version\": \"[0-9]*\.[0-9]*\.[0-9]*\"/\"version\": \"$VERSION\"/g" src/bp/manifest.json
+    sed -i \
+        -e '/"dependencies"/,/]/! s/"version": "[0-9]*\.[0-9]*\.[0-9]*"/"version": "'"$VERSION"'"/' \
+        src/bp/manifest.json
     echo "Updated src/bp/manifest.json (string format)"
 fi
 
 # Update rp manifest (array format: [0, 1, 2])
+# Update header, modules, AND dependencies (which references the BP by UUID)
 if [ -f "src/rp/manifest.json" ]; then
-    sed -i "s/\"version\": \[[0-9]*, [0-9]*, [0-9]*\]/\"version\": [$VERSION_ARRAY]/g" src/rp/manifest.json
+    sed -i \
+        -e 's/"version": \[[0-9]*, [0-9]*, [0-9]*\]/"version": ['"$VERSION_ARRAY"']/g' \
+        src/rp/manifest.json
     echo "Updated src/rp/manifest.json (array format)"
 fi
 

@@ -1,0 +1,45 @@
+{
+  "description": "Blocks that don't drop themselves when broken, even with silk touch. Data sourced from minecraft.wiki",
+  "entries": [
+    {
+      "name": "minecraft:mob_spawner",
+      "note": "Drops nothing"
+    },
+    {
+      "name": "minecraft:tripWire",
+      "note": "Drops string instead of itself"
+    },
+    {
+      "name": "minecraft:chain",
+      "note": "Drops itself when broken with shears, otherwise nothing"
+    },
+    {
+      "name": "minecraft:light_block",
+      "note": "Drops nothing"
+    },
+    {
+      "name": "minecraft:air",
+      "note": "Drops nothing"
+    },
+    {
+      "name": "minecraft:cave_vines",
+      "note": "Drops nothing when mined without bone meal"
+    },
+    {
+      "name": "minecraft:cave_vines_plant",
+      "note": "Drops nothing when mined without bone meal"
+    },
+    {
+      "name": "minecraft:kelp",
+      "note": "Drops nothing when water is present"
+    },
+    {
+      "name": "minecraft:seagrass",
+      "note": "Drops nothing when water is present"
+    },
+    {
+      "name": "minecraft:kelp_plant",
+      "note": "Drops nothing when water is present"
+    }
+  ]
+}

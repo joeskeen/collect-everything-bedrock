@@ -2,22 +2,9 @@ import { Player, PlayerBreakBlockAfterEvent, World } from "@minecraft/server";
 import { DiContainer } from "../../shared/di.js";
 import { Logger } from "../../shared/logging.js";
 import { CollectFn } from "./collect.js";
+import { UNOBTAINABLE_BLOCKS } from "../../generated/unobtainable_blocks.js";
 
-export const BREAKABLE_UNOBTAINABLE_BLOCKS = [
-  "minecraft:mob_spawner",
-  "minecraft:budding_amethyst",
-  "minecraft:chorus_plant",
-  "minecraft:frog_spawn",
-  "minecraft:trial_spawner",
-  "minecraft:vault",
-  "minecraft:infested_stone",
-  "minecraft:infested_cobblestone",
-  "minecraft:infested_stone_bricks",
-  "minecraft:infested_mossy_stone_bricks",
-  "minecraft:infested_cracked_stone_bricks",
-  "minecraft:infested_chiseled_stone_bricks",
-  "minecraft:infested_deepslate"
-];
+const unobtainableBlockSet = new Set(UNOBTAINABLE_BLOCKS.map((e: { name: string }) => e.name));
 
 export class UnobtainableBlockCollector {
   private readonly logger: Logger;
@@ -41,7 +28,7 @@ export class UnobtainableBlockCollector {
 
     const block = event.brokenBlockPermutation;
     const blockId = block.type.id;
-    if (!BREAKABLE_UNOBTAINABLE_BLOCKS.includes(blockId)) return;
+    if (!unobtainableBlockSet.has(blockId)) return;
 
     this.logger.debug(`Collected block: ${blockId}`);
     this.collect(`block:${blockId}`);

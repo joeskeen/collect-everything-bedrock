@@ -49,7 +49,7 @@ export class PlayerCollectionService {
     this.logger.debug(`Collecting ${what}`);
     this.collection.set(what, true);
     const displayName = formatCollectedId(what);
-    this.playerNotifierService.toast(`§6:solid_star: Collected: ${displayName}`);
+    this.playerNotifierService.toast(`§6:solid_star: Collected ${displayName}`);
     this.save();
   }
 

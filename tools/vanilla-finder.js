@@ -5,6 +5,17 @@ export function findVanillaPath() {
   return findVanillaRPPath();
 }
 
+export function findLootTablesPath() {
+  const bpPath = findVanillaBPPath();
+  const lootTablesPath = join(bpPath, "loot_tables");
+  if (!existsSync(lootTablesPath)) {
+    throw new Error(
+      `Loot tables directory not found at ${lootTablesPath}. Please ensure the vanilla behavior pack is valid.`,
+    );
+  }
+  return lootTablesPath;
+}
+
 export function findVanillaBPPath() {
   if (process.env.VANILLA_BP) {
     return process.env.VANILLA_BP;
@@ -85,6 +96,14 @@ export function findVanillaRPPath() {
       "No Minecraft versions found in McpeLauncher data. Please ensure you have at least one version of Minecraft installed.",
     );
   }
+  versions.sort((a, b) => {
+    const [aMajor, aMinor, aPatch, aBuild] = a.split(".").map(Number);
+    const [bMajor, bMinor, bPatch, bBuild] = b.split(".").map(Number);
+    if (aMajor !== bMajor) return bMajor - aMajor;
+    if (aMinor !== bMinor) return bMinor - aMinor;
+    if (aPatch !== bPatch) return bPatch - aPatch;
+    return bBuild - aBuild;
+  });
   const latestVersion = versions[0];
   const vanillaPath = join(
     basePath,
@@ -101,4 +120,25 @@ export function findVanillaRPPath() {
     );
   }
   return vanillaPath;
+}
+
+export function findLootTablePaths() {
+  const lootTablesPath = findLootTablesPath();
+  const paths = [];
+
+  function walkDir(dir, prefix = "") {
+    const entries = readdirSync(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        walkDir(join(dir, entry.name), prefix ? `${prefix}/${entry.name}` : entry.name);
+      } else if (entry.name.endsWith(".json")) {
+        const tableName = entry.name.replace(".json", "");
+        const path = prefix ? `${prefix}/${tableName}` : tableName;
+        paths.push(path);
+      }
+    }
+  }
+
+  walkDir(lootTablesPath);
+  return paths;
 }

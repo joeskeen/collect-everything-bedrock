@@ -1,0 +1,21 @@
+{
+  "description": "Blocks that can be broken in survival mode but can NEVER be held in inventory (even with silk touch). This means they either drop nothing, or drop something else entirely.",
+  "entries": [
+    { "name": "minecraft:mob_spawner" }, // TODO: action: break
+    { "name": "minecraft:budding_amethyst" }, // TODO: action: break
+    { "name": "minecraft:chorus_plant" }, // TODO: action: break
+    { "name": "minecraft:frog_spawn" }, // TODO: action: break
+    
+    { "name": "minecraft:trial_spawner" }, // TODO: actions: [break, state = ejecting_reward and player is in range]; TODO: Ominous variant ["ominous"=true]
+    { "name": "minecraft:vault" }, // TODO: Ominous Vault variant
+
+    { "name": "minecraft:infested_stone" },
+    { "name": "minecraft:infested_cobblestone" },
+    { "name": "minecraft:infested_stone_bricks" },
+    { "name": "minecraft:infested_mossy_stone_bricks" },
+    { "name": "minecraft:infested_cracked_stone_bricks" },
+    { "name": "minecraft:infested_chiseled_stone_bricks" },
+    { "name": "minecraft:infested_deepslate" },
+    { "name": "minecraft:tripWire", "display_name": "Tripwire" }
+  ]
+}

@@ -28,4 +28,4 @@ Object.entries(metricSources).forEach(([key, path]) => {
     }
 });
 
-writeFileSync(join(__dirname, "../src/scripts/dynamic/computed-metrics.ts"), outputLines.join("\n"));
+writeFileSync(join(__dirname, "../src/scripts/generated/computed-metrics.ts"), outputLines.join("\n"));

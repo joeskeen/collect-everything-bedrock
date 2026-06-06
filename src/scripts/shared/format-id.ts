@@ -77,6 +77,8 @@ export function formatEntityId(entityId: string): string {
   let biome: string | undefined;
   let isWarm = false;
   let isCold = false;
+  let color: number | undefined;
+  let color2: number | undefined;
   const extraParts: string[] = [];
 
   const startIndex = parts[0] === "minecraft" ? 2 : 1;
@@ -93,6 +95,12 @@ export function formatEntityId(entityId: string): string {
       isWarm = true;
     } else if (parts[i] === "cold") {
       isCold = true;
+    } else if (parts[i] === "color" && i + 1 < parts.length) {
+      color = parseInt(parts[i + 1]);
+      i++;
+    } else if (parts[i] === "color2" && i + 1 < parts.length) {
+      color2 = parseInt(parts[i + 1]);
+      i++;
     } else {
       extraParts.push(parts[i]);
     }
@@ -106,6 +114,14 @@ export function formatEntityId(entityId: string): string {
     result = `Cold ${result}`;
   } else if (variant !== undefined) {
     result = `${result} Variant ${variant}`;
+  }
+
+  if (color !== undefined) {
+    result = `${result} ${toColorName(color)}`;
+  }
+
+  if (color2 !== undefined) {
+    result = `${result}/${toColorName(color2)}`;
   }
 
   if (isBaby) {
@@ -123,24 +139,36 @@ export function formatEntityId(entityId: string): string {
   return result;
 }
 
+const PALETTE_COLORS = [
+  "White", "Orange", "Magenta", "Light Blue", "Yellow", "Lime", "Pink", "Gray",
+  "Silver", "Cyan", "Purple", "Blue", "Brown", "Green", "Red", "Black"
+];
+
+function toColorName(colorIndex: number): string {
+  if (colorIndex >= 0 && colorIndex < PALETTE_COLORS.length) {
+    return PALETTE_COLORS[colorIndex];
+  }
+  return `Color ${colorIndex}`;
+}
+
 export function formatCollectedId(collectedId: string): string {
   if (collectedId.startsWith("item:")) {
-    return formatItemId(collectedId);
+    return `Item: ${formatItemId(collectedId)}`;
   }
   if (collectedId.startsWith("biome:")) {
-    return formatBiomeId(collectedId);
+    return `Biome: ${formatBiomeId(collectedId)}`;
   }
   if (collectedId.startsWith("enchantment:")) {
-    return formatEnchantmentId(collectedId);
+    return `Enchantment: ${formatEnchantmentId(collectedId)}`;
   }
   if (collectedId.startsWith("effect:")) {
-    return formatEffectId(collectedId);
+    return `Effect: ${formatEffectId(collectedId)}`;
   }
   if (collectedId.startsWith("entity:")) {
-    return formatEntityId(collectedId);
+    return `Entity: ${formatEntityId(collectedId)}`;
   }
   if (collectedId.startsWith("block:")) {
-    return formatBlockId(collectedId);
+    return `Block: ${formatBlockId(collectedId)}`;
   }
   return collectedId;
 }

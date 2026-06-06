@@ -64,14 +64,19 @@ export class EntityCollector {
       }
     }
 
-    const biome = entity.dimension.getBiome(entity.location);
-    if (biome) {
-      const biomeTags = biome.getTags();
-      if (biomeTags.includes("spawns_warm_variant_farm_animals")) {
-        entityId += ":warm";
-      } else if (biomeTags.includes("spawns_cold_variant_farm_animals")) {
-        entityId += ":cold";
-      }
+    const climateVariant = entity.getProperty("minecraft:climate_variant");
+    if (climateVariant !== undefined && climateVariant !== null) {
+      entityId += `:${climateVariant}`;
+    }
+
+    const color = entity.getProperty("minecraft:color");
+    if (color !== undefined && color !== null) {
+      entityId += `:color:${color}`;
+    }
+
+    const color2 = entity.getProperty("minecraft:color2");
+    if (color2 !== undefined && color2 !== null) {
+      entityId += `:color2:${color2}`;
     }
 
     const isBabyComponent = entity.getComponent(EntityComponentTypes.IsBaby);
