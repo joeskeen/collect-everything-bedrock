@@ -3,6 +3,7 @@ import { singleton, inject, DependencyContainer, container } from "tsyringe";
 import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../global-tokens";
 import { Logger } from "../shared/logging/logger";
 import { PlayerCollection } from "../player/player-collection";
+import { WOOD_SWORD } from "../shared/emoji";
 
 const PLAYER_INITIALIZATION_DELAY_TICKS = 100;
 
@@ -29,6 +30,9 @@ export class PlayerManager {
   }
 
   async initializePlayer(playerName: string) {
+    this.logger.log(`${WOOD_SWORD} Player joined: ${playerName}`);
+
+    // if you try to get a player before they are fully loaded you will get an error
     await new Promise((resolve) => this.system.runTimeout(() => resolve(undefined), PLAYER_INITIALIZATION_DELAY_TICKS));
 
     const player = this.world.getPlayers({ name: playerName })[0];
