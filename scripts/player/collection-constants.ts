@@ -2,7 +2,7 @@ import { InjectionToken } from "tsyringe";
 import { Runnable } from "../shared/runnable";
 import { GREEN } from "../shared/format-codes";
 
-export type CollectFn = (category: keyof PlayerCollectionData, what: string) => void;
+export type CollectFn = (category: keyof PlayerCollectionData, what: string, displayName?: string) => void;
 export type Collector = { collect: CollectFn };
 export const COLLECTOR: InjectionToken<Collector> = Symbol(
   "Access to the function for reporting having collected something"

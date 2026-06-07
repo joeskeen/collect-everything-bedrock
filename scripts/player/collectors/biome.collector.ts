@@ -5,6 +5,7 @@ import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../../shared/global-tok
 import type { Player, System, World } from "@minecraft/server";
 import { BIOME, COLLECTOR, Collector } from "../collection-constants";
 import { Logger } from "../../shared/logging/logger";
+import { ALL_BIOMES } from "../../data/biomes";
 
 const BIOME_POLLING_INTERVAL_TICKS = 50;
 
@@ -38,7 +39,7 @@ export class BiomeCollector implements Runnable, Disposable {
       if (fullBiomeId === this.lastBiome) return;
 
       this.lastBiome = fullBiomeId;
-      this.collector.collect(BIOME, fullBiomeId);
+      this.collector.collect(BIOME, fullBiomeId, ALL_BIOMES[fullBiomeId].displayName);
     }
   }
 }

@@ -41,13 +41,16 @@ export class PlayerCollection {
     this.logger.log(`Collection initialized.`);
   }
 
-  onCollect(category: keyof PlayerCollectionData, what: string) {
+  onCollect(category: keyof PlayerCollectionData, what: string, displayName?: string) {
     if (this.collection[category].has(what)) {
       return;
     }
+    if (!displayName) {
+      displayName = formatId(what);
+    }
     // TODO: save collection to storage
     this.collection[category].set(what, this.system.currentTick);
-    const fullMessage = `${SOLID_STAR} ${THEME[category] ?? ""}Collected ${capitalCase(category)}: ${BOLD}${formatId(what)}`;
+    const fullMessage = `${SOLID_STAR} ${THEME[category] ?? ""}Collected ${capitalCase(category)}: ${BOLD}${displayName}`;
     this.logger.log(fullMessage);
     this.playerNotifier.toast(fullMessage);
   }
