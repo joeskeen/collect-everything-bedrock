@@ -13,6 +13,7 @@ export class ResetAllCommandHandler implements CommandHandler {
 
   handleCommand(_event: any): CustomCommandResult {
     this.logger.log("BOOM");
+    // TODO: actually implement this
     return { status: customCommandStatuses.Success };
   }
 }

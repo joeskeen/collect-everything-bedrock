@@ -1,4 +1,4 @@
-import { container, DependencyContainer, inject, injectAll, registry, singleton } from "tsyringe";
+import { container, DependencyContainer, inject, registry, singleton } from "tsyringe";
 import {
   ADD_ON_COMMANDS_TOKEN,
   AddOnCommand,
@@ -8,6 +8,7 @@ import {
   customCommandStatuses,
 } from "./add-on-command";
 import { resetAllCommand, ResetAllCommandHandler } from "./admin-commands/reset-all.command";
+import { playerStatsCommand } from "../player/player-commands/stats.command";
 import type { CustomCommandOrigin, CustomCommandResult, Entity, Player, StartupEvent, System } from "@minecraft/server";
 import { SYSTEM_TOKEN } from "../shared/global-tokens";
 import { Disposable } from "../shared/disposable";
@@ -19,8 +20,7 @@ export function isPlayer(entity?: Entity): entity is Player {
 }
 
 @registry([
-  { token: COMMAND_HANDLER_CLASSES_TOKEN, useValue: ResetAllCommandHandler },
-  { token: ADD_ON_COMMANDS_TOKEN, useValue: [resetAllCommand] as AddOnCommand<CommandHandler>[] },
+  { token: ADD_ON_COMMANDS_TOKEN, useValue: [resetAllCommand, playerStatsCommand] as AddOnCommand<CommandHandler>[] },
 ])
 @singleton()
 export class CommandManager implements Disposable {
