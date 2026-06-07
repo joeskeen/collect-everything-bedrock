@@ -31,3 +31,4 @@ export const OBFUSCATED = "§k";
 export const BOLD = "§l";
 export const ITALIC = "§o";
 export const RESET = "§r";
+export const PERCENT_SYMBOL = "%%";

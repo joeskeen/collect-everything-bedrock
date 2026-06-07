@@ -1,8 +1,8 @@
 import { inject, Lifecycle, scoped } from "tsyringe";
 import { Runnable } from "../../shared/runnable";
 import { Disposable } from "../../shared/disposable";
-import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
-import type { Player, System } from "@minecraft/server";
+import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../../shared/global-tokens";
+import type { Player, System, World } from "@minecraft/server";
 import { BIOME, COLLECTOR, Collector } from "../collection-constants";
 import { Logger } from "../../shared/logging/logger";
 
@@ -15,6 +15,7 @@ export class BiomeCollector implements Runnable, Disposable {
 
   constructor(
     @inject(Logger) private readonly logger: Logger,
+    @inject(WORLD_TOKEN) private readonly world: World,
     @inject(SYSTEM_TOKEN) private readonly system: System,
     @inject(PLAYER_TOKEN) private readonly player: Player,
     @inject(COLLECTOR) private readonly collector: Collector
