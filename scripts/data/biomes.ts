@@ -3,8 +3,9 @@ export interface BiomeData {
   internalId: number;
 }
 
-export function biomeCount() {
-  return Object.keys(ALL_BIOMES).length;
+export function countCollectedBiomes(biomes: string[]) {
+  const builtInCount = biomes.filter((b) => b in ALL_BIOMES).length;
+  return { collected: builtInCount, extra: biomes.length - builtInCount, total: Object.keys(ALL_BIOMES).length };
 }
 
 export const ALL_BIOMES: Record<string, BiomeData> = {

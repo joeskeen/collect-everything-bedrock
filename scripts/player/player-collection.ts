@@ -10,6 +10,8 @@ import {
 } from "./collection-constants";
 import { Runnable } from "../shared/runnable";
 import { BiomeCollector } from "./collectors/biome.collector";
+import { EntityKilledCollector } from "./collectors/entity-killed.collector";
+import { EntityNamedCollector } from "./collectors/entity-named.collector";
 import { PlayerNotifier } from "./player-notifier";
 import { SOLID_STAR } from "../shared/emoji";
 import { formatId } from "../shared/formatting";
@@ -21,6 +23,8 @@ import { SYSTEM_TOKEN } from "../shared/global-tokens";
 @registry([
   { token: COLLECTOR, useValue: { collect: () => {} } as Collector },
   { token: COLLECTORS_TOKEN, useClass: BiomeCollector },
+  { token: COLLECTORS_TOKEN, useClass: EntityKilledCollector },
+  { token: COLLECTORS_TOKEN, useClass: EntityNamedCollector },
 ])
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerCollection {

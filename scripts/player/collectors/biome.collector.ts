@@ -1,13 +1,11 @@
 import { inject, Lifecycle, scoped } from "tsyringe";
 import { Runnable } from "../../shared/runnable";
 import { Disposable } from "../../shared/disposable";
-import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../../shared/global-tokens";
-import type { Player, System, World } from "@minecraft/server";
+import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
+import type { Player, System } from "@minecraft/server";
 import { BIOME, COLLECTOR, Collector } from "../collection-constants";
-import { Logger } from "../../shared/logging/logger";
 import { ALL_BIOMES } from "../../data/biomes";
-
-const BIOME_POLLING_INTERVAL_TICKS = 50;
+import { POLLING_INTERVAL_TICKS } from "../../shared/ticks";
 
 @scoped(Lifecycle.ContainerScoped)
 export class BiomeCollector implements Runnable, Disposable {
@@ -15,15 +13,13 @@ export class BiomeCollector implements Runnable, Disposable {
   private lastBiome: string | null = null;
 
   constructor(
-    @inject(Logger) private readonly logger: Logger,
-    @inject(WORLD_TOKEN) private readonly world: World,
     @inject(SYSTEM_TOKEN) private readonly system: System,
     @inject(PLAYER_TOKEN) private readonly player: Player,
     @inject(COLLECTOR) private readonly collector: Collector
   ) {}
 
   run() {
-    this.intervalId = this.system.runInterval(this.tick.bind(this), BIOME_POLLING_INTERVAL_TICKS);
+    this.intervalId = this.system.runInterval(this.tick.bind(this), POLLING_INTERVAL_TICKS);
   }
 
   dispose() {

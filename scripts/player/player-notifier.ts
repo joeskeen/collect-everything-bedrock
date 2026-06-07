@@ -53,15 +53,18 @@ export class PlayerNotifier implements Disposable {
     });
   }
 
-  run(message?: Message) {
-    if (this.disposed) return;
+  run() {
+    // // force a short delay before starting to send messages to ensure the player is fully loaded
+    // this.messageQueue.push({
+    //   type: "actionbar",
+    //   content: "",
+    //   duration: PLAYER_INITIALIZATION_DELAY_TICKS,
+    // });
+    this.tick();
+  }
 
-    // force a short delay before starting to send messages to ensure the player is fully loaded
-    this.messageQueue.push({
-      type: "actionbar",
-      content: "",
-      duration: PLAYER_INITIALIZATION_DELAY_TICKS,
-    });
+  tick(message?: Message) {
+    if (this.disposed) return;
 
     const duration = message?.duration ?? QUEUE_PROCESSING_INTERVAL_TICKS;
     if (message) {
@@ -72,7 +75,7 @@ export class PlayerNotifier implements Disposable {
     }
     this.system.runTimeout(() => {
       const nextMessage = this.messageQueue.shift();
-      this.run(nextMessage);
+      this.tick(nextMessage);
     }, duration);
   }
 
