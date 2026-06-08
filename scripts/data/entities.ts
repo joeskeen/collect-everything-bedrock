@@ -94,7 +94,7 @@ export const ALL_ENTITIES: Record<string, EntityData> = {
   // "minecraft:sulfur_cube": { displayName: "Sulfur Cube", internalId: 108 }, // TODO: after this is released we can uncomment this
   "minecraft:tadpole": { internalId: 109 },
   "minecraft:trader_llama": { internalId: 113 },
-  "minecraft:tropicalfish": { internalId: 115 },
+  "minecraft:tropicalfish": { displayName: "Tropical Fish", internalId: 115 },
   "minecraft:turtle": { internalId: 116 },
   "minecraft:vex": { internalId: 118 },
   "minecraft:villager_v2": { displayName: "Villager", internalId: 120 },
