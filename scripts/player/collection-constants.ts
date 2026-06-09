@@ -26,18 +26,18 @@ export const THEME: Record<string, string> = {
 };
 
 export interface PlayerCollectionData {
-  [BIOME]: Map<string, number>;
-  [ENTITY]: Map<string, number>;
-  [EFFECT]: Map<string, number>;
-  [ENCHANTMENT]: Map<string, number>;
-  [UNOBTAINABLE_ITEMS]: Map<string, number>;
+  [BIOME]: Record<string, number>;
+  [ENTITY]: Record<string, number>;
+  [EFFECT]: Record<string, number>;
+  [ENCHANTMENT]: Record<string, number>;
+  [UNOBTAINABLE_ITEMS]: Record<string, number>;
 }
 export function emptyCollection(): PlayerCollectionData {
   return {
-    [BIOME]: new Map(),
-    [ENTITY]: new Map(),
-    [EFFECT]: new Map(),
-    [ENCHANTMENT]: new Map(),
-    [UNOBTAINABLE_ITEMS]: new Map(),
+    [BIOME]: {},
+    [ENTITY]: {},
+    [EFFECT]: {},
+    [ENCHANTMENT]: {},
+    [UNOBTAINABLE_ITEMS]: {},
   };
 }

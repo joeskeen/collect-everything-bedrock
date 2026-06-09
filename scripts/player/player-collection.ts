@@ -17,11 +17,15 @@ import { SOLID_STAR } from "../shared/emoji";
 import { formatId } from "../shared/formatting";
 import { BOLD } from "../shared/format-codes";
 import { capitalCase } from "change-case";
-import type { System } from "@minecraft/server";
-import { SYSTEM_TOKEN } from "../shared/global-tokens";
+import type { Player, System } from "@minecraft/server";
+import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../shared/global-tokens";
+import { CollectionScoreboard } from "../system/scoreboard";
+import { NAMESPACE } from "../shared/constants";
+import { PlayerStorage } from "../shared/storage";
+
+const COLLECTION_KEY = `${NAMESPACE}:collection`;
 
 @registry([
-  { token: COLLECTOR, useValue: { collect: () => {} } as Collector },
   { token: COLLECTORS_TOKEN, useClass: BiomeCollector },
   { token: COLLECTORS_TOKEN, useClass: EntityKilledCollector },
   { token: COLLECTORS_TOKEN, useClass: EntityNamedCollector },
@@ -33,30 +37,52 @@ export class PlayerCollection {
   constructor(
     @inject(Logger) private logger: Logger,
     @inject(SYSTEM_TOKEN) private system: System,
+    @inject(CollectionScoreboard) private collectionScoreboard: CollectionScoreboard,
     @inject(COLLECTOR) collector: Collector,
     @inject(PlayerNotifier) private readonly playerNotifier: PlayerNotifier,
+    @inject(PLAYER_TOKEN) private readonly player: Player,
+    @inject(PlayerStorage) private readonly playerStorage: PlayerStorage,
     @injectAll(COLLECTORS_TOKEN) private readonly collectors: Runnable[]
   ) {
     collector.collect = this.onCollect.bind(this);
   }
   run() {
-    // TODO: load collection from storage
+    this.collection = this.playerStorage.get<PlayerCollectionData>(COLLECTION_KEY) ?? emptyCollection();
+    console.log(this.collection);
+    console.log(typeof this.collection);
+    this.updateScore();
     this.collectors.forEach((c) => c.run());
     this.logger.log(`Collection initialized.`);
   }
 
   onCollect(category: keyof PlayerCollectionData, what: string, displayName?: string) {
-    if (this.collection[category].has(what)) {
+    if (this.collection[category]?.[what]) {
       return;
     }
-    if (!displayName) {
-      displayName = formatId(what);
+    try {
+      if (!displayName) {
+        displayName = formatId(what);
+      }
+      this.collection[category][what] = this.system.currentTick;
+
+      this.playerStorage.set(COLLECTION_KEY, this.collection);
+
+      const fullMessage = `${SOLID_STAR} ${THEME[category] ?? ""}Collected ${capitalCase(category)}: ${BOLD}${displayName}`;
+      this.logger.log(fullMessage);
+      this.playerNotifier.toast(fullMessage);
+
+      this.updateScore();
+    } catch (err) {
+      this.logger.error("errror collecting", category, what, err, (err as Error).stack);
     }
-    // TODO: save collection to storage
-    this.collection[category].set(what, this.system.currentTick);
-    const fullMessage = `${SOLID_STAR} ${THEME[category] ?? ""}Collected ${capitalCase(category)}: ${BOLD}${displayName}`;
-    this.logger.log(fullMessage);
-    this.playerNotifier.toast(fullMessage);
+  }
+
+  updateScore() {
+    const score = Object.keys(this.collection).reduce(
+      (prev, curr) => prev + Object.keys((this.collection as any)[curr]).length,
+      0
+    );
+    this.collectionScoreboard.update(this.player, score);
   }
 
   getCollection() {

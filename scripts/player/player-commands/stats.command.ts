@@ -1,6 +1,6 @@
 import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
-import { CustomCommandResult } from "@minecraft/server";
+import type { CustomCommandResult } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
 import { BIOME, ENTITY } from "../collection-constants";
 import { countCollectedBiomes } from "../../data/biomes";
@@ -16,8 +16,8 @@ export class PlayerStatsCommand implements CommandHandler {
   handleCommand(event: any): CustomCommandResult {
     const collection = this.collection.getCollection();
     const collectionProgress = [
-      { category: BIOME, ...countCollectedBiomes([...collection[BIOME].keys()]) },
-      { category: ENTITY, ...countCollectedEntities([...collection[ENTITY].keys()]) },
+      { category: BIOME, ...countCollectedBiomes(Object.keys(collection[BIOME] ?? {})) },
+      { category: ENTITY, ...countCollectedEntities(Object.keys(collection[ENTITY] ?? {})) },
     ];
     const totalProgress = {
       collected: collectionProgress.reduce((prev, curr) => prev + curr.collected, 0),

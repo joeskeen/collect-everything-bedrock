@@ -1,13 +1,12 @@
-import { container, DependencyContainer, inject, registry, singleton } from "tsyringe";
+import { container, DependencyContainer, inject, injectAll, registry, singleton } from "tsyringe";
 import {
   ADD_ON_COMMANDS_TOKEN,
   AddOnCommand,
-  COMMAND_HANDLER_CLASSES_TOKEN,
   CommandHandler,
   commandPermissionLevels,
   customCommandStatuses,
 } from "./add-on-command";
-import { resetAllCommand, ResetAllCommandHandler } from "./admin-commands/reset-all.command";
+import { resetAllCommand as adminResetAllCommand } from "./admin-commands/reset-all.command";
 import { playerStatsCommand } from "../player/player-commands/stats.command";
 import type { CustomCommandOrigin, CustomCommandResult, Entity, Player, StartupEvent, System } from "@minecraft/server";
 import { SYSTEM_TOKEN } from "../shared/global-tokens";
@@ -20,17 +19,16 @@ export function isPlayer(entity?: Entity): entity is Player {
 }
 
 @registry([
-  { token: ADD_ON_COMMANDS_TOKEN, useValue: [resetAllCommand, playerStatsCommand] as AddOnCommand<CommandHandler>[] },
+  { token: ADD_ON_COMMANDS_TOKEN, useValue: adminResetAllCommand },
+  { token: ADD_ON_COMMANDS_TOKEN, useValue: playerStatsCommand },
 ])
 @singleton()
 export class CommandManager implements Disposable {
-  private readonly subscriptions: Function[] = [];
-
   constructor(
     @inject(Logger) private readonly logger: Logger,
     @inject(SYSTEM_TOKEN) private readonly system: System,
     @inject(PlayerManager) private readonly playerManager: PlayerManager,
-    @inject(ADD_ON_COMMANDS_TOKEN) private readonly commands: AddOnCommand<CommandHandler>[]
+    @injectAll(ADD_ON_COMMANDS_TOKEN) private readonly commands: AddOnCommand<CommandHandler>[]
   ) {}
 
   onStartUp(event: StartupEvent) {
@@ -66,7 +64,7 @@ export class CommandManager implements Disposable {
       return handler.handleCommand(origin);
     } catch (err) {
       return {
-        message: `Error while executing command ${command.name} in scope '${resolvedScope}': ${err}`,
+        message: `Error while executing command ${command.name} in scope '${resolvedScope}': ${err} ${(err as Error).stack}`,
         status: customCommandStatuses.Failure,
       };
     }

@@ -1,4 +1,9 @@
-import type { CommandPermissionLevel, CustomCommand, CustomCommandResult } from "@minecraft/server";
+import type {
+  CommandPermissionLevel,
+  CustomCommand,
+  CustomCommandOrigin,
+  CustomCommandResult,
+} from "@minecraft/server";
 import { InjectionToken } from "tsyringe";
 import { NAMESPACE } from "../shared/constants";
 
@@ -46,7 +51,7 @@ export const COMMAND_HANDLER_CLASSES_TOKEN: InjectionToken<Class<CommandHandler>
 );
 
 export interface CommandHandler {
-  handleCommand(event: any): CustomCommandResult;
+  handleCommand(event: CustomCommandOrigin): CustomCommandResult;
 }
 
 export type Class<_T = unknown> = Function;

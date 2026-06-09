@@ -7,6 +7,7 @@ import { PlayerNotifier } from "../player/player-notifier";
 import { WOOD_SWORD } from "../shared/emoji";
 import { BLUE, BOLD } from "../shared/format-codes";
 import { PLAYER_INITIALIZATION_DELAY_TICKS } from "../shared/ticks";
+import { COLLECTOR, Collector } from "../player/collection-constants";
 
 @singleton()
 export class PlayerManager {
@@ -50,6 +51,7 @@ export class PlayerManager {
       const playerContainer = container.createChildContainer();
       playerContainer.registerInstance(PLAYER_TOKEN, player);
       playerContainer.registerInstance(PLAYER_SESSION_TOKEN, { startTick: this.system.currentTick });
+      playerContainer.registerInstance(COLLECTOR, { collect: () => {} } as Collector);
       this.players.set(playerName, playerContainer);
 
       const notifier = playerContainer.resolve(PlayerNotifier);
@@ -60,7 +62,7 @@ export class PlayerManager {
 
       this.logger.log(`Player ${playerName} initialized successfully.`);
     } catch (err) {
-      this.logger.error(`Error initializing ${playerName}:`, err);
+      this.logger.error(`Error initializing ${playerName}:`, err, (err as Error).stack);
     }
   }
 

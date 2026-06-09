@@ -7,7 +7,9 @@ import { getLogSettings, LOG_SETTINGS_TOKEN } from "./shared/logging/log-setting
 import { Logger } from "./shared/logging/logger";
 import { CRAFTING_TABLE } from "./shared/emoji";
 import { AQUA } from "./shared/format-codes";
+import { registerDebugProviders } from "./debug/index";
 
+registerDebugProviders();
 container.register(LOG_SETTINGS_TOKEN, { useValue: getLogSettings });
 container.register(SYSTEM_TOKEN, { useValue: system });
 container.register(WORLD_TOKEN, { useValue: world });
