@@ -1,6 +1,7 @@
 import { inject, singleton } from "tsyringe";
 import { ITEM_TYPES_TOKEN } from "../../shared/global-tokens";
 import type { ItemTypes, RawMessage } from "@minecraft/server";
+import { formatId } from "../../shared/formatting";
 
 @singleton()
 export class ItemRegistry {
@@ -17,7 +18,8 @@ export class ItemRegistry {
   }
 
   formatItem(itemId: string): RawMessage {
-    return { translate: this.itemTypes.get(itemId)!.localizationKey };
+    const localizationKey = this.itemTypes.get(itemId)?.localizationKey;
+    return localizationKey ? { translate: localizationKey } : { text: formatId(itemId) };
   }
 
   findItemsByKeyword(word: string): string[] {

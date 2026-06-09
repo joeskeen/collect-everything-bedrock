@@ -10,8 +10,11 @@ import {
 } from "./collection-constants";
 import { Runnable } from "../shared/runnable";
 import { BiomeCollector } from "../collections/biome/biome.collector";
+import { EffectCollector } from "../collections/effect/effect.collector";
+import { EnchantmentCollector } from "../collections/enchantment/enchantment.collector";
 import { EntityKilledCollector } from "../collections/entity/entity-killed.collector";
 import { EntityNamedCollector } from "../collections/entity/entity-named.collector";
+import { ItemCollector } from "../collections/item/item.collector";
 import { PlayerNotifier } from "./player-notifier";
 import { SOLID_STAR } from "../shared/emoji";
 import { BOLD } from "../shared/format-codes";
@@ -26,8 +29,11 @@ const COLLECTION_KEY = `${NAMESPACE}:collection`;
 
 @registry([
   { token: COLLECTORS_TOKEN, useClass: BiomeCollector },
+  { token: COLLECTORS_TOKEN, useClass: EffectCollector },
+  { token: COLLECTORS_TOKEN, useClass: EnchantmentCollector },
   { token: COLLECTORS_TOKEN, useClass: EntityKilledCollector },
   { token: COLLECTORS_TOKEN, useClass: EntityNamedCollector },
+  { token: COLLECTORS_TOKEN, useClass: ItemCollector },
 ])
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerCollection {

@@ -1,4 +1,4 @@
-import type { Player, RawMessage, System } from "@minecraft/server";
+import type { Player, RawMessage, System, TitleDisplayOptions } from "@minecraft/server";
 import { Disposable } from "../shared/disposable";
 import { Logger } from "../shared/logging/logger";
 import { PLAYER_INITIALIZATION_DELAY_TICKS, QUEUE_PROCESSING_INTERVAL_TICKS } from "../shared/ticks";
@@ -55,12 +55,6 @@ export class PlayerNotifier implements Disposable {
   }
 
   run() {
-    // // force a short delay before starting to send messages to ensure the player is fully loaded
-    // this.messageQueue.push({
-    //   type: "actionbar",
-    //   content: "",
-    //   duration: PLAYER_INITIALIZATION_DELAY_TICKS,
-    // });
     this.tick();
   }
 
@@ -69,7 +63,16 @@ export class PlayerNotifier implements Disposable {
 
     const duration = message?.duration ?? QUEUE_PROCESSING_INTERVAL_TICKS;
     if (message) {
-      this.player.runCommand(`title @s ${message.type} ${message.content}`);
+      switch (message.type) {
+        case "actionbar":
+          this.player.onScreenDisplay.setActionBar(message.content);
+          break;
+        case "subtitle":
+          this.player.onScreenDisplay.updateSubtitle(message.content);
+          break;
+        case "title":
+          this.player.onScreenDisplay.setTitle(message.content, { stayDuration: duration } as TitleDisplayOptions);
+      }
       if (message.content) {
         this.player.runCommand(`playsound random.toast @p`);
       }

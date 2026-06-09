@@ -79,6 +79,7 @@ export class PlayerUncollectedCommand implements CommandHandler {
             ...x.entries.flatMap((e) => [e, { text: ", " }]),
             { text: "\n" },
           ]),
+          { text: "\n" },
         ],
       };
       this.player.sendMessage(message);

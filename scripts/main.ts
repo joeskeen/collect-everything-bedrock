@@ -10,6 +10,8 @@ import {
   DimensionTypes,
   EntityTypes,
   BlockTypes,
+  ItemComponentTypes,
+  ItemEnchantableComponent,
   RawMessage,
 } from "@minecraft/server";
 import { CollectEverythingAddOn } from "./system/collect-everything-add-on";
@@ -20,6 +22,8 @@ import {
   EFFECT_TYPES_TOKEN,
   ENCHANTMENT_TYPES_TOKEN,
   ENTITY_TYPES_TOKEN,
+  ITEM_COMPONENT_TYPES_TOKEN,
+  ITEM_ENCHANTABLE_COMPONENT_TOKEN,
   ITEM_TYPES_TOKEN,
   SYSTEM_TOKEN,
   WORLD_TOKEN,
@@ -41,6 +45,8 @@ container.registerInstance(ENCHANTMENT_TYPES_TOKEN, EnchantmentTypes);
 container.registerInstance(DIMENSION_TYPES_TOKEN, DimensionTypes);
 container.registerInstance(ENTITY_TYPES_TOKEN, EntityTypes);
 container.registerInstance(BLOCK_TYPES_TOKEN, BlockTypes);
+container.registerInstance(ITEM_COMPONENT_TYPES_TOKEN, ItemComponentTypes);
+container.registerInstance(ITEM_ENCHANTABLE_COMPONENT_TOKEN, ItemEnchantableComponent);
 const logger = container.resolve(Logger);
 
 logger.log(`${CRAFTING_TABLE} ${AQUA}Initializing Collect Everything Add-On...`);

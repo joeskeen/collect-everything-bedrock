@@ -1,9 +1,11 @@
 import type {
   BiomeTypes,
-  ItemTypes,
+  DimensionTypes,
   EffectTypes,
   EnchantmentTypes,
-  DimensionTypes,
+  ItemComponentTypes,
+  ItemEnchantableComponent,
+  ItemTypes,
   EntityTypes,
   BlockTypes,
   Player,
@@ -34,5 +36,11 @@ export const DIMENSION_TYPES_TOKEN: InjectionToken<typeof DimensionTypes> = Symb
 );
 export const ENTITY_TYPES_TOKEN: InjectionToken<typeof EntityTypes> = Symbol(
   "EntityTypes class from @minecraft/server"
+);
+export const ITEM_COMPONENT_TYPES_TOKEN: InjectionToken<typeof ItemComponentTypes> = Symbol(
+  "ItemComponentTypes from @minecraft/server"
+);
+export const ITEM_ENCHANTABLE_COMPONENT_TOKEN: InjectionToken<typeof ItemEnchantableComponent> = Symbol(
+  "ItemEnchantableComponent from @minecraft/server"
 );
 export const BLOCK_TYPES_TOKEN: InjectionToken<typeof BlockTypes> = Symbol("BlockTypes class from @minecraft/server");

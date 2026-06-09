@@ -1,0 +1,68 @@
+import { inject, Lifecycle, scoped } from "tsyringe";
+import { Runnable } from "../../shared/runnable";
+import { Disposable } from "../../shared/disposable";
+import {
+  ITEM_COMPONENT_TYPES_TOKEN,
+  ITEM_ENCHANTABLE_COMPONENT_TOKEN,
+  PLAYER_TOKEN,
+  WORLD_TOKEN,
+} from "../../shared/global-tokens";
+import type {
+  PlayerInventoryItemChangeAfterEvent,
+  Player,
+  World,
+  ItemStack,
+  ItemComponentTypes,
+  ItemEnchantableComponent,
+} from "@minecraft/server";
+import { COLLECTOR, Collector, ENCHANTMENT } from "../../player/collection-constants";
+import { EnchantmentRegistry } from "./enchantment.registry";
+
+@scoped(Lifecycle.ContainerScoped)
+export class EnchantmentCollector implements Runnable, Disposable {
+  private readonly boundCallback: (event: PlayerInventoryItemChangeAfterEvent) => void;
+  private readonly unsubscribe: () => void;
+
+  constructor(
+    @inject(WORLD_TOKEN) private readonly world: World,
+    @inject(PLAYER_TOKEN) private readonly player: Player,
+    @inject(COLLECTOR) private readonly collector: Collector,
+    @inject(EnchantmentRegistry) private readonly enchantmentRegistry: EnchantmentRegistry,
+    @inject(ITEM_COMPONENT_TYPES_TOKEN) private readonly itemComponentTypes: typeof ItemComponentTypes,
+    @inject(ITEM_ENCHANTABLE_COMPONENT_TOKEN) private readonly itemEnchantableComponent: typeof ItemEnchantableComponent
+  ) {
+    this.boundCallback = this.onPlayerInventoryItemChange.bind(this);
+    this.world.afterEvents.playerInventoryItemChange.subscribe(this.boundCallback);
+    this.unsubscribe = () => this.world.afterEvents.playerInventoryItemChange.unsubscribe(this.boundCallback);
+  }
+
+  run() {}
+
+  dispose() {
+    this.unsubscribe();
+  }
+
+  private getEnchantments(itemStack: ItemStack): string[] {
+    try {
+      const enchantComponent = itemStack.getComponent(this.itemComponentTypes.Enchantable);
+      if (!enchantComponent) return [];
+
+      const enchantments = enchantComponent.getEnchantments();
+      return enchantments.map((e) => `${e.type.id}:${e.level}`);
+    } catch {
+      return [];
+    }
+  }
+
+  private readonly onPlayerInventoryItemChange = (event: PlayerInventoryItemChangeAfterEvent) => {
+    if (event.player.id !== this.player.id) return;
+
+    const newItem = event.itemStack;
+    if (!newItem) return;
+
+    const enchantments = this.getEnchantments(newItem);
+    for (const enchantmentId of enchantments) {
+      this.collector.collect(ENCHANTMENT, enchantmentId, this.enchantmentRegistry.formatEnchantment(enchantmentId));
+    }
+  };
+}
