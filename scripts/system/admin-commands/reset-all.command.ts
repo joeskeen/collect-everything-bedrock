@@ -2,7 +2,7 @@ import { inject, singleton } from "tsyringe";
 import { addOnCommand, CommandHandler, commandPermissionLevels, customCommandStatuses } from "../add-on-command";
 import { PlayerManager } from "../player-manager";
 import { Logger } from "../../shared/logging/logger";
-import { CustomCommandResult } from "@minecraft/server";
+import type { CustomCommandResult } from "@minecraft/server";
 
 @singleton()
 export class ResetAllCommandHandler implements CommandHandler {

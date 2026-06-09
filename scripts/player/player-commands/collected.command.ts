@@ -1,14 +1,20 @@
 import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
-import type { CustomCommandResult } from "@minecraft/server";
+import { System, type CustomCommandResult } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
-import { THEME } from "../collection-constants";
+import { ITEM, THEME } from "../collection-constants";
 import { formatId } from "../../shared/formatting";
 import { GOLD, GRAY, RESET } from "../../shared/format-codes";
+import { SYSTEM_TOKEN } from "../../shared/global-tokens";
+import { BiomeRegistry } from "../../collections/biome/biome.registry";
 
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerCollectedCommand implements CommandHandler {
-  constructor(@inject(PlayerCollection) private readonly collection: PlayerCollection) {}
+  constructor(
+    @inject(PlayerCollection) private readonly collection: PlayerCollection,
+    @inject(SYSTEM_TOKEN) private readonly system: System,
+    @inject(BiomeRegistry) private readonly biomeRegistry: BiomeRegistry
+  ) {}
 
   handleCommand(event: any): CustomCommandResult {
     const collection = this.collection.getCollection();

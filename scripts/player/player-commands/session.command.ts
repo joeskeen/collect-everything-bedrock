@@ -2,7 +2,7 @@ import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
 import type { CustomCommandResult } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
-import { BIOME, ENTITY, THEME } from "../collection-constants";
+import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME } from "../collection-constants";
 import { capitalCase } from "change-case";
 import { formatId } from "../../shared/formatting";
 import { GOLD, GRAY, RESET } from "../../shared/format-codes";
@@ -30,6 +30,24 @@ export class PlayerSessionCommand implements CommandHandler {
           .filter(([_what, when]) => when > this.playerSession.startTick)
           .map(([what]) => what),
       },
+      {
+        category: ITEM,
+        collected: Object.entries(collection[ITEM])
+          .filter(([_what, when]) => when > this.playerSession.startTick)
+          .map(([what]) => what),
+      },
+      {
+        category: EFFECT,
+        collected: Object.entries(collection[EFFECT])
+          .filter(([_what, when]) => when > this.playerSession.startTick)
+          .map(([what]) => what),
+      },
+      {
+        category: ENCHANTMENT,
+        collected: Object.entries(collection[ENCHANTMENT])
+          .filter(([_what, when]) => when > this.playerSession.startTick)
+          .map(([what]) => what),
+      },
     ];
     const totalCollected = {
       collected: collectionProgress.reduce((prev, curr) => prev + curr.collected.length, 0),
@@ -42,6 +60,7 @@ export class PlayerSessionCommand implements CommandHandler {
             `${THEME[c.category]}${capitalCase(c.category)}${RESET} (${c.collected.length}): ${c.collected.map(formatId).join(", ")}`
         )
         .join("\n"),
+      "\n",
     ];
     return { message: messageLines.join("\n"), status: customCommandStatuses.Success };
   }

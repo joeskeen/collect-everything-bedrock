@@ -46,7 +46,7 @@ export class PlayerCollection {
     collector.collect = this.onCollect.bind(this);
   }
   run() {
-    this.collection = this.playerStorage.get<PlayerCollectionData>(COLLECTION_KEY) ?? emptyCollection();
+    this.collection = { ...emptyCollection(), ...this.playerStorage.get<PlayerCollectionData>(COLLECTION_KEY) };
     this.updateScore();
     this.collectors.forEach((c) => c.run());
     this.logger.log(`Collection initialized.`);
