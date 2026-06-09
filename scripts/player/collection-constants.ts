@@ -1,8 +1,9 @@
 import { InjectionToken } from "tsyringe";
 import { Runnable } from "../shared/runnable";
 import { GREEN, RED, AQUA, LIGHT_PURPLE, BLUE } from "../shared/format-codes";
+import { RawMessage } from "@minecraft/server";
 
-export type CollectFn = (category: keyof PlayerCollectionData, what: string, displayName?: string) => void;
+export type CollectFn = (category: keyof PlayerCollectionData, what: string, formatted: RawMessage) => void;
 export type Collector = { collect: CollectFn };
 export const COLLECTOR: InjectionToken<Collector> = Symbol(
   "Access to the function for reporting having collected something"

@@ -3,9 +3,8 @@ import { Runnable } from "../../shared/runnable";
 import { Disposable } from "../../shared/disposable";
 import { PLAYER_TOKEN, WORLD_TOKEN } from "../../shared/global-tokens";
 import type { Player, PlayerInteractWithEntityAfterEvent, World } from "@minecraft/server";
-import { COLLECTOR, Collector, ENTITY } from "../collection-constants";
-import { identifyEntity } from "../../data/entities";
-import { Logger } from "../../shared/logging/logger";
+import { COLLECTOR, Collector, ENTITY } from "../../player/collection-constants";
+import { EntityRegistry } from "./entity.registry";
 
 @scoped(Lifecycle.ContainerScoped)
 export class EntityNamedCollector implements Runnable, Disposable {
@@ -13,7 +12,7 @@ export class EntityNamedCollector implements Runnable, Disposable {
     @inject(WORLD_TOKEN) private readonly world: World,
     @inject(PLAYER_TOKEN) private readonly player: Player,
     @inject(COLLECTOR) private readonly collector: Collector,
-    @inject(Logger) private readonly logger: Logger
+    @inject(EntityRegistry) private readonly entityRegistry: EntityRegistry
   ) {}
 
   run() {
@@ -30,8 +29,8 @@ export class EntityNamedCollector implements Runnable, Disposable {
     }
 
     if (event.beforeItemStack?.typeId === "minecraft:name_tag") {
-      const [entityId, entityDisplayName] = identifyEntity(event.target);
-      this.collector.collect(ENTITY, entityId, entityDisplayName);
+      const id = event.target.typeId;
+      this.collector.collect(ENTITY, id, this.entityRegistry.formatEntity(id));
     }
   };
 }

@@ -1,4 +1,4 @@
-import type { Player, System } from "@minecraft/server";
+import type { Player, RawMessage, System } from "@minecraft/server";
 import { Disposable } from "../shared/disposable";
 import { Logger } from "../shared/logging/logger";
 import { PLAYER_INITIALIZATION_DELAY_TICKS, QUEUE_PROCESSING_INTERVAL_TICKS } from "../shared/ticks";
@@ -10,7 +10,8 @@ import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../shared/global-tokens";
  * @param text
  * @returns
  */
-export function messageDurationTicks(text: string) {
+export function messageDurationTicks(message: RawMessage) {
+  const text = JSON.stringify(message);
   // formula (ms): Duration = min(max(message length * 50, 2000), 10000)
   const length = text.length;
   const ms = Math.min(Math.max(length * 50, 2000), 10000);
@@ -20,7 +21,7 @@ export function messageDurationTicks(text: string) {
 
 export interface Message {
   type: "actionbar" | "title" | "subtitle";
-  content: string;
+  content: RawMessage;
   duration?: number;
 }
 
@@ -35,11 +36,11 @@ export class PlayerNotifier implements Disposable {
     @inject(SYSTEM_TOKEN) private readonly system: System
   ) {}
 
-  toast(message: string) {
+  toast(message: RawMessage) {
     this.addMessage({ type: "actionbar", content: message });
   }
 
-  title(title: string, subtitle?: string) {
+  title(title: RawMessage, subtitle?: RawMessage) {
     this.addMessage({ type: "title", content: title });
     if (subtitle) {
       this.addMessage({ type: "subtitle", content: subtitle });

@@ -8,6 +8,9 @@ import {
 } from "./add-on-command";
 import { resetAllCommand as adminResetAllCommand } from "./admin-commands/reset-all.command";
 import { playerStatsCommand } from "../player/player-commands/stats.command";
+import { playerSessionCommand } from "../player/player-commands/session.command";
+import { playerCollectedCommand } from "../player/player-commands/collected.command";
+import { playerUncollectedCommand } from "../player/player-commands/uncollected.command";
 import type { CustomCommandOrigin, CustomCommandResult, Entity, Player, StartupEvent, System } from "@minecraft/server";
 import { SYSTEM_TOKEN } from "../shared/global-tokens";
 import { Disposable } from "../shared/disposable";
@@ -21,6 +24,9 @@ export function isPlayer(entity?: Entity): entity is Player {
 @registry([
   { token: ADD_ON_COMMANDS_TOKEN, useValue: adminResetAllCommand },
   { token: ADD_ON_COMMANDS_TOKEN, useValue: playerStatsCommand },
+  { token: ADD_ON_COMMANDS_TOKEN, useValue: playerSessionCommand },
+  { token: ADD_ON_COMMANDS_TOKEN, useValue: playerCollectedCommand },
+  { token: ADD_ON_COMMANDS_TOKEN, useValue: playerUncollectedCommand },
 ])
 @singleton()
 export class CommandManager implements Disposable {

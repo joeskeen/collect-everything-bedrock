@@ -9,15 +9,14 @@ import {
   emptyCollection,
 } from "./collection-constants";
 import { Runnable } from "../shared/runnable";
-import { BiomeCollector } from "./collectors/biome.collector";
-import { EntityKilledCollector } from "./collectors/entity-killed.collector";
-import { EntityNamedCollector } from "./collectors/entity-named.collector";
+import { BiomeCollector } from "../collections/biome/biome.collector";
+import { EntityKilledCollector } from "../collections/entity/entity-killed.collector";
+import { EntityNamedCollector } from "../collections/entity/entity-named.collector";
 import { PlayerNotifier } from "./player-notifier";
 import { SOLID_STAR } from "../shared/emoji";
-import { formatId } from "../shared/formatting";
 import { BOLD } from "../shared/format-codes";
 import { capitalCase } from "change-case";
-import type { Player, System } from "@minecraft/server";
+import type { Player, RawMessage, System } from "@minecraft/server";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../shared/global-tokens";
 import { CollectionScoreboard } from "../system/scoreboard";
 import { NAMESPACE } from "../shared/constants";
@@ -48,32 +47,32 @@ export class PlayerCollection {
   }
   run() {
     this.collection = this.playerStorage.get<PlayerCollectionData>(COLLECTION_KEY) ?? emptyCollection();
-    console.log(this.collection);
-    console.log(typeof this.collection);
     this.updateScore();
     this.collectors.forEach((c) => c.run());
     this.logger.log(`Collection initialized.`);
   }
 
-  onCollect(category: keyof PlayerCollectionData, what: string, displayName?: string) {
+  onCollect(category: keyof PlayerCollectionData, what: string, formatted: RawMessage) {
     if (this.collection[category]?.[what]) {
       return;
     }
     try {
-      if (!displayName) {
-        displayName = formatId(what);
-      }
       this.collection[category][what] = this.system.currentTick;
 
       this.playerStorage.set(COLLECTION_KEY, this.collection);
 
-      const fullMessage = `${SOLID_STAR} ${THEME[category] ?? ""}Collected ${capitalCase(category)}: ${BOLD}${displayName}`;
+      const fullMessage: RawMessage = {
+        rawtext: [
+          { text: `${SOLID_STAR} ${THEME[category] ?? ""}Collected ${capitalCase(category)}: ${BOLD}` },
+          formatted,
+        ],
+      };
       this.logger.log(fullMessage);
       this.playerNotifier.toast(fullMessage);
 
       this.updateScore();
     } catch (err) {
-      this.logger.error("errror collecting", category, what, err, (err as Error).stack);
+      this.logger.error("error collecting", category, what, err, (err as Error).stack);
     }
   }
 

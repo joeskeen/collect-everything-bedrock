@@ -3,21 +3,25 @@ import { addOnCommand, CommandHandler, customCommandStatuses } from "../../syste
 import type { CustomCommandResult } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
 import { BIOME, ENTITY } from "../collection-constants";
-import { countCollectedBiomes } from "../../data/biomes";
 import { capitalCase } from "change-case";
 import { percent } from "../../shared/formatting";
 import { GOLD, GRAY } from "../../shared/format-codes";
-import { countCollectedEntities } from "../../data/entities";
+import { BiomeRegistry } from "../../collections/biome/biome.registry";
+import { EntityRegistry } from "../../collections/entity/entity.registry";
 
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerStatsCommand implements CommandHandler {
-  constructor(@inject(PlayerCollection) private readonly collection: PlayerCollection) {}
+  constructor(
+    @inject(PlayerCollection) private readonly collection: PlayerCollection,
+    @inject(BiomeRegistry) private readonly biomeRegistry: BiomeRegistry,
+    @inject(EntityRegistry) private readonly entityRegistry: EntityRegistry
+  ) {}
 
   handleCommand(event: any): CustomCommandResult {
     const collection = this.collection.getCollection();
     const collectionProgress = [
-      { category: BIOME, ...countCollectedBiomes(Object.keys(collection[BIOME] ?? {})) },
-      { category: ENTITY, ...countCollectedEntities(Object.keys(collection[ENTITY] ?? {})) },
+      { category: BIOME, ...this.biomeRegistry.countCollectedBiomes(Object.keys(collection[BIOME] ?? {})) },
+      { category: ENTITY, ...this.entityRegistry.countCollectedEntities(Object.keys(collection[ENTITY] ?? {})) },
     ];
     const totalProgress = {
       collected: collectionProgress.reduce((prev, curr) => prev + curr.collected, 0),

@@ -3,9 +3,9 @@ import { Runnable } from "../../shared/runnable";
 import { Disposable } from "../../shared/disposable";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import type { Player, System } from "@minecraft/server";
-import { BIOME, COLLECTOR, Collector } from "../collection-constants";
-import { ALL_BIOMES } from "../../data/biomes";
+import { BIOME, COLLECTOR, Collector } from "../../player/collection-constants";
 import { POLLING_INTERVAL_TICKS } from "../../shared/ticks";
+import { BiomeRegistry } from "./biome.registry";
 
 @scoped(Lifecycle.ContainerScoped)
 export class BiomeCollector implements Runnable, Disposable {
@@ -15,7 +15,8 @@ export class BiomeCollector implements Runnable, Disposable {
   constructor(
     @inject(SYSTEM_TOKEN) private readonly system: System,
     @inject(PLAYER_TOKEN) private readonly player: Player,
-    @inject(COLLECTOR) private readonly collector: Collector
+    @inject(COLLECTOR) private readonly collector: Collector,
+    @inject(BiomeRegistry) private readonly biomeRegistry: BiomeRegistry
   ) {}
 
   run() {
@@ -29,13 +30,15 @@ export class BiomeCollector implements Runnable, Disposable {
   }
 
   tick() {
-    const currentBiome = this.player.dimension.getBiome(this.player.location);
-    if (currentBiome) {
-      const fullBiomeId = currentBiome.id;
-      if (fullBiomeId === this.lastBiome) return;
-
-      this.lastBiome = fullBiomeId;
-      this.collector.collect(BIOME, fullBiomeId, ALL_BIOMES[fullBiomeId].displayName);
+    try {
+      const currentBiome = this.player.dimension.getBiome(this.player.location);
+      const id = currentBiome?.id;
+      if (id && id !== this.lastBiome) {
+        this.lastBiome = id;
+        this.collector.collect(BIOME, id, this.biomeRegistry.formatBiome(id));
+      }
+    } catch {
+      // player is outside of world boundary, ignore
     }
   }
 }

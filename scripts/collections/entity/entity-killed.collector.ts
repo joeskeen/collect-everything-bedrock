@@ -3,15 +3,16 @@ import { Runnable } from "../../shared/runnable";
 import { Disposable } from "../../shared/disposable";
 import { PLAYER_TOKEN, WORLD_TOKEN } from "../../shared/global-tokens";
 import type { EntityDieAfterEvent, Player, World } from "@minecraft/server";
-import { COLLECTOR, Collector, ENTITY } from "../collection-constants";
-import { identifyEntity } from "../../data/entities";
+import { COLLECTOR, Collector, ENTITY } from "../../player/collection-constants";
+import { EntityRegistry } from "./entity.registry";
 
 @scoped(Lifecycle.ContainerScoped)
 export class EntityKilledCollector implements Runnable, Disposable {
   constructor(
     @inject(WORLD_TOKEN) private readonly world: World,
     @inject(PLAYER_TOKEN) private readonly player: Player,
-    @inject(COLLECTOR) private readonly collector: Collector
+    @inject(COLLECTOR) private readonly collector: Collector,
+    @inject(EntityRegistry) private readonly entityRegistry: EntityRegistry
   ) {}
 
   run() {
@@ -29,7 +30,7 @@ export class EntityKilledCollector implements Runnable, Disposable {
     const damagingEntity = damageSource.damagingEntity;
     if (!damagingEntity || damagingEntity.id !== this.player.id) return;
 
-    const [entityId, displayName] = identifyEntity(event.deadEntity);
-    this.collector.collect(ENTITY, entityId, displayName);
+    const id = event.deadEntity.typeId;
+    this.collector.collect(ENTITY, id, this.entityRegistry.formatEntity(id));
   };
 }
