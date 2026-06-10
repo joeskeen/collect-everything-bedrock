@@ -12,7 +12,7 @@ import {
   BlockTypes,
   ItemComponentTypes,
   ItemEnchantableComponent,
-  RawMessage,
+  EntityComponentTypes,
 } from "@minecraft/server";
 import { CollectEverythingAddOn } from "./system/collect-everything-add-on";
 import {
@@ -21,6 +21,7 @@ import {
   DIMENSION_TYPES_TOKEN,
   EFFECT_TYPES_TOKEN,
   ENCHANTMENT_TYPES_TOKEN,
+  ENTITY_COMPONENT_TYPES_TOKEN,
   ENTITY_TYPES_TOKEN,
   ITEM_COMPONENT_TYPES_TOKEN,
   ITEM_ENCHANTABLE_COMPONENT_TOKEN,
@@ -46,6 +47,7 @@ container.registerInstance(DIMENSION_TYPES_TOKEN, DimensionTypes);
 container.registerInstance(ENTITY_TYPES_TOKEN, EntityTypes);
 container.registerInstance(BLOCK_TYPES_TOKEN, BlockTypes);
 container.registerInstance(ITEM_COMPONENT_TYPES_TOKEN, ItemComponentTypes);
+container.registerInstance(ENTITY_COMPONENT_TYPES_TOKEN, EntityComponentTypes);
 container.registerInstance(ITEM_ENCHANTABLE_COMPONENT_TOKEN, ItemEnchantableComponent);
 const logger = container.resolve(Logger);
 

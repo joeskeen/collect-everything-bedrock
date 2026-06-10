@@ -1,7 +1,8 @@
+type LogLevels = "log" | "warn" | "error";
 const logSettingsValue = {
-  levels: ["log", "warn", "error"] as const,
-  logToConsole: true,
-  logToChat: true,
+  levels: [] as LogLevels[],
+  logToConsole: false,
+  logToChat: false,
 };
 export interface LogSettings {
   (): typeof logSettingsValue;

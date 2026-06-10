@@ -48,7 +48,7 @@ export class EnchantmentCollector implements Runnable, Disposable {
       if (!enchantComponent) return [];
 
       const enchantments = enchantComponent.getEnchantments();
-      return enchantments.map((e) => `${e.type.id}:${e.level}`);
+      return enchantments.map((e) => e.type.id);
     } catch {
       return [];
     }

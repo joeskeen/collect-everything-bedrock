@@ -29,7 +29,7 @@ export class EffectCollector implements Runnable, Disposable {
   }
 
   private collectEffect(effect: Effect) {
-    const effectId = `${effect.typeId}:${effect.amplifier}`;
+    const effectId = effect.typeId;
     if (this.activeEffects.has(effectId)) return;
 
     this.activeEffects.add(effectId);

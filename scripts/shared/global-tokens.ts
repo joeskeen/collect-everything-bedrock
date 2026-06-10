@@ -11,6 +11,7 @@ import type {
   Player,
   System,
   World,
+  EntityComponentTypes,
 } from "@minecraft/server";
 import { InjectionToken } from "tsyringe";
 
@@ -39,6 +40,9 @@ export const ENTITY_TYPES_TOKEN: InjectionToken<typeof EntityTypes> = Symbol(
 );
 export const ITEM_COMPONENT_TYPES_TOKEN: InjectionToken<typeof ItemComponentTypes> = Symbol(
   "ItemComponentTypes from @minecraft/server"
+);
+export const ENTITY_COMPONENT_TYPES_TOKEN: InjectionToken<typeof EntityComponentTypes> = Symbol(
+  "EntityComponentTypes from @minecraft/server"
 );
 export const ITEM_ENCHANTABLE_COMPONENT_TOKEN: InjectionToken<typeof ItemEnchantableComponent> = Symbol(
   "ItemEnchantableComponent from @minecraft/server"
