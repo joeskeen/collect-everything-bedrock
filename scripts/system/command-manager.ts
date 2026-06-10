@@ -11,6 +11,7 @@ import { playerStatsCommand } from "../player/player-commands/stats.command";
 import { playerSessionCommand } from "../player/player-commands/session.command";
 import { playerCollectedCommand } from "../player/player-commands/collected.command";
 import { playerUncollectedCommand } from "../player/player-commands/uncollected.command";
+import { playerAllCommand } from "../player/player-commands/all.command";
 import type { CustomCommandOrigin, CustomCommandResult, Entity, Player, StartupEvent, System } from "@minecraft/server";
 import { SYSTEM_TOKEN } from "../shared/global-tokens";
 import { Disposable } from "../shared/disposable";
@@ -27,6 +28,7 @@ export function isPlayer(entity?: Entity): entity is Player {
   { token: ADD_ON_COMMANDS_TOKEN, useValue: playerSessionCommand },
   { token: ADD_ON_COMMANDS_TOKEN, useValue: playerCollectedCommand },
   { token: ADD_ON_COMMANDS_TOKEN, useValue: playerUncollectedCommand },
+  { token: ADD_ON_COMMANDS_TOKEN, useValue: playerAllCommand },
 ])
 @singleton()
 export class CommandManager implements Disposable {
@@ -41,12 +43,12 @@ export class CommandManager implements Disposable {
     this.logger.log("registering commands...", JSON.stringify(this.commands));
     for (let command of this.commands) {
       this.logger.log(`registering command ${command.name}...`);
-      event.customCommandRegistry.registerCommand(command, (origin) => this.onCommand(origin, command));
+      event.customCommandRegistry.registerCommand(command, (origin, ...args) => this.onCommand(origin, command, args));
     }
     this.logger.log("all commands registered");
   }
 
-  onCommand(origin: CustomCommandOrigin, command: AddOnCommand<CommandHandler>): CustomCommandResult {
+  onCommand(origin: CustomCommandOrigin, command: AddOnCommand<CommandHandler>, args: any[]): CustomCommandResult {
     const commandScope = command.permissionLevel;
     const source = origin.sourceEntity;
 
@@ -67,7 +69,7 @@ export class CommandManager implements Disposable {
 
     try {
       const handler = scopedContainer.resolve(command.handlerClass as any) as CommandHandler;
-      return handler.handleCommand(origin);
+      return handler.handleCommand(origin, args);
     } catch (err) {
       return {
         message: `Error while executing command ${command.name} in scope '${resolvedScope}': ${err} ${(err as Error).stack}`,

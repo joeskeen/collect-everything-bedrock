@@ -1,6 +1,7 @@
 import { inject, singleton } from "tsyringe";
 import { ENTITY_TYPES_TOKEN } from "../../shared/global-tokens";
 import type { EntityTypes, RawMessage } from "@minecraft/server";
+import { EXCLUDED_ENTITIES } from "./entity-exclusions";
 
 @singleton()
 export class EntityRegistry {
@@ -11,7 +12,10 @@ export class EntityRegistry {
 
   private ensureInitialized() {
     if (!this._initialized) {
-      this.entities = this.entityTypes.getAll().map((e) => e.id);
+      this.entities = this.entityTypes
+        .getAll()
+        .map((e) => e.id)
+        .filter((e) => !EXCLUDED_ENTITIES.includes(e));
       this._initialized = true;
     }
   }
