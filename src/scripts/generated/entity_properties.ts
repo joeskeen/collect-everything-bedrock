@@ -1,0 +1,38 @@
+// Auto-generated from curated/entity_properties.json - DO NOT EDIT
+export const ENTITY_PROPERTIES = {
+  "description": "Entities that have collectible variant properties. Sources: Microsoft Learn and testing.",
+  "properties": {
+    "minecraft:color": {
+      "description": "PaletteColor (0-15) for entity main color. Works on vanilla entities with predefined color values.",
+      "entities": [
+        "minecraft:sheep",
+        "minecraft:llama",
+        "minecraft:shulker"
+      ],
+      "valueType": "PaletteColor"
+    },
+    "minecraft:color2": {
+      "description": "PaletteColor (0-15) for entity secondary color. Only tropical fish.",
+      "entities": [
+        "minecraft:tropicalfish"
+      ],
+      "valueType": "PaletteColor"
+    },
+    "minecraft:climate_variant": {
+      "description": "Farm animal climate variant set at spawn based on biome tags.",
+      "entities": [
+        "minecraft:cow",
+        "minecraft:pig",
+        "minecraft:chicken",
+        "minecraft:rabbit",
+        "minecraft:llama",
+        "minecraft:wolf"
+      ],
+      "values": [
+        "temperate",
+        "warm",
+        "cold"
+      ]
+    }
+  }
+} as const;

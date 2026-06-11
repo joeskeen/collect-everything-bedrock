@@ -1,0 +1,357 @@
+{
+  "format_version": 1,
+  "registry_name": "biomes",
+  "total_count": 70,
+  "entries": [
+    {
+      "id": 27,
+      "name": "minecraft:bamboo_jungle",
+      "display_name": "Bamboo Jungle"
+    },
+    {
+      "id": 30,
+      "name": "minecraft:bamboo_jungle_hills",
+      "display_name": "Bamboo Jungle Hills"
+    },
+    {
+      "id": 69,
+      "name": "minecraft:basalt_deltas",
+      "display_name": "Basalt Deltas"
+    },
+    {
+      "id": 21,
+      "name": "minecraft:beach",
+      "display_name": "Beach"
+    },
+    {
+      "id": 34,
+      "name": "minecraft:birch_forest",
+      "display_name": "Birch Forest"
+    },
+    {
+      "id": 35,
+      "name": "minecraft:birch_forest_hills",
+      "display_name": "Birch Forest Hills"
+    },
+    {
+      "id": 70,
+      "name": "minecraft:cherry_grove",
+      "display_name": "Cherry Grove"
+    },
+    {
+      "id": 33,
+      "name": "minecraft:cold_beach",
+      "display_name": "Cold Beach"
+    },
+    {
+      "id": 62,
+      "name": "minecraft:cold_ocean",
+      "display_name": "Cold Ocean"
+    },
+    {
+      "id": 37,
+      "name": "minecraft:cold_taiga",
+      "display_name": "Cold Taiga"
+    },
+    {
+      "id": 39,
+      "name": "minecraft:cold_taiga_hills",
+      "display_name": "Cold Taiga Hills"
+    },
+    {
+      "id": 38,
+      "name": "minecraft:cold_taiga_mutated",
+      "display_name": "Cold Taiga Mutated"
+    },
+    {
+      "id": 67,
+      "name": "minecraft:crimson_forest",
+      "display_name": "Crimson Forest"
+    },
+    {
+      "id": 63,
+      "name": "minecraft:deep_cold_ocean",
+      "display_name": "Deep Cold Ocean"
+    },
+    {
+      "id": 65,
+      "name": "minecraft:deep_frozen_ocean",
+      "display_name": "Deep Frozen Ocean"
+    },
+    {
+      "id": 61,
+      "name": "minecraft:deep_lukewarm_ocean",
+      "display_name": "Deep Lukewarm Ocean"
+    },
+    {
+      "id": 57,
+      "name": "minecraft:deep_ocean",
+      "display_name": "Deep Ocean"
+    },
+    {
+      "id": 59,
+      "name": "minecraft:deep_warm_ocean",
+      "display_name": "Deep Warm Ocean"
+    },
+    {
+      "id": 3,
+      "name": "minecraft:desert",
+      "display_name": "Desert"
+    },
+    {
+      "id": 22,
+      "name": "minecraft:desert_hills",
+      "display_name": "Desert Hills"
+    },
+    {
+      "id": 4,
+      "name": "minecraft:extreme_hills",
+      "display_name": "Extreme Hills"
+    },
+    {
+      "id": 25,
+      "name": "minecraft:extreme_hills_edge",
+      "display_name": "Extreme Hills Edge"
+    },
+    {
+      "id": 47,
+      "name": "minecraft:extreme_hills_mutated",
+      "display_name": "Extreme Hills Mutated"
+    },
+    {
+      "id": 45,
+      "name": "minecraft:extreme_hills_plus_trees",
+      "display_name": "Extreme Hills Plus Trees"
+    },
+    {
+      "id": 46,
+      "name": "minecraft:extreme_hills_plus_trees_mutated",
+      "display_name": "Extreme Hills Plus Trees Mutated"
+    },
+    {
+      "id": 6,
+      "name": "minecraft:flower_forest",
+      "display_name": "Flower Forest"
+    },
+    {
+      "id": 5,
+      "name": "minecraft:forest",
+      "display_name": "Forest"
+    },
+    {
+      "id": 23,
+      "name": "minecraft:forest_hills",
+      "display_name": "Forest Hills"
+    },
+    {
+      "id": 64,
+      "name": "minecraft:frozen_ocean",
+      "display_name": "Frozen Ocean"
+    },
+    {
+      "id": 15,
+      "name": "minecraft:frozen_river",
+      "display_name": "Frozen River"
+    },
+    {
+      "id": 13,
+      "name": "minecraft:hell",
+      "display_name": "Hell"
+    },
+    {
+      "id": 18,
+      "name": "minecraft:ice_mountains",
+      "display_name": "Ice Mountains"
+    },
+    {
+      "id": 16,
+      "name": "minecraft:ice_plains",
+      "display_name": "Ice Plains"
+    },
+    {
+      "id": 17,
+      "name": "minecraft:ice_plains_spikes",
+      "display_name": "Ice Plains Spikes"
+    },
+    {
+      "id": 26,
+      "name": "minecraft:jungle",
+      "display_name": "Jungle"
+    },
+    {
+      "id": 31,
+      "name": "minecraft:jungle_edge",
+      "display_name": "Jungle Edge"
+    },
+    {
+      "id": 29,
+      "name": "minecraft:jungle_hills",
+      "display_name": "Jungle Hills"
+    },
+    {
+      "id": 28,
+      "name": "minecraft:jungle_mutated",
+      "display_name": "Jungle Mutated"
+    },
+    {
+      "id": 60,
+      "name": "minecraft:lukewarm_ocean",
+      "display_name": "Lukewarm Ocean"
+    },
+    {
+      "id": 11,
+      "name": "minecraft:mangrove_swamp",
+      "display_name": "Mangrove Swamp"
+    },
+    {
+      "id": 41,
+      "name": "minecraft:mega_spruce_taiga",
+      "display_name": "Mega Spruce Taiga"
+    },
+    {
+      "id": 43,
+      "name": "minecraft:mega_spruce_taiga_mutated",
+      "display_name": "Mega Spruce Taiga Mutated"
+    },
+    {
+      "id": 40,
+      "name": "minecraft:mega_taiga",
+      "display_name": "Mega Taiga"
+    },
+    {
+      "id": 44,
+      "name": "minecraft:mega_taiga_hills",
+      "display_name": "Mega Taiga Hills"
+    },
+    {
+      "id": 42,
+      "name": "minecraft:mega_taiga_mutated",
+      "display_name": "Mega Taiga Mutated"
+    },
+    {
+      "id": 51,
+      "name": "minecraft:mesa",
+      "display_name": "Mesa"
+    },
+    {
+      "id": 52,
+      "name": "minecraft:mesa_bryce",
+      "display_name": "Mesa Bryce"
+    },
+    {
+      "id": 53,
+      "name": "minecraft:mesa_mutated",
+      "display_name": "Mesa Mutated"
+    },
+    {
+      "id": 55,
+      "name": "minecraft:mesa_plateau",
+      "display_name": "Mesa Plateau"
+    },
+    {
+      "id": 54,
+      "name": "minecraft:mesa_plateau_stone",
+      "display_name": "Mesa Plateau Stone"
+    },
+    {
+      "id": 19,
+      "name": "minecraft:mushroom_island",
+      "display_name": "Mushroom Island"
+    },
+    {
+      "id": 20,
+      "name": "minecraft:mushroom_island_shore",
+      "display_name": "Mushroom Island Shore"
+    },
+    {
+      "id": 56,
+      "name": "minecraft:ocean",
+      "display_name": "Ocean"
+    },
+    {
+      "id": 1,
+      "name": "minecraft:plains",
+      "display_name": "Plains"
+    },
+    {
+      "id": 12,
+      "name": "minecraft:river",
+      "display_name": "River"
+    },
+    {
+      "id": 36,
+      "name": "minecraft:roofed_forest",
+      "display_name": "Roofed Forest"
+    },
+    {
+      "id": 48,
+      "name": "minecraft:savanna",
+      "display_name": "Savanna"
+    },
+    {
+      "id": 50,
+      "name": "minecraft:savanna_mutated",
+      "display_name": "Savanna Mutated"
+    },
+    {
+      "id": 49,
+      "name": "minecraft:savanna_plateau",
+      "display_name": "Savanna Plateau"
+    },
+    {
+      "id": 68,
+      "name": "minecraft:soulsand_valley",
+      "display_name": "Soulsand Valley"
+    },
+    {
+      "id": 32,
+      "name": "minecraft:stone_beach",
+      "display_name": "Stone Beach"
+    },
+    {
+      "id": 2,
+      "name": "minecraft:sunflower_plains",
+      "display_name": "Sunflower Plains"
+    },
+    {
+      "id": 9,
+      "name": "minecraft:swampland",
+      "display_name": "Swampland"
+    },
+    {
+      "id": 10,
+      "name": "minecraft:swampland_mutated",
+      "display_name": "Swampland Mutated"
+    },
+    {
+      "id": 7,
+      "name": "minecraft:taiga",
+      "display_name": "Taiga"
+    },
+    {
+      "id": 24,
+      "name": "minecraft:taiga_hills",
+      "display_name": "Taiga Hills"
+    },
+    {
+      "id": 8,
+      "name": "minecraft:taiga_mutated",
+      "display_name": "Taiga Mutated"
+    },
+    {
+      "id": 14,
+      "name": "minecraft:the_end",
+      "display_name": "The End"
+    },
+    {
+      "id": 58,
+      "name": "minecraft:warm_ocean",
+      "display_name": "Warm Ocean"
+    },
+    {
+      "id": 66,
+      "name": "minecraft:warped_forest",
+      "display_name": "Warped Forest"
+    }
+  ]
+}

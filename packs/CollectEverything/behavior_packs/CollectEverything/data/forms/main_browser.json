@@ -1,0 +1,44 @@
+{
+  "form_title": "Collect Everything — Browser",
+  "body": "Track your exploration progress!\n\nBlocks: 1198\nItems: 1504\nEntities: 178\nBiomes: 70",
+  "buttons": [
+    {
+      "text": "Blocks",
+      "data": "blocks"
+    },
+    {
+      "text": "Items",
+      "data": "items"
+    },
+    {
+      "text": "Entities",
+      "data": "entities"
+    },
+    {
+      "text": "Biomes",
+      "data": "biomes"
+    },
+    {
+      "text": "Settings",
+      "data": "settings"
+    }
+  ],
+  "view_buttons": [
+    {
+      "text": "Alphabetical",
+      "data": "alpha"
+    },
+    {
+      "text": "Grouped",
+      "data": "grouped"
+    },
+    {
+      "text": "Completed First",
+      "data": "completed"
+    },
+    {
+      "text": "Incomplete First",
+      "data": "incomplete"
+    }
+  ]
+}

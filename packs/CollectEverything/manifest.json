@@ -1,0 +1,40 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Collect Everything!",
+    "description": "Add-on containing both behavior and resource packs",
+    "uuid": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+    "version": "0.1.3",
+    "min_engine_version": [
+      1,
+      21,
+      114
+    ]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
+      "version": "0.1.3"
+    },
+    {
+      "type": "resources",
+      "uuid": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+      "version": [
+        0,
+        1,
+        3
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+      "version": [
+        0,
+        1,
+        3
+      ]
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "form_title": "Items Collection (0/1504)",
+  "view_type": "Incomplete First",
+  "buttons": [
+    {
+      "text": "✘ Acacia Boat",
+      "data": "minecraft:acacia_boat"
+    },
+    {
+      "text": "✘ Acacia Button",
+      "data": "minecraft:acacia_button"
+    },
+    {
+      "text": "✘ Acacia Door",
+      "data": "minecraft:acacia_door"
+    },
+    {
+      "text": "✘ Acacia Double Slab",
+      "data": "minecraft:acacia_double_slab"
+    },
+    {
+      "text": "✘ Acacia Fence",
+      "data": "minecraft:acacia_fence"
+    },
+    {
+      "text": "✘ Acacia Fence Gate",
+      "data": "minecraft:acacia_fence_gate"
+    },
+    {
+      "text": "✘ Acacia Hanging Sign",
+      "data": "minecraft:acacia_hanging_sign"
+    },
+    {
+      "text": "✘ Acacia Leaves",
+      "data": "minecraft:acacia_leaves"
+    },
+    {
+      "text": "✘ Acacia Log",
+      "data": "minecraft:acacia_log"
+    },
+    {
+      "text": "✘ Acacia Planks",
+      "data": "minecraft:acacia_planks"
+    },
+    {
+      "text": "✘ Acacia Pressure Plate",
+      "data": "minecraft:acacia_pressure_plate"
+    },
+    {
+      "text": "✘ Acacia Sapling",
+      "data": "minecraft:acacia_sapling"
+    },
+    {
+      "text": "✘ Acacia Shelf",
+      "data": "minecraft:acacia_shelf"
+    },
+    {
+      "text": "✘ Acacia Sign",
+      "data": "minecraft:acacia_sign"
+    },
+    {
+      "text": "✘ Acacia Slab",
+      "data": "minecraft:acacia_slab"
+    },
+    {
+      "text": "✘ Acacia Stairs",
+      "data": "minecraft:acacia_stairs"
+    },
+    {
+      "text": "✘ Acacia Standing Sign",
+      "data": "minecraft:acacia_standing_sign"
+    },
+    {
+      "text": "✘ Acacia Trapdoor",
+      "data": "minecraft:acacia_trapdoor"
+    },
+    {
+      "text": "✘ Acacia Wall Sign",
+      "data": "minecraft:acacia_wall_sign"
+    },
+    {
+      "text": "✘ Acacia Wood",
+      "data": "minecraft:acacia_wood"
+    },
+    {
+      "text": "✘ Activator Rail",
+      "data": "minecraft:activator_rail"
+    },
+    {
+      "text": "✘ Allium",
+      "data": "minecraft:allium"
+    },
+    {
+      "text": "✘ Allow",
+      "data": "minecraft:allow"
+    },
+    {
+      "text": "✘ Amethyst Block",
+      "data": "minecraft:amethyst_block"
+    },
+    {
+      "text": "✘ Amethyst Cluster",
+      "data": "minecraft:amethyst_cluster"
+    },
+    {
+      "text": "✘ Amethyst Shard",
+      "data": "minecraft:amethyst_shard"
+    },
+    {
+      "text": "✘ Ancient Debris",
+      "data": "minecraft:ancient_debris"
+    },
+    {
+      "text": "✘ Andesite",
+      "data": "minecraft:andesite"
+    },
+    {
+      "text": "✘ Andesite Double Slab",
+      "data": "minecraft:andesite_double_slab"
+    },
+    {
+      "text": "✘ Andesite Slab",
+      "data": "minecraft:andesite_slab"
+    }
+  ],
+  "has_more": true
+}

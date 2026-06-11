@@ -1,0 +1,127 @@
+{
+  "form_title": "Entities Collection (0/178)",
+  "view_type": "Grouped",
+  "buttons": [
+    {
+      "text": "✘ Agent",
+      "data": "minecraft:agent"
+    },
+    {
+      "text": "✘ Allay",
+      "data": "minecraft:allay"
+    },
+    {
+      "text": "✘ Armadillo",
+      "data": "minecraft:armadillo"
+    },
+    {
+      "text": "✘ Armor Stand",
+      "data": "minecraft:armor_stand"
+    },
+    {
+      "text": "✘ Armor Stand",
+      "data": "minecraft:armor_stand"
+    },
+    {
+      "text": "✘ Arrow",
+      "data": "minecraft:arrow"
+    },
+    {
+      "text": "✘ Axolotl",
+      "data": "minecraft:axolotl"
+    },
+    {
+      "text": "✘ Bat",
+      "data": "minecraft:bat"
+    },
+    {
+      "text": "✘ Bed",
+      "data": "minecraft:bed"
+    },
+    {
+      "text": "✘ Bee",
+      "data": "minecraft:bee"
+    },
+    {
+      "text": "✘ Blaze",
+      "data": "minecraft:blaze"
+    },
+    {
+      "text": "✘ Blaze",
+      "data": "minecraft:blaze"
+    },
+    {
+      "text": "✘ Boat",
+      "data": "minecraft:boat"
+    },
+    {
+      "text": "✘ Bogged",
+      "data": "minecraft:bogged"
+    },
+    {
+      "text": "✘ Breeze",
+      "data": "minecraft:breeze"
+    },
+    {
+      "text": "✘ Breeze Wind Charge Projectile",
+      "data": "minecraft:breeze_wind_charge_projectile"
+    },
+    {
+      "text": "✘ Camel",
+      "data": "minecraft:camel"
+    },
+    {
+      "text": "✘ Camel Husk",
+      "data": "minecraft:camel_husk"
+    },
+    {
+      "text": "✘ Cat",
+      "data": "minecraft:cat"
+    },
+    {
+      "text": "✘ Cave Spider",
+      "data": "minecraft:cave_spider"
+    },
+    {
+      "text": "✘ Cave Spider",
+      "data": "minecraft:cave_spider"
+    },
+    {
+      "text": "✘ Chest Boat",
+      "data": "minecraft:chest_boat"
+    },
+    {
+      "text": "✘ Chest Minecart",
+      "data": "minecraft:chest_minecart"
+    },
+    {
+      "text": "✘ Chest Minecart",
+      "data": "minecraft:chest_minecart"
+    },
+    {
+      "text": "✘ Chicken",
+      "data": "minecraft:chicken"
+    },
+    {
+      "text": "✘ Chicken",
+      "data": "minecraft:chicken"
+    },
+    {
+      "text": "✘ Cod",
+      "data": "minecraft:cod"
+    },
+    {
+      "text": "✘ Command Block Minecart",
+      "data": "minecraft:command_block_minecart"
+    },
+    {
+      "text": "✘ Command Block Minecart",
+      "data": "minecraft:command_block_minecart"
+    },
+    {
+      "text": "✘ Copper Golem",
+      "data": "minecraft:copper_golem"
+    }
+  ],
+  "has_more": true
+}

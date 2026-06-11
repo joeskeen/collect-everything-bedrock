@@ -1,0 +1,17 @@
+{
+    "en_us.lang": {
+        "collect_everything.title": "Collect Everything",
+        "collect_everything.blocks.collected": "Block Collected",
+        "collect_everything.entities.collected": "Entity Discovered",
+        "collect_everything.biomes.discovered": "Biome Discovered",
+        "collect_everything.hud.blocks": "Blocks",
+        "collect_everything.hud.entities": "Entities",
+        "collect_everything.hud.biomes": "Biomes",
+        "collect_everything.settings.title": "Collection Settings",
+        "collect_everything.settings.horse_variants": "Track Horse Variants",
+        "collect_everything.settings.fish_variants": "Track Fish Variants",
+        "collect_everything.settings.by_trade": "Collect by Trading",
+        "collect_everything.settings.by_naming": "Collect by Naming",
+        "collect_everything.settings.by_vanquish": "Collect by Killing"
+    }
+}
