@@ -1,6 +1,6 @@
 import { inject, singleton } from "tsyringe";
 import { ENCHANTMENT_TYPES_TOKEN } from "../../shared/global-tokens";
-import type { EnchantmentTypes, RawMessage } from "@minecraft/server";
+import type { EnchantmentTypes, ItemComponentTypes, ItemEnchantableComponent, RawMessage } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
 
 @singleton()
@@ -15,6 +15,13 @@ export class EnchantmentRegistry {
       this.enchantments = this.enchantmentTypes.getAll().map((e) => e.id);
       this._initialized = true;
     }
+  }
+
+  identify(enchantComponent?: ItemEnchantableComponent) {
+    if (!enchantComponent) {
+      return [];
+    }
+    return enchantComponent.getEnchantments().flatMap((e) => [e.type.id, `${e.type.id}+${e.level}`]);
   }
 
   formatEnchantment(enchantmentId: string): RawMessage {

@@ -1,7 +1,8 @@
 import { inject, singleton } from "tsyringe";
 import { EFFECT_TYPES_TOKEN } from "../../shared/global-tokens";
-import type { EffectTypes, RawMessage } from "@minecraft/server";
+import type { Effect, EffectTypes, RawMessage } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
+import { EXCLUDED_EFFECTS } from "./effect-exclusions";
 
 @singleton()
 export class EffectRegistry {
@@ -12,9 +13,16 @@ export class EffectRegistry {
 
   private ensureInitialized() {
     if (!this._initialized) {
-      this.effects = this.effectTypes.getAll().map((e) => e.getName());
+      this.effects = this.effectTypes
+        .getAll()
+        .map((e) => e.getName())
+        .filter((e) => !EXCLUDED_EFFECTS.includes(e));
       this._initialized = true;
     }
+  }
+
+  identify(effect: Effect) {
+    return [effect.typeId, `${effect.typeId}+${effect.amplifier}`];
   }
 
   formatEffect(effectId: string): RawMessage {
