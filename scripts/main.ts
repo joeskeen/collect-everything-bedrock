@@ -33,9 +33,9 @@ import { getLogSettings, LOG_SETTINGS_TOKEN } from "./shared/logging/log-setting
 import { Logger } from "./shared/logging/logger";
 import { CRAFTING_TABLE } from "./shared/emoji";
 import { AQUA } from "./shared/format-codes";
-import { registerDebugProviders } from "./debug/index";
+// import { registerDebugProviders } from "./debug/index";
 
-registerDebugProviders();
+// registerDebugProviders();
 container.registerInstance(LOG_SETTINGS_TOKEN, getLogSettings);
 container.registerInstance(SYSTEM_TOKEN, system);
 container.registerInstance(WORLD_TOKEN, world);
