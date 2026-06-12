@@ -17,6 +17,7 @@ import { EntityNamedCollector } from "../collections/entity/entity-named.collect
 import { EntityLeashedCollector } from "../collections/entity/entity-leashed.collector";
 import { EntityTamedCollector } from "../collections/entity/entity-tamed.collector";
 import { ItemCollector } from "../collections/item/item.collector";
+import { UnobtainableCollector } from "../collections/unobtainable/unobtainable.collector";
 import { PlayerNotifier } from "./player-notifier";
 import { SOLID_STAR } from "../shared/emoji";
 import { BOLD } from "../shared/format-codes";
@@ -38,6 +39,7 @@ const COLLECTION_KEY = `${NAMESPACE}:collection`;
   { token: COLLECTORS_TOKEN, useClass: EntityLeashedCollector },
   { token: COLLECTORS_TOKEN, useClass: EntityTamedCollector },
   { token: COLLECTORS_TOKEN, useClass: ItemCollector },
+  { token: COLLECTORS_TOKEN, useClass: UnobtainableCollector },
 ])
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerCollection {

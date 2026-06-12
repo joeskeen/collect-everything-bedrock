@@ -7,7 +7,7 @@ import {
 } from "../../system/add-on-command";
 import type { Player, RawMessage, CustomCommandResult, System, CustomCommandOrigin } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
-import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME } from "../collection-constants";
+import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME, UNOBTAINABLE } from "../collection-constants";
 import { GRAY, MINECOIN_GOLD, RESET } from "../../shared/format-codes";
 import { capitalCase } from "change-case";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
@@ -16,6 +16,7 @@ import { EntityRegistry } from "../../collections/entity/entity.registry";
 import { ItemRegistry } from "../../collections/item/item.registry";
 import { EffectRegistry } from "../../collections/effect/effect.registry";
 import { EnchantmentRegistry } from "../../collections/enchantment/enchantment.registry";
+import { UnobtainableRegistry } from "../../collections/unobtainable/unobtainable.registry";
 
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerAllCommand implements CommandHandler {
@@ -27,6 +28,7 @@ export class PlayerAllCommand implements CommandHandler {
     @inject(ItemRegistry) private readonly itemRegistry: ItemRegistry,
     @inject(EffectRegistry) private readonly effectRegistry: EffectRegistry,
     @inject(EnchantmentRegistry) private readonly enchantmentRegistry: EnchantmentRegistry,
+    @inject(UnobtainableRegistry) private readonly unobtainableRegistry: UnobtainableRegistry,
     @inject(PLAYER_TOKEN) private readonly player: Player
   ) {}
 
@@ -85,6 +87,16 @@ export class PlayerAllCommand implements CommandHandler {
               .sort()
               .filter((e) => e.includes(filter)),
           format: (k: string) => this.enchantmentRegistry.formatEnchantment(k),
+        },
+        {
+          category: UNOBTAINABLE,
+          isCollected: (k: string) => !!collection[UNOBTAINABLE][k],
+          allEntries: () =>
+            this.unobtainableRegistry
+              .allUnobtainables()
+              .sort()
+              .filter((e) => e.includes(filter)),
+          format: (k: string) => this.unobtainableRegistry.formatUnobtainable(k),
         },
       ];
 

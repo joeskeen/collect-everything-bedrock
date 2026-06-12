@@ -2,7 +2,7 @@ import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
 import type { CustomCommandResult, Player, System } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
-import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME } from "../collection-constants";
+import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME, UNOBTAINABLE } from "../collection-constants";
 import { capitalCase } from "change-case";
 import { percent } from "../../shared/formatting";
 import { GOLD, GRAY, RESET } from "../../shared/format-codes";
@@ -11,6 +11,7 @@ import { EntityRegistry } from "../../collections/entity/entity.registry";
 import { ItemRegistry } from "../../collections/item/item.registry";
 import { EffectRegistry } from "../../collections/effect/effect.registry";
 import { EnchantmentRegistry } from "../../collections/enchantment/enchantment.registry";
+import { UnobtainableRegistry } from "../../collections/unobtainable/unobtainable.registry";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 
 @scoped(Lifecycle.ContainerScoped)
@@ -23,7 +24,8 @@ export class PlayerStatsCommand implements CommandHandler {
     @inject(EntityRegistry) private readonly entityRegistry: EntityRegistry,
     @inject(ItemRegistry) private readonly itemRegistry: ItemRegistry,
     @inject(EffectRegistry) private readonly effectRegistry: EffectRegistry,
-    @inject(EnchantmentRegistry) private readonly enchantmentRegistry: EnchantmentRegistry
+    @inject(EnchantmentRegistry) private readonly enchantmentRegistry: EnchantmentRegistry,
+    @inject(UnobtainableRegistry) private readonly unobtainableRegistry: UnobtainableRegistry
   ) {}
 
   handleCommand(event: any): CustomCommandResult {
@@ -37,6 +39,10 @@ export class PlayerStatsCommand implements CommandHandler {
         {
           category: ENCHANTMENT,
           ...this.enchantmentRegistry.countCollectedEnchantments(Object.keys(collection[ENCHANTMENT] ?? {})),
+        },
+        {
+          category: UNOBTAINABLE,
+          ...this.unobtainableRegistry.countCollectedUnobtainables(Object.keys(collection[UNOBTAINABLE] ?? {})),
         },
       ];
       const totalProgress = {

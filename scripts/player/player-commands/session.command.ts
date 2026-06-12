@@ -2,7 +2,7 @@ import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
 import type { CustomCommandResult, Player, System } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
-import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME } from "../collection-constants";
+import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME, UNOBTAINABLE } from "../collection-constants";
 import { capitalCase } from "change-case";
 import { formatId } from "../../shared/formatting";
 import { GOLD, GRAY, RESET } from "../../shared/format-codes";
@@ -48,6 +48,12 @@ export class PlayerSessionCommand implements CommandHandler {
         {
           category: ENCHANTMENT,
           collected: Object.entries(collection[ENCHANTMENT])
+            .filter(([_what, when]) => when > this.playerSession.startTick)
+            .map(([what]) => what),
+        },
+        {
+          category: UNOBTAINABLE,
+          collected: Object.entries(collection[UNOBTAINABLE])
             .filter(([_what, when]) => when > this.playerSession.startTick)
             .map(([what]) => what),
         },
