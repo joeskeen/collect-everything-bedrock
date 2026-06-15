@@ -1,6 +1,6 @@
 # Collect Everything! - Bedrock Add-On
 
-<img src="./src/bp/pack_icon.png" width="128" height="128" alt="Collect Everything Icon" />
+<img src="./behavior_packs/collect-everything-bedrock/pack_icon.png" width="128" height="128" alt="Collect Everything Icon" />
 
 [![Sponsor this project](https://img.shields.io/github/sponsors/joeskeen?label=Sponsors&logo=githubsponsors)](https://github.com/sponsors/joeskeen)
 
