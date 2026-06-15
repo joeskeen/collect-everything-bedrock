@@ -3,6 +3,7 @@ import { EFFECT_TYPES_TOKEN } from "../../shared/global-tokens";
 import type { Effect, EffectTypes, RawMessage } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
 import { EXCLUDED_EFFECTS } from "./effect-exclusions";
+import { DifficultyLevel } from "../../player/player-settings";
 
 @singleton()
 export class EffectRegistry {
@@ -42,12 +43,12 @@ export class EffectRegistry {
     return { collected: builtInCount, extra: effects.length - builtInCount, total: this.effects.length };
   }
 
-  allEffects() {
+  allEffects(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return [...this.effects];
   }
 
-  effectCount() {
+  effectCount(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return this.effects.length;
   }

@@ -4,6 +4,7 @@ import { PLAYER_SESSION_TOKEN, PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from ".
 import { Logger } from "../shared/logging/logger";
 import { PlayerCollection } from "../player/player-collection";
 import { PlayerNotifier } from "../player/player-notifier";
+import { PlayerSettingsService } from "../player/player-settings";
 import { WOOD_SWORD } from "../shared/emoji";
 import { BLUE, BOLD } from "../shared/format-codes";
 import { PLAYER_INITIALIZATION_DELAY_TICKS } from "../shared/ticks";
@@ -53,6 +54,9 @@ export class PlayerManager {
       playerContainer.registerInstance(PLAYER_SESSION_TOKEN, { startTick: this.system.currentTick });
       playerContainer.registerInstance(COLLECTOR, { collect: () => {} } as Collector);
       this.players.set(playerName, playerContainer);
+
+      const settings = playerContainer.resolve(PlayerSettingsService);
+      settings.run();
 
       const notifier = playerContainer.resolve(PlayerNotifier);
       notifier.run();

@@ -20,10 +20,10 @@ import { ItemCollector } from "../collections/item/item.collector";
 import { UnobtainableCollector } from "../collections/unobtainable/unobtainable.collector";
 import { PlayerNotifier } from "./player-notifier";
 import { SOLID_STAR } from "../shared/emoji";
-import { BOLD } from "../shared/format-codes";
+import { BOLD, GRAY, ITALIC } from "../shared/format-codes";
 import { capitalCase } from "change-case";
-import type { Player, RawMessage, System } from "@minecraft/server";
-import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../shared/global-tokens";
+import type { Player, RawMessage, System, World } from "@minecraft/server";
+import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../shared/global-tokens";
 import { CollectionScoreboard } from "../system/scoreboard";
 import { NAMESPACE } from "../shared/constants";
 import { PlayerStorage } from "../shared/storage";
@@ -53,7 +53,8 @@ export class PlayerCollection {
     @inject(PlayerNotifier) private readonly playerNotifier: PlayerNotifier,
     @inject(PLAYER_TOKEN) private readonly player: Player,
     @inject(PlayerStorage) private readonly playerStorage: PlayerStorage,
-    @injectAll(COLLECTORS_TOKEN) private readonly collectors: Runnable[]
+    @injectAll(COLLECTORS_TOKEN) private readonly collectors: Runnable[],
+    @inject(WORLD_TOKEN) private world: World
   ) {
     collector.collect = this.onCollect.bind(this);
   }
@@ -81,6 +82,9 @@ export class PlayerCollection {
       };
       this.logger.log(fullMessage);
       this.playerNotifier.toast(fullMessage);
+      this.world.sendMessage({
+        rawtext: [{ text: `${GRAY}${ITALIC}${this.player.name} collected ` }, formatted],
+      });
 
       this.updateScore();
     } catch (err) {

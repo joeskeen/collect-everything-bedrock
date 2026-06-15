@@ -3,6 +3,7 @@ import { BIOME_TYPES_TOKEN } from "../../shared/global-tokens";
 import type { BiomeTypes, RawMessage } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
 import { BIOME_NAME_OVERRIDES } from "./biome-name-overrides";
+import { DifficultyLevel } from "../../player/player-settings";
 
 @singleton()
 export class BiomeRegistry {
@@ -40,12 +41,12 @@ export class BiomeRegistry {
     return { collected: builtInCount, extra: biomes.length - builtInCount, total: this.biomes.length };
   }
 
-  allBiomes() {
+  allBiomes(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return [...this.biomes];
   }
 
-  biomeCount() {
+  biomeCount(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return this.biomes.length;
   }

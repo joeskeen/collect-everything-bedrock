@@ -11,6 +11,7 @@ import { playerStatsCommand } from "../player/player-commands/stats.command";
 import { playerSessionCommand } from "../player/player-commands/session.command";
 import { playerCollectedCommand } from "../player/player-commands/collected.command";
 import { playerUncollectedCommand } from "../player/player-commands/uncollected.command";
+import { playerSettingsCommand } from "../player/player-commands/settings.command";
 import { playerAllCommand } from "../player/player-commands/all.command";
 import type { CustomCommandOrigin, CustomCommandResult, Entity, Player, StartupEvent, System } from "@minecraft/server";
 import { SYSTEM_TOKEN } from "../shared/global-tokens";
@@ -29,6 +30,7 @@ export function isPlayer(entity?: Entity): entity is Player {
   { token: ADD_ON_COMMANDS_TOKEN, useValue: playerCollectedCommand },
   { token: ADD_ON_COMMANDS_TOKEN, useValue: playerUncollectedCommand },
   { token: ADD_ON_COMMANDS_TOKEN, useValue: playerAllCommand },
+  { token: ADD_ON_COMMANDS_TOKEN, useValue: playerSettingsCommand },
 ])
 @singleton()
 export class CommandManager implements Disposable {

@@ -3,6 +3,7 @@ import { ITEM_COMPONENT_TYPES_TOKEN, ITEM_TYPES_TOKEN } from "../../shared/globa
 import type { ItemComponentTypes, ItemStack, ItemTypes, RawMessage } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
 import { EXCLUDED_ITEMS } from "./item-exclusions";
+import { DifficultyLevel } from "../../player/player-settings";
 
 @singleton()
 export class ItemRegistry {
@@ -68,12 +69,12 @@ export class ItemRegistry {
     };
   }
 
-  allItems() {
+  allItems(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return [...this.items];
   }
 
-  itemCount() {
+  itemCount(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return this.items.length;
   }

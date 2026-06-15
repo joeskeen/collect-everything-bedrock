@@ -13,6 +13,7 @@ import type {
   World,
   EntityComponentTypes,
 } from "@minecraft/server";
+import type { ModalFormData } from "@minecraft/server-ui";
 import { InjectionToken } from "tsyringe";
 
 export const SYSTEM_TOKEN: InjectionToken<System> = Symbol("global @minecraft/server `system`");
@@ -48,3 +49,6 @@ export const ITEM_ENCHANTABLE_COMPONENT_TOKEN: InjectionToken<typeof ItemEnchant
   "ItemEnchantableComponent from @minecraft/server"
 );
 export const BLOCK_TYPES_TOKEN: InjectionToken<typeof BlockTypes> = Symbol("BlockTypes class from @minecraft/server");
+
+export type CreateFormFn = () => ModalFormData;
+export const CREATE_FORM_TOKEN: InjectionToken<CreateFormFn> = Symbol("modal form creation function");

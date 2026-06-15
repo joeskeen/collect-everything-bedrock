@@ -18,6 +18,7 @@ import { CollectEverythingAddOn } from "./system/collect-everything-add-on";
 import {
   BIOME_TYPES_TOKEN,
   BLOCK_TYPES_TOKEN,
+  CREATE_FORM_TOKEN,
   DIMENSION_TYPES_TOKEN,
   EFFECT_TYPES_TOKEN,
   ENCHANTMENT_TYPES_TOKEN,
@@ -33,9 +34,11 @@ import { getLogSettings, LOG_SETTINGS_TOKEN } from "./shared/logging/log-setting
 import { Logger } from "./shared/logging/logger";
 import { CRAFTING_TABLE } from "./shared/emoji";
 import { AQUA } from "./shared/format-codes";
-// import { registerDebugProviders } from "./debug/index";
+import "./debug/index";
+import { ModalFormData } from "@minecraft/server-ui";
 
 // registerDebugProviders();
+container.registerInstance(CREATE_FORM_TOKEN, () => new ModalFormData());
 container.registerInstance(LOG_SETTINGS_TOKEN, getLogSettings);
 container.registerInstance(SYSTEM_TOKEN, system);
 container.registerInstance(WORLD_TOKEN, world);

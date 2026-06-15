@@ -2,6 +2,7 @@ import { inject, singleton } from "tsyringe";
 import { ENCHANTMENT_TYPES_TOKEN } from "../../shared/global-tokens";
 import type { EnchantmentTypes, ItemComponentTypes, ItemEnchantableComponent, RawMessage } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
+import { DifficultyLevel } from "../../player/player-settings";
 
 @singleton()
 export class EnchantmentRegistry {
@@ -41,12 +42,12 @@ export class EnchantmentRegistry {
     return { collected: builtInCount, extra: enchantments.length - builtInCount, total: this.enchantments.length };
   }
 
-  allEnchantments() {
+  allEnchantments(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return [...this.enchantments];
   }
 
-  enchantmentCount() {
+  enchantmentCount(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return this.enchantments.length;
   }

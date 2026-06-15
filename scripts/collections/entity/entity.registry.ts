@@ -4,6 +4,7 @@ import type { Entity, EntityComponentTypes, EntityTypes, RawMessage } from "@min
 import { EXCLUDED_ENTITIES } from "./entity-exclusions";
 import { trimId } from "../../shared/formatting";
 import { capitalCase } from "change-case";
+import { DifficultyLevel } from "../../player/player-settings";
 
 export const CLIMATE_VARIANT_PROPERTY = "minecraft:climate_variant";
 
@@ -114,12 +115,12 @@ export class EntityRegistry {
     return { collected: builtInCount, extra: entities.length - builtInCount, total: this.entities.length };
   }
 
-  allEntities() {
+  allEntities(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return [...this.entities];
   }
 
-  entityTypeCount() {
+  entityTypeCount(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return this.entities.length;
   }
