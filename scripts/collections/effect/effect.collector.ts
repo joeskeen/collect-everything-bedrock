@@ -28,20 +28,21 @@ export class EffectCollector implements Runnable, Disposable {
     this.system.clearRun(this.intervalId);
   }
 
-  private collectEffect(effect: Effect) {
-    const effectId = effect.typeId;
-    if (this.activeEffects.has(effectId)) return;
-
-    this.activeEffects.add(effectId);
-    this.collector.collect(EFFECT, effectId, this.effectRegistry.formatEffect(effectId));
-  }
-
   private readonly checkEffects = () => {
     try {
       const effects = this.player.getEffects();
+      const resolvedIds = [];
       for (const effect of effects) {
-        this.collectEffect(effect);
+        const ids = this.effectRegistry.identify(effect);
+        for (const id of ids) {
+          resolvedIds.push(id);
+          if (this.activeEffects.has(id)) continue;
+
+          this.activeEffects.add(id);
+          this.collector.collect(EFFECT, id, this.effectRegistry.formatEffect(id));
+        }
       }
+      this.activeEffects = new Set(resolvedIds);
     } catch {}
   };
 }

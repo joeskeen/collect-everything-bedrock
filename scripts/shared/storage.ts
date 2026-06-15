@@ -7,9 +7,7 @@ export abstract class StorageBase {
 
   get<T>(key: string): T | undefined {
     const value = this.storageSource.getDynamicProperty(key);
-    console.log(key, typeof value);
     if (value !== undefined && typeof value === "string") {
-      console.log("parsing...");
       return JSON.parse(value) as T;
     }
     return value as T | undefined;

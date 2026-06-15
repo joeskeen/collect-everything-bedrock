@@ -42,25 +42,13 @@ export class EnchantmentCollector implements Runnable, Disposable {
     this.unsubscribe();
   }
 
-  private getEnchantments(itemStack: ItemStack): string[] {
-    try {
-      const enchantComponent = itemStack.getComponent(this.itemComponentTypes.Enchantable);
-      if (!enchantComponent) return [];
-
-      const enchantments = enchantComponent.getEnchantments();
-      return enchantments.map((e) => e.type.id);
-    } catch {
-      return [];
-    }
-  }
-
   private readonly onPlayerInventoryItemChange = (event: PlayerInventoryItemChangeAfterEvent) => {
     if (event.player.id !== this.player.id) return;
 
     const newItem = event.itemStack;
     if (!newItem) return;
 
-    const enchantments = this.getEnchantments(newItem);
+    const enchantments = this.enchantmentRegistry.identify(newItem.getComponent(this.itemComponentTypes.Enchantable));
     for (const enchantmentId of enchantments) {
       this.collector.collect(ENCHANTMENT, enchantmentId, this.enchantmentRegistry.formatEnchantment(enchantmentId));
     }

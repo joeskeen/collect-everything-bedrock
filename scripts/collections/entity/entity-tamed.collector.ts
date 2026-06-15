@@ -35,8 +35,8 @@ export class EntityTamedCollector implements Runnable, Disposable {
     }
 
     if (event.target.getComponent(this.entityComponentTypes.IsTamed)) {
-      const id = event.target.typeId;
-      this.collector.collect(ENTITY, id, this.entityRegistry.formatEntity(id));
+      const ids = this.entityRegistry.identifyEntity(event.target);
+      ids.forEach((id) => this.collector.collect(ENTITY, id, this.entityRegistry.formatEntity(id)));
     }
   };
 }

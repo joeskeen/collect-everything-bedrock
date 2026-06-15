@@ -2,7 +2,7 @@ import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
 import type { Player, RawMessage, CustomCommandResult, System } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
-import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME } from "../collection-constants";
+import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME, UNOBTAINABLE } from "../collection-constants";
 import { GOLD, GRAY, RESET } from "../../shared/format-codes";
 import { capitalCase } from "change-case";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
@@ -11,6 +11,7 @@ import { EntityRegistry } from "../../collections/entity/entity.registry";
 import { ItemRegistry } from "../../collections/item/item.registry";
 import { EffectRegistry } from "../../collections/effect/effect.registry";
 import { EnchantmentRegistry } from "../../collections/enchantment/enchantment.registry";
+import { UnobtainableRegistry } from "../../collections/unobtainable/unobtainable.registry";
 
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerCollectedCommand implements CommandHandler {
@@ -22,6 +23,7 @@ export class PlayerCollectedCommand implements CommandHandler {
     @inject(ItemRegistry) private readonly itemRegistry: ItemRegistry,
     @inject(EffectRegistry) private readonly effectRegistry: EffectRegistry,
     @inject(EnchantmentRegistry) private readonly enchantmentRegistry: EnchantmentRegistry,
+    @inject(UnobtainableRegistry) private readonly unobtainableRegistry: UnobtainableRegistry,
     @inject(PLAYER_TOKEN) private readonly player: Player
   ) {}
 
@@ -68,6 +70,14 @@ export class PlayerCollectedCommand implements CommandHandler {
             .filter((k) => collection[ENCHANTMENT][k])
             .sort()
             .map((k) => this.enchantmentRegistry.formatEnchantment(k)),
+        },
+        {
+          category: UNOBTAINABLE,
+          entries: this.unobtainableRegistry
+            .allUnobtainables()
+            .filter((k) => collection[UNOBTAINABLE][k])
+            .sort()
+            .map((k) => this.unobtainableRegistry.formatUnobtainable(k)),
         },
       ];
 

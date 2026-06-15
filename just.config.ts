@@ -76,8 +76,26 @@ task("stamp", () => {
 task("clean-local", cleanTask(DEFAULT_CLEAN_DIRECTORIES));
 task("clean-collateral", cleanCollateralTask(STANDARD_CLEAN_PATHS));
 task("clean", parallel("clean-local", "clean-collateral"));
+task("generateWorldPackManifests", () => {
+  const outputDir = path.resolve(__dirname, "dist/packages");
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
+  const bpManifestPath = path.resolve(__dirname, "behavior_packs", projectName, "manifest.json");
+  const rpManifestPath = path.resolve(__dirname, "resource_packs", projectName, "manifest.json");
+  const bpManifest = JSON.parse(fs.readFileSync(bpManifestPath).toString());
+  const rpManifest = JSON.parse(fs.readFileSync(rpManifestPath).toString());
+
+  const worldBehaviorPacks = [{ pack_id: bpManifest.header.uuid, version: bpManifest.header.version }];
+  const worldResourcePacks = [{ pack_id: rpManifest.header.uuid, version: rpManifest.header.version }];
+
+  fs.writeFileSync(path.join(outputDir, "world_behavior_packs.json"), JSON.stringify(worldBehaviorPacks, null, 2));
+  fs.writeFileSync(path.join(outputDir, "world_resource_packs.json"), JSON.stringify(worldResourcePacks, null, 2));
+  console.log("Generated world_behavior_packs.json and world_resource_packs.json");
+});
 task("copyArtifacts", copyTask(copyTaskOptions));
-task("package", series("clean-collateral", "stamp", "copyArtifacts"));
+task("package", series("clean-collateral", "stamp", "copyArtifacts", "generateWorldPackManifests"));
 task(
   "local-deploy",
   watchTask(
@@ -91,4 +109,4 @@ task(
   )
 );
 task("createMcaddonFile", mcaddonTask(mcaddonTaskOptions));
-task("mcaddon", series("clean-local", "build", "createMcaddonFile"));
+task("mcaddon", series("clean-local", "build", "generateWorldPackManifests", "createMcaddonFile"));

@@ -1,6 +1,6 @@
 import { inject, singleton } from "tsyringe";
-import { ITEM_TYPES_TOKEN } from "../../shared/global-tokens";
-import type { ItemTypes, RawMessage } from "@minecraft/server";
+import { ITEM_COMPONENT_TYPES_TOKEN, ITEM_TYPES_TOKEN } from "../../shared/global-tokens";
+import type { ItemComponentTypes, ItemStack, ItemTypes, RawMessage } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
 import { EXCLUDED_ITEMS } from "./item-exclusions";
 
@@ -11,6 +11,7 @@ export class ItemRegistry {
 
   constructor(
     @inject(ITEM_TYPES_TOKEN) private readonly itemTypes: typeof ItemTypes,
+    @inject(ITEM_COMPONENT_TYPES_TOKEN) private readonly itemComponentTypes: typeof ItemComponentTypes
   ) {}
 
   private ensureInitialized() {
@@ -23,11 +24,31 @@ export class ItemRegistry {
     }
   }
 
-  formatItem(itemId: string): RawMessage {
+  identifyItem(itemStack: ItemStack): string[] {
+    const { Potion } = this.itemComponentTypes;
+    const potionComponent = itemStack.getComponent(Potion);
+    if (potionComponent) {
+      return [
+        itemStack.typeId,
+        `${itemStack.typeId}+${potionComponent.potionDeliveryType.id}`,
+        `${itemStack.typeId}+${potionComponent.potionEffectType.id}`,
+        `${itemStack.typeId}+${potionComponent.potionDeliveryType.id}+${potionComponent.potionEffectType.id}`,
+      ];
+    } else {
+      return [itemStack.typeId];
+    }
+  }
+
+  formatItem(fullItemId: string): RawMessage {
+    const [itemId, ...variants] = fullItemId.split("+");
     const localizationKey = this.itemTypes.get(itemId)?.localizationKey;
-    return localizationKey
-      ? { translate: localizationKey }
-      : { text: formatId(itemId) };
+    const formatted = {
+      rawtext: [localizationKey ? { translate: localizationKey } : { text: formatId(itemId) }],
+    };
+    if (variants.length) {
+      formatted.rawtext.push({ text: ` (${variants.map((id) => formatId(id)).join(", ")})` });
+    }
+    return formatted;
   }
 
   findItemsByKeyword(word: string): string[] {
