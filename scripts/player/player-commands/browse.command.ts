@@ -106,22 +106,20 @@ export class PlayerBrowseCommand implements CommandHandler {
 
   private showForm() {
     const collection = this.playerCollection.getCollection();
-    const chestForm = new CollectionFormData("mega", this.createActionForm).title(
+    const collectionForm = new CollectionFormData(this.createActionForm).title(
       `Collection - ${capitalCase(this.activeCategory)}`
     );
-
-    let slot = 0;
 
     const totalCollected = this.categories.reduce(
       (sum, cat) => sum + cat.collectedCount(Object.keys(collection[cat.key] ?? {})).collected,
       0
     );
     const totalItems = this.categories.reduce((sum, cat) => sum + cat.allIds().length, 0);
-    chestForm.button(slot++, "All", [`${GRAY}${totalCollected}/${totalItems}`], "textures/items/book_normal");
+    collectionForm.button("All", [`${GRAY}${totalCollected}/${totalItems}`], "textures/items/book_normal");
 
     for (const cat of this.categories) {
       const { collected, total } = cat.collectedCount(Object.keys(collection[cat.key] ?? {}));
-      chestForm.button(slot++, cat.label, [`${GRAY}${collected}/${total}`], cat.icon);
+      collectionForm.button(cat.label, [`${GRAY}${collected}/${total}`], cat.icon);
     }
 
     const itemsToShow =
@@ -134,10 +132,10 @@ export class PlayerBrowseCommand implements CommandHandler {
 
     for (const item of itemsToShow) {
       // if (slot >= SLOT_COUNT) break;
-      chestForm.button(slot++, formatId(item[0]), [item[0], String(item[1])], item[0]);
+      collectionForm.button(formatId(item[0]), [item[0], String(item[1])], item[0]);
     }
 
-    chestForm.show(this.player).then((result) => {
+    collectionForm.show(this.player).then((result) => {
       if (result.canceled || result.selection === undefined) return;
       const selection = result.selection;
       if (selection === 0) {

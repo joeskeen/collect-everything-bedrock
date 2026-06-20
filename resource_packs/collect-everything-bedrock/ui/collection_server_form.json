@@ -8,16 +8,24 @@
     "anchor_from": "bottom_left",
     "anchor_to": "bottom_left"
   },
-  "grid_items_136": {
+  "grid_items": {
     "type": "grid",
     "size": [306, "default"],
     "grid_item_template": "collection_ui.inventory_item_panel",
     "collection_name": "form_buttons",
     "grid_rescaling_type": "horizontal",
-    "maximum_grid_items": 340,
+    "maximum_grid_items": 100,
+    // "bindings": [
+    //   {
+    //     "binding_name": "#form_buttons_length",
+    //     "binding_name_override": "#maximum_grid_items",
+    //     "binding_type": "collection",
+    //     "binding_collection_name": "script_grid_collection"
+    //   }
+    // ]
     "layer": 1
   },
-  "collection_ui_template_136": {
+  "collection_ui_template": {
     "type": "panel",
     "size": ["100%c", "100%c"],
     "bindings": [
@@ -62,7 +70,7 @@
                         },
                         {
                           "scroll_view@common.scrolling_panel": {
-                            "$scrolling_content": "collection_ui.grid_items_136",
+                            "$scrolling_content": "collection_ui.grid_items",
                             "$scrolling_pane_size": [313, 134]
                           }
                         }
@@ -83,9 +91,9 @@
     "size": ["100%", "100%"],
     "controls": [
       {
-        "136@collection_ui.collection_ui_template_136": {
+        "@collection_ui.collection_ui_template": {
           "$grid_size": [17, 8],
-          "$condition": "§c§o§l§l§e§c§t§i§o§n§1§3§6"
+          "$condition": "§c§o§l§l§e§c§t§i§o§n"
         }
       }
     ]
