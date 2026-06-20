@@ -15,6 +15,7 @@ import { DDUI, DDUI_TOKEN } from "../../ui/ui.tokens";
 import { CollectionFormData } from "../../shared/forms";
 import { formatId } from "../../shared/formatting";
 import IDS from "../../data/_generated-internalIds.json";
+import { GRAY } from "../../shared/format-codes";
 
 const SLOT_COUNT = 136;
 
@@ -116,11 +117,11 @@ export class PlayerBrowseCommand implements CommandHandler {
       0
     );
     const totalItems = this.categories.reduce((sum, cat) => sum + cat.allIds().length, 0);
-    chestForm.button(slot++, "All", [`§7${totalCollected}/${totalItems}`], "textures/items/book_normal");
+    chestForm.button(slot++, "All", [`${GRAY}${totalCollected}/${totalItems}`], "textures/items/book_normal");
 
     for (const cat of this.categories) {
       const { collected, total } = cat.collectedCount(Object.keys(collection[cat.key] ?? {}));
-      chestForm.button(slot++, cat.label, [`§7${collected}/${total}`], cat.icon);
+      chestForm.button(slot++, cat.label, [`${GRAY}${collected}/${total}`], cat.icon);
     }
 
     const itemsToShow =
@@ -132,7 +133,7 @@ export class PlayerBrowseCommand implements CommandHandler {
         : this.getCategoryItems(this.activeCategory);
 
     for (const item of itemsToShow) {
-      if (slot >= SLOT_COUNT) break;
+      // if (slot >= SLOT_COUNT) break;
       chestForm.button(slot++, formatId(item[0]), [item[0], String(item[1])], item[0]);
     }
 

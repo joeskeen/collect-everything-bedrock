@@ -10,11 +10,11 @@
   },
   "grid_items_136": {
     "type": "grid",
-    "size": ["100%", "default"],
-    "offset": [0, 0],
-    "grid_dimensions": [17, 8],
+    "size": [306, "default"],
     "grid_item_template": "collection_ui.inventory_item_panel",
     "collection_name": "form_buttons",
+    "grid_rescaling_type": "horizontal",
+    "maximum_grid_items": 340,
     "layer": 1
   },
   "collection_ui_template_136": {
@@ -32,26 +32,26 @@
           "type": "image",
           "texture": "$border_and_background_texture",
           "layer": 0,
-          "size": ["100%c + 14px", "100%c + 11px"],
+          "size": [323, 164],
           "controls": [
             {
               "container": {
                 "type": "panel",
-                "size": ["100%c", "100%c"],
+                "size": [313, 149],
                 "controls": [
                   {
                     "stack": {
                       "type": "stack_panel",
                       "orientation": "vertical",
-                      "size": [306, "100%c"],
+                      "size": [313, 144],
                       "controls": [
                         {
                           "gap@common.empty_panel": {
-                            "size": ["100%", 6],
+                            "size": ["100%", 5],
                             "controls": [
                               {
                                 "close_button@common.close_button": {
-                                  "$close_button_offset": [5, -3]
+                                  "$close_button_offset": [5, -5]
                                 }
                               }
                             ]
@@ -61,7 +61,10 @@
                           "text@collection_ui.collection_label": {}
                         },
                         {
-                          "grid@collection_ui.grid_items_136": {}
+                          "scroll_view@common.scrolling_panel": {
+                            "$scrolling_content": "collection_ui.grid_items_136",
+                            "$scrolling_pane_size": [313, 134]
+                          }
                         }
                       ]
                     }

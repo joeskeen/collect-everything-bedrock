@@ -1,3 +1,4 @@
 {
-  "$border_and_background_texture": "textures/ui/dialog_background_opaque"
+  "$border_and_background_texture": "textures/ui/dialog_background_opaque",
+  "$grid_dimensions": [17, 8]
 }
