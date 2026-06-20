@@ -11,6 +11,12 @@
       {
         "icon@hud.collecteverything_button_icon": {}
       }
+    ],
+    "bindings": [
+      {
+        "binding_name": "#using_touch",
+        "binding_name_override": "#visible"
+      }
     ]
   },
 

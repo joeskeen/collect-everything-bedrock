@@ -34,7 +34,7 @@ export class CollectionFormData {
     size: UiSizeKey = 27,
     private readonly createActionForm: CreateActionFormFn
   ) {
-    const sizing = COLLECTION_UI_SIZES.get(size) ?? ["§c§h§e§s§t§2§7§r", 27];
+    const sizing = COLLECTION_UI_SIZES.get(size) ?? ["§c§o§l§l§e§c§t§i§o§n§1§3§6", 136];
     this.#titleText = { rawtext: [{ text: sizing[0] }] };
     this.#slotCount = sizing[1];
     this.#buttonArray = Array(this.#slotCount).fill([{ rawtext: [{ text: "" }] }, undefined] as const);
