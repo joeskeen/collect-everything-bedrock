@@ -14,7 +14,7 @@
     "grid_item_template": "collection_ui.inventory_item_panel",
     "collection_name": "form_buttons",
     "grid_rescaling_type": "horizontal",
-    "maximum_grid_items": 100,
+    "maximum_grid_items": 5000,
     // "bindings": [
     //   {
     //     "binding_name": "#form_buttons_length",
@@ -85,7 +85,6 @@
       }
     ]
   },
-  // Add dynamic/custom sizing scales and edit forms.js -> sizes
   "collection_panel": {
     "type": "panel",
     "size": ["100%", "100%"],
@@ -102,6 +101,36 @@
     "type": "panel",
     "size": [18, 18],
     "layer": 1,
+    "bindings": [
+      {
+        "binding_name": "#null",
+        "binding_type": "collection",
+        "binding_condition": "none",
+        "binding_collection_name": "form_buttons"
+      },
+      {
+        "binding_name": "#null",
+        "binding_type": "collection_details",
+        "binding_collection_name": "form_buttons"
+      },
+      {
+        "binding_name": "#form_button_text",
+        "binding_type": "collection",
+        "binding_collection_name": "form_buttons"
+      },
+      {
+        "binding_name": "#null",
+        "binding_type": "view",
+        "source_property_name": "(not (#form_button_text = ''))",
+        "target_property_name": "#visible"
+      },
+      {
+        "binding_name": "#null",
+        "binding_type": "view",
+        "source_property_name": "(#form_button_text = '')",
+        "target_property_name": "#ignored"
+      }
+    ],
     "controls": [
       {
         "bg@collection_ui.cell": {}
