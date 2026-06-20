@@ -12,7 +12,7 @@ world.afterEvents.itemUse.subscribe((e) => {
   if (e.itemStack.typeId === "collecteverything:checklist") {
     console.log("success!");
     (e.source as Player).playSound("block.click");
-    (e.source as Player).runCommand("collecteverything:settings");
+    (e.source as Player).runCommand("collecteverything:browse");
   } else {
     dumpItem(e.itemStack);
   }

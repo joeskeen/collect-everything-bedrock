@@ -1,7 +1,3 @@
 {
-	"ui_defs": [
-		"ui/chest_server_form.json",
-		"ui/chest_inventory_system.json",
-		"ui/furnace_server_form.json"
-	]
+  "ui_defs": ["ui/collection_server_form.json"]
 }

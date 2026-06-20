@@ -4,7 +4,7 @@
     "type": "panel",
     "controls": [
       {
-        "collection_136_ui@chest_ui.chest_panel": {
+        "collection_136_ui@collection_ui.collection_panel": {
           "bindings": [
             {
               "binding_name": "#title_text"

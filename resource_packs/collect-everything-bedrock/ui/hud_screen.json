@@ -16,7 +16,7 @@
 
   "collecteverything_button_icon": {
     "type": "image",
-    "texture": "textures/ui/item_background.png",
+    "texture": "textures/items/checklist",
     "size": [40, 40]
   },
 
