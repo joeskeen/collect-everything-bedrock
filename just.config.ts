@@ -29,7 +29,7 @@ const versionArray = [version.major, version.minor, version.patch];
 
 const bundleTaskOptions: BundleTaskParameters = {
   entryPoint: path.join(__dirname, "./scripts/main.ts"),
-  external: ["@minecraft/server", "@minecraft/server-ui"],
+  external: ["@minecraft/math", "@minecraft/server", "@minecraft/server-ui", "@minecraft/vanilla-data"],
   outfile: path.resolve(__dirname, "./dist/scripts/main.js"),
   minifyWhitespace: true,
   sourcemap: false,
@@ -47,7 +47,6 @@ const mcaddonTaskOptions: ZipTaskParameters = {
 task("lint", coreLint(["scripts/**/*.ts"], argv().fix));
 task("typescript", tscTask());
 task("bundle", bundleTask(bundleTaskOptions));
-task("build", series("typescript", "bundle"));
 task("stamp", () => {
   (() => {
     const rpManifestPath = path.resolve(__dirname, "resource_packs", projectName, "manifest.json");
@@ -73,6 +72,7 @@ task("stamp", () => {
     fs.writeFileSync(bpManifestPath, JSON.stringify(bpManifest, null, 2));
   })();
 });
+task("build", series("stamp", "typescript", "bundle"));
 task("clean-local", cleanTask(DEFAULT_CLEAN_DIRECTORIES));
 task("clean-collateral", cleanCollateralTask(STANDARD_CLEAN_PATHS));
 task("clean", parallel("clean-local", "clean-collateral"));
@@ -95,7 +95,7 @@ task("generateWorldPackManifests", () => {
   console.log("Generated world_behavior_packs.json and world_resource_packs.json");
 });
 task("copyArtifacts", copyTask(copyTaskOptions));
-task("package", series("clean-collateral", "stamp", "copyArtifacts", "generateWorldPackManifests"));
+task("package", series("clean-collateral", "copyArtifacts", "generateWorldPackManifests"));
 task(
   "local-deploy",
   watchTask(

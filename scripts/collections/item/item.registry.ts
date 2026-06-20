@@ -4,6 +4,7 @@ import type { ItemComponentTypes, ItemStack, ItemTypes, RawMessage } from "@mine
 import { formatId } from "../../shared/formatting";
 import { EXCLUDED_ITEMS } from "./item-exclusions";
 import { DifficultyLevel } from "../../player/player-settings";
+import { capitalCase } from "change-case";
 
 @singleton()
 export class ItemRegistry {
@@ -35,6 +36,10 @@ export class ItemRegistry {
         `${itemStack.typeId}+${potionComponent.potionEffectType.id}`,
         `${itemStack.typeId}+${potionComponent.potionDeliveryType.id}+${potionComponent.potionEffectType.id}`,
       ];
+    } else if (itemStack.typeId === "minecraft:bed") {
+      const color = /^item\.bed\.(.+)\.name$/.exec(itemStack.localizationKey)?.[1];
+      console.log("bed color", capitalCase(color ?? ""));
+      return [itemStack.typeId, `${itemStack.typeId}+${color}`];
     } else {
       return [itemStack.typeId];
     }
@@ -43,12 +48,14 @@ export class ItemRegistry {
   formatItem(fullItemId: string): RawMessage {
     const [itemId, ...variants] = fullItemId.split("+");
     const localizationKey = this.itemTypes.get(itemId)?.localizationKey;
+    const isBed = itemId === "minecraft:bed"; // TODO: I need to make pluggable formatter
     const formatted = {
-      rawtext: [localizationKey ? { translate: localizationKey } : { text: formatId(itemId) }],
+      rawtext: [!isBed && localizationKey ? { translate: localizationKey } : { text: formatId(itemId) }],
     };
     if (variants.length) {
       formatted.rawtext.push({ text: ` (${variants.map((id) => formatId(id)).join(", ")})` });
     }
+    console.log(JSON.stringify(formatted));
     return formatted;
   }
 

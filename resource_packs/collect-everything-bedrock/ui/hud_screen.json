@@ -1,0 +1,34 @@
+{
+  "namespace": "hud",
+
+  "collecteverything_button": {
+    "type": "button",
+    "size": [40, 40],
+    "anchor_from": "top_right",
+    "anchor_to": "top_right",
+    "offset": [-10, 10],
+    "controls": [
+      {
+        "icon@hud.collecteverything_button_icon": {}
+      }
+    ]
+  },
+
+  "collecteverything_button_icon": {
+    "type": "image",
+    "texture": "textures/ui/item_background.png",
+    "size": [40, 40]
+  },
+
+  "root_panel": {
+    "type": "panel",
+
+    "modifications": [
+      {
+        "array_name": "controls",
+        "operation": "insert_front",
+        "value": [{ "collecteverything_button@hud.collecteverything_button": {} }]
+      }
+    ]
+  }
+}

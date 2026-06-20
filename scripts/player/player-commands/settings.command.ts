@@ -1,10 +1,9 @@
 import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
 import type { Player, CustomCommandResult, CustomCommandOrigin, System } from "@minecraft/server";
-import { CREATE_FORM_TOKEN, CreateFormFn, PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
-import { BOLD, ITALIC, MATERIAL_COPPER, MATERIAL_GOLD, MATERIAL_IRON, RED, RESET } from "../../shared/format-codes";
+import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import { DifficultyLevel, PlayerSettingsService } from "../player-settings";
-import { capitalCase } from "change-case";
+import { DDUI, DDUI_TOKEN } from "../../ui/ui.tokens";
 
 export type SettingsFormResponses = [number];
 
@@ -12,38 +11,56 @@ export type SettingsFormResponses = [number];
 export class PlayerSettingsCommand implements CommandHandler {
   constructor(
     @inject(PLAYER_TOKEN) private readonly player: Player,
-    @inject(CREATE_FORM_TOKEN) private readonly createForm: CreateFormFn,
     @inject(SYSTEM_TOKEN) private readonly system: System,
-    @inject(PlayerSettingsService) private readonly playerSettings: PlayerSettingsService
+    @inject(PlayerSettingsService) private readonly playerSettings: PlayerSettingsService,
+    @inject(DDUI_TOKEN) private readonly ddui: DDUI
   ) {}
 
   handleCommand(event: CustomCommandOrigin, args: any[]): CustomCommandResult {
     this.system.run(() => {
       const currentSettings = this.playerSettings.get();
       const options: DifficultyLevel[] = ["basic", "committed", "insane"];
-      const form = this.createForm()
-        .title("Collect Everything! Personal Settings")
-        .dropdown(
-          "Collection Difficulty",
-          options.map((o) => capitalCase(o)),
-          {
-            defaultValueIndex: options.indexOf(currentSettings.difficulty),
-            tooltip: `Changes the collection goals.
-${BOLD}${MATERIAL_COPPER}Basic${RESET}: one of each thing by minecraft ID string ${ITALIC}(i.e. one horse)${RESET}
-${BOLD}${MATERIAL_IRON}Committed${RESET}: collect each variant type ${ITALIC}(i.e. each horse color and each horse pattern)${RESET}
-${BOLD}${MATERIAL_GOLD}Insane${RESET}: collect each variant combination ${ITALIC}(i.e. each horse color/pattern combination)${RESET}
-${RED}${ITALIC}(${BOLD}warning${RESET}${RED}: this includes 2000+ tropical fish combinations!)${RESET}`,
-          }
-        );
-      form.show(this.player).then((response) => {
-        if (response.canceled) {
-          return;
-        }
-        const [difficultyLevel] = response.formValues as SettingsFormResponses;
-        this.playerSettings.change({
-          difficulty: options[difficultyLevel],
-        });
+
+      const difficulty = new this.ddui.ObservableNumber(options.indexOf(currentSettings.difficulty), {
+        clientWritable: true,
       });
+
+      new this.ddui.CustomForm(this.player, "Collect Everything! Settings")
+        .divider()
+        .dropdown(
+          "Difficulty",
+          difficulty,
+          [
+            {
+              label: `Basic`,
+              value: 0,
+              description: `one of each thing by minecraft ID string (i.e. one horse)`,
+            },
+            {
+              label: `Committed`,
+              value: 1,
+              description: `collect each variant *type* (i.e. each horse color and each horse pattern)`,
+            },
+            {
+              label: `Insane`,
+              value: 2,
+              description: `collect each variant *combination* (i.e. each horse color/pattern combination)
+              (warning: this includes 2000+ tropical fish combinations!)`,
+            },
+          ],
+          { description: "Changes the collection goals." } as any
+        )
+        .divider()
+        .show()
+        .then((x) => {
+          const difficultyLevel = difficulty.getData();
+          this.playerSettings.change({
+            difficulty: options[difficultyLevel],
+          });
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     });
 
     return { status: customCommandStatuses.Success };

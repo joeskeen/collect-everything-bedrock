@@ -1,6 +1,6 @@
 import { InjectionToken } from "tsyringe";
 import { Runnable } from "../shared/runnable";
-import { GREEN, RED, AQUA, LIGHT_PURPLE, MATERIAL_COPPER, MATERIAL_DIAMOND } from "../shared/format-codes";
+import { DARK_GREEN, RED, AQUA, LIGHT_PURPLE, MATERIAL_COPPER, MATERIAL_DIAMOND } from "../shared/format-codes";
 import { RawMessage } from "@minecraft/server";
 
 export type CollectFn = (category: keyof PlayerCollectionData, what: string, formatted: RawMessage) => void;
@@ -19,7 +19,7 @@ export const UNOBTAINABLE = "unobtainable";
 export const ITEM = "item";
 
 export const THEME: Record<string, string> = {
-  [BIOME]: GREEN,
+  [BIOME]: DARK_GREEN,
   [ENTITY]: RED,
   [EFFECT]: AQUA,
   [ENCHANTMENT]: LIGHT_PURPLE,

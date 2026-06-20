@@ -1,54 +1,31 @@
 import { container } from "tsyringe";
 import { ADD_ON_COMMANDS_TOKEN } from "../system/add-on-command";
 import { debugDumpCommand } from "./dump.command";
-import { Player, system, world } from "@minecraft/server";
-import { ActionFormData, MessageFormData, ModalFormData } from "@minecraft/server-ui";
+import { world, system, Player, ItemStack, Block } from "@minecraft/server";
+import { uiManager } from "@minecraft/server-ui";
 
 export function registerDebugProviders() {
   container.registerInstance(ADD_ON_COMMANDS_TOKEN, debugDumpCommand);
 }
 
-// system.
+world.afterEvents.itemUse.subscribe((e) => {
+  if (e.itemStack.typeId === "collecteverything:checklist") {
+    console.log("success!");
+    (e.source as Player).playSound("block.click");
+    (e.source as Player).runCommand("collecteverything:settings");
+  } else {
+    dumpItem(e.itemStack);
+  }
+});
+world.afterEvents.playerPlaceBlock.subscribe((e) => {
+  dumpItem(e.block);
+});
+world.afterEvents.playerInventoryItemChange.subscribe((e) => {
+  if (e.itemStack) {
+    dumpItem(e.itemStack);
+  }
+});
 
-// system.run(() => {
-//   const ui = new ActionFormData().title("Form").body("").button("button1").button("button2").button("button3");
-
-//   const customUi = new ActionFormData()
-//     .title("Custom form")
-//     .body("")
-//     .button("button1")
-//     .button("button2")
-//     .button("button3");
-
-//   const message = new MessageFormData().title("test").body("hello").button1("x?").button2("null");
-
-//   const modalForm = new ModalFormData()
-//     .title("modal form example")
-//     .toggle("toggle?")
-//     .toggle("toggle? (yes)", { defaultValue: true, tooltip: "please do not change this" })
-//     .dropdown("choose", ["option 1", "option 2", "option 3"])
-//     .dropdown("choose?", ["option 1", "option 2", "option 3"], {
-//       defaultValueIndex: 2,
-//       tooltip: "I already chose for you",
-//     })
-//     .textField("freeform", "")
-//     .textField("opinionated", "", { defaultValue: "this is cool", tooltip: "yeah it is" });
-
-//   world.afterEvents.itemUse.subscribe((event) => {
-//     const { source, itemStack } = event;
-//     switch (itemStack.typeId) {
-//       case "minecraft:compass":
-//         ui.show(source);
-//         break;
-//       case "minecraft:clock":
-//         customUi.show(source);
-//         break;
-//       case "minecraft:nether_star":
-//         message.show(source);
-//         break;
-//       case "minecraft:echo_shard":
-//         modalForm.show(source).then((x) => source.sendMessage(JSON.stringify(x.formValues)));
-//         break;
-//     }
-//   });
-// });
+function dumpItem(item: ItemStack | Block) {
+  console.log(item.typeId, item.getTags().join(", "), item.getComponent("minecraft:color2"), item.localizationKey);
+}

@@ -9,6 +9,6 @@ export function formatId(what: string): string {
   return capitalCase(trimId(what));
 }
 
-export function percent(numerator: number, denominator: number): string {
-  return `${Math.floor((numerator / denominator) * 100)}${PERCENT_SYMBOL}`;
+export function percent(numerator: number, denominator: number, encodePercent = true): string {
+  return `${Math.floor((numerator / denominator) * 100)}${encodePercent ? PERCENT_SYMBOL : "%"}`;
 }

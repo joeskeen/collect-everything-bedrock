@@ -1,0 +1,5 @@
+{
+  "$show_inventory": false,
+  "$border_and_background_texture": "textures/ui/dialog_background_opaque",
+  "$disable_collection_136_slots_layout": false
+}

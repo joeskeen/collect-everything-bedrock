@@ -29,6 +29,9 @@ export const MATERIAL_AMETHYST = "§u";
 export const MATERIAL_RESIN = "§v";
 export const OBFUSCATED = "§k";
 export const BOLD = "§l";
+/**
+ * @deprecated this doesn't work currently on custom forms
+ */
 export const ITALIC = "§o";
 export const RESET = "§r";
 export const PERCENT_SYMBOL = "%%";

@@ -1,0 +1,16 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "collecteverything:checklist",
+      "category": "items"
+    },
+    "components": {
+      "minecraft:icon": "checklist",
+      "minecraft:render_offsets": "book",
+      "minecraft:display_name": {
+        "value": "item.collecteverything.checklist.name"
+      }
+    }
+  }
+}
