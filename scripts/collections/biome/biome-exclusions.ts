@@ -15,6 +15,7 @@ export const BIOME_EXCLUSIONS = [
   "minecraft:jungle_edge_mutated",
   "minecraft:mesa_plateau_stone_mutated",
   "minecraft:extreme_hills_edge",
+  "minecraft:legacy_frozen_ocean",
   "minecraft:mushroom_island_shore",
   "minecraft:savanna_plateau_mutated",
   "minecraft:ice_mountains",

@@ -14,8 +14,7 @@ import { capitalCase } from "change-case";
 import { DDUI, DDUI_TOKEN } from "../../ui/ui.tokens";
 import { CollectionFormData } from "../../shared/forms";
 import { formatId, trimNamespace as removeNamespace } from "../../shared/formatting";
-import IDS from "../../data/_generated-internalIds.json";
-import TEXTURES from "../../data/metadata";
+import { getItemTexture } from "../../collections/item/item-texture";
 import ENTITIES from "../../collections/entity/entities";
 import EFFECTS from "../../collections/effect/effects";
 import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
@@ -35,7 +34,7 @@ type CategoryKey =
 interface Category {
   key: CategoryKey;
   label: string;
-  icon: string;
+  icon: string | number;
   allIds: () => string[];
   textures?: Record<string, string>;
   collectedCount: (keys: string[]) => { collected: number; total: number };
@@ -64,21 +63,21 @@ export class PlayerBrowseCommand implements CommandHandler {
     {
       key: ITEM,
       label: "Items",
-      icon: "minecraft:diamond",
+      icon: getItemTexture("minecraft:diamond", false, this.itemRegistry.customItemCount()),
       allIds: () => this.itemRegistry.allItems(),
       collectedCount: (keys) => this.itemRegistry.countCollectedItems(keys),
     },
     {
       key: BIOME,
       label: "Biomes",
-      icon: "minecraft:oak_sapling",
+      icon: getItemTexture("minecraft:oak_sapling", false, this.itemRegistry.customItemCount()),
       allIds: () => this.biomeRegistry.allBiomes(),
       collectedCount: (keys) => this.biomeRegistry.countCollectedBiomes(keys),
     },
     {
       key: ENTITY,
       label: "Entities",
-      icon: "minecraft:creeper_head",
+      icon: getItemTexture("minecraft:creeper_head", false, this.itemRegistry.customItemCount()),
       allIds: () => {
         const difficulty = this.playerSettingsService.get().difficulty;
         console.log("getting entities for difficulty", difficulty);
@@ -105,7 +104,7 @@ export class PlayerBrowseCommand implements CommandHandler {
     {
       key: ENCHANTMENT,
       label: "Enchant",
-      icon: "minecraft:enchanted_book",
+      icon: getItemTexture("minecraft:enchanted_book", true, this.itemRegistry.customItemCount()),
       allIds: () => this.enchantmentRegistry.allEnchantments(),
       collectedCount: (keys) => this.enchantmentRegistry.countCollectedEnchantments(keys),
     },
@@ -136,22 +135,22 @@ export class PlayerBrowseCommand implements CommandHandler {
     );
     const totalItems = this.categories.reduce((sum, cat) => sum + cat.allIds().length, 0);
     collectionForm.button(
-      "All",
-      [`${GRAY}${totalCollected}/${totalItems}`],
+      { text: "All" },
+      [{ text: `${GRAY}${totalCollected}/${totalItems}` }],
       "textures/items/book_normal",
       undefined,
-      (totalCollected / totalItems) * 100
+      Math.floor((totalCollected / totalItems) * 100)
     );
 
     for (const cat of this.categories) {
       const { collected } = cat.collectedCount(Object.keys(collection[cat.key] ?? {}));
       const total = cat.allIds().length;
       collectionForm.button(
-        cat.label,
-        [`${GRAY}${collected}/${total}`],
+        { text: cat.label },
+        [{ text: `${GRAY}${collected}/${total}` }],
         cat.icon,
         undefined,
-        (collected / total) * 100
+        Math.floor((collected / total) * 100)
       );
     }
 
@@ -164,30 +163,35 @@ export class PlayerBrowseCommand implements CommandHandler {
 
     for (const thing of thingsToShow) {
       const [itemId, category] = thing;
-      let texture: string;
+      let texture: string | number;
       let name: RawMessage;
+      let isEnchanted = false;
+      const baseId = itemId.split("+")[0];
       const percentComplete = this.playerCollection.hasCollected(category as any, itemId) ? 100 : 0;
-      if (category === "item") {
+      if (category === "item" || category === "unobtainable") {
         name = this.itemRegistry.formatItem(itemId);
-        texture = (TEXTURES.items as any)[itemId]?.textures[0] ?? itemId;
+        texture = getItemTexture(baseId, false, this.itemRegistry.customItemCount());
       } else if (category === "entity") {
-        const entityId = itemId.split("+")[0];
-        texture = (ENTITIES as any)[entityId]?.texture ?? entityId;
+        texture = (ENTITIES as any)[baseId]?.texture ?? baseId;
         name = this.entityRegistry.formatEntity(itemId);
       } else if (category === "effect") {
         name = this.effectRegistry.formatEffect(itemId);
         texture = (EFFECTS as any)[itemId]?.texture ?? UNKNOWN_TEXTURE;
       } else if (category === "enchantment") {
         name = this.enchantmentRegistry.formatEnchantment(itemId);
-        texture = "textures/items/book_enchanted";
+        texture = getItemTexture("minecraft:enchanted_book", true, this.itemRegistry.customItemCount());
+        isEnchanted = true;
+      } else if (category === "biome") {
+        name = this.biomeRegistry.formatBiome(baseId);
+        texture = this.biomeRegistry.resolveTexture(itemId);
       } else {
         texture = itemId;
         name = { text: formatId(itemId) };
       }
       collectionForm.button(
         name,
-        [`${ITALIC}${GRAY}${category}${RESET}`, itemId],
-        texture || UNKNOWN_TEXTURE,
+        [{ text: `${ITALIC}${GRAY}${category}${RESET}` }, { text: itemId }],
+        texture ?? UNKNOWN_TEXTURE,
         undefined,
         percentComplete
       );

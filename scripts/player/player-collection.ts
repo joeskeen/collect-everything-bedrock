@@ -1,4 +1,4 @@
-import { delay, inject, injectAll, Lifecycle, registry, scoped } from "tsyringe";
+import { inject, injectAll, Lifecycle, registry, scoped } from "tsyringe";
 import { Logger } from "../shared/logging/logger";
 import {
   COLLECTOR,

@@ -37,6 +37,25 @@ export class CollectionScoreboard {
       objective,
       sortOrder: objectiveSortOrders.Descending,
     });
+    this.checkForOfflinePlayers();
+  }
+
+  checkForOfflinePlayers() {
+    let objective = this.world.scoreboard.getObjective(objectiveId);
+    if (!objective) {
+      return;
+    }
+
+    objective.getParticipants().forEach((p) => {
+      try {
+        var player = p.getEntity() as Player;
+        if (!player) {
+          objective.removeParticipant(p);
+        }
+      } catch {
+        objective.removeParticipant(p);
+      }
+    });
   }
 
   reset() {
@@ -45,13 +64,6 @@ export class CollectionScoreboard {
       objective = this.world.scoreboard.addObjective(objectiveId, objectiveDisplayName);
     }
 
-    const participants = objective.getParticipants();
-    participants.forEach((p) => {
-      if (this.world.getPlayers({ name: p.displayName }).length) {
-        objective.setScore(p, 0);
-      } else {
-        objective.removeParticipant(p);
-      }
-    });
+    this.checkForOfflinePlayers();
   }
 }

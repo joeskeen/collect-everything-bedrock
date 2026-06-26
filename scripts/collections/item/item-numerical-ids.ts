@@ -1,4 +1,4 @@
-{
+export default {
   "minecraft:acacia_boat": 382,
   "minecraft:acacia_button": -140,
   "minecraft:acacia_chest_boat": 656,
@@ -1904,5 +1904,5 @@
   "minecraft:zombie_nautilus_spawn_egg": 760,
   "minecraft:zombie_pigman_spawn_egg": 452,
   "minecraft:zombie_spawn_egg": 451,
-  "minecraft:zombie_villager_spawn_egg": 482
-}
+  "minecraft:zombie_villager_spawn_egg": 482,
+};

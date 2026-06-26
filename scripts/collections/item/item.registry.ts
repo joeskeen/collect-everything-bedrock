@@ -9,6 +9,7 @@ import { capitalCase } from "change-case";
 @singleton()
 export class ItemRegistry {
   private _initialized = false;
+  private _customItemCount = 0;
   private items: string[] = [];
 
   constructor(
@@ -22,8 +23,18 @@ export class ItemRegistry {
         .getAll()
         .map((i) => i.id)
         .filter((i) => !EXCLUDED_ITEMS.includes(i));
+      this._customItemCount = this.itemTypes
+        .getAll()
+        .map((i) => i.id)
+        .filter((i) => !i.startsWith("minecraft:")).length;
       this._initialized = true;
     }
+  }
+
+  customItemCount() {
+    this.ensureInitialized();
+
+    return this._customItemCount;
   }
 
   identifyItem(itemStack: ItemStack): string[] {
@@ -49,8 +60,14 @@ export class ItemRegistry {
     const [itemId, ...variants] = fullItemId.split("+");
     const localizationKey = this.itemTypes.get(itemId)?.localizationKey;
     const isBed = itemId === "minecraft:bed"; // TODO: I need to make pluggable formatter
+    const isMusicDisc = itemId.startsWith("minecraft:music_disc");
+    const isBanner = itemId === "minecraft:banner";
     const formatted = {
-      rawtext: [!isBed && localizationKey ? { translate: localizationKey } : { text: formatId(itemId) }],
+      rawtext: [
+        !isBed && !isMusicDisc && !isBanner && localizationKey
+          ? { translate: localizationKey }
+          : { text: formatId(itemId) },
+      ],
     };
     if (variants.length) {
       formatted.rawtext.push({ text: ` (${variants.map((id) => formatId(id)).join(", ")})` });

@@ -5,6 +5,10 @@ import { formatId } from "../../shared/formatting";
 import { BIOME_NAME_OVERRIDES } from "./biome-name-overrides";
 import { BIOME_EXCLUSIONS } from "./biome-exclusions";
 import { DifficultyLevel } from "../../player/player-settings";
+import BIOMES from "./biomes";
+import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
+
+type KnownBiomeId = keyof typeof BIOMES;
 
 @singleton()
 export class BiomeRegistry {
@@ -21,6 +25,15 @@ export class BiomeRegistry {
         .filter((b) => !BIOME_EXCLUSIONS.includes(b));
       this._initialized = true;
     }
+  }
+
+  resolveTexture(biomeId: string): string | number {
+    if (biomeId in BIOMES) {
+      const metadata = BIOMES[biomeId as KnownBiomeId];
+      return metadata.texture;
+    }
+
+    return UNKNOWN_TEXTURE;
   }
 
   formatBiome(biomeId: string): RawMessage {

@@ -35,6 +35,7 @@ export class BiomeCollector implements Runnable, Disposable {
       const id = currentBiome?.id;
       if (id && id !== this.lastBiome) {
         this.lastBiome = id;
+        console.log(this.player.name, id);
         this.collector.collect(BIOME, id, this.biomeRegistry.formatBiome(id));
       }
     } catch {

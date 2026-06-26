@@ -1,4 +1,7 @@
 export const EXCLUDED_ITEMS = [
+  "collecteverything:checklist",
+
+  // unobtainable in survival
   "minecraft:air",
   "minecraft:allow",
   "minecraft:barrier",

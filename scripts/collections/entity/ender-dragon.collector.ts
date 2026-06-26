@@ -1,6 +1,5 @@
-import { container, inject, Lifecycle, scoped, singleton } from "tsyringe";
+import { container, inject, singleton } from "tsyringe";
 import { Runnable } from "../../shared/runnable";
-import { Disposable } from "../../shared/disposable";
 import { WORLD_TOKEN } from "../../shared/global-tokens";
 import type { EntityDieAfterEvent, World } from "@minecraft/server";
 import { ENTITY } from "../../player/collection-constants";
