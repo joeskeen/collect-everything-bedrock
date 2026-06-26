@@ -38,7 +38,7 @@ export class ItemRegistry {
       ];
     } else if (itemStack.typeId === "minecraft:bed") {
       const color = /^item\.bed\.(.+)\.name$/.exec(itemStack.localizationKey)?.[1];
-      console.log("bed color", capitalCase(color ?? ""));
+      // console.log("bed color", capitalCase(color ?? ""));
       return [itemStack.typeId, `${itemStack.typeId}+${color}`];
     } else {
       return [itemStack.typeId];
@@ -55,7 +55,7 @@ export class ItemRegistry {
     if (variants.length) {
       formatted.rawtext.push({ text: ` (${variants.map((id) => formatId(id)).join(", ")})` });
     }
-    console.log(JSON.stringify(formatted));
+    // console.log(JSON.stringify(formatted));
     return formatted;
   }
 

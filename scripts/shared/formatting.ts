@@ -1,12 +1,12 @@
 import { capitalCase } from "change-case";
 import { PERCENT_SYMBOL } from "./format-codes";
 
-export function trimId(what: string): string {
-  return what.replace(/^minecraft:/, "");
+export function trimNamespace(what: string): string {
+  return what.replace(/^[^:]+:/, "");
 }
 
 export function formatId(what: string): string {
-  return capitalCase(trimId(what));
+  return capitalCase(trimNamespace(what));
 }
 
 export function percent(numerator: number, denominator: number, encodePercent = true): string {

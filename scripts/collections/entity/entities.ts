@@ -1,7 +1,5 @@
 export default {
-  "minecraft:allay": {
-    texture: "textures/items/spawn_eggs/spawn_egg_allay",
-  },
+  "minecraft:allay": { texture: "textures/items/spawn_eggs/spawn_egg_allay" },
   "minecraft:armadillo": {
     texture: "textures/items/spawn_eggs/spawn_egg_armadillo",
     variants: {
@@ -21,36 +19,28 @@ export default {
       },
     },
   },
-  "minecraft:bat": {
-    texture: "textures/items/spawn_eggs/spawn_egg_bat",
-  },
+  "minecraft:bat": { texture: "textures/items/spawn_eggs/spawn_egg_bat" },
   "minecraft:bee": {
     texture: "textures/items/spawn_eggs/spawn_egg_bee",
     variants: {
       "c.is_baby": "baby",
     },
   },
-  "minecraft:blaze": {
-    texture: "textures/items/spawn_eggs/spawn_egg_blaze",
-  },
+  "minecraft:blaze": { texture: "textures/items/spawn_eggs/spawn_egg_blaze" },
   "minecraft:bogged": {
     texture: "textures/items/spawn_eggs/spawn_egg_bogged",
     variants: {
       "c.is_sheared": "sheared",
     },
   },
-  "minecraft:breeze": {
-    texture: "textures/items/spawn_eggs/spawn_egg_breeze",
-  },
+  "minecraft:breeze": { texture: "textures/items/spawn_eggs/spawn_egg_breeze" },
   "minecraft:camel": {
     texture: "textures/items/spawn_eggs/spawn_egg_camel",
     variants: {
       "c.is_baby": "baby",
     },
   },
-  "minecraft:camel_husk": {
-    texture: "textures/items/spawn_eggs/spawn_egg_camel_husk",
-  },
+  "minecraft:camel_husk": { texture: "textures/items/spawn_eggs/spawn_egg_camel_husk" },
   "minecraft:cat": {
     texture: "textures/items/spawn_eggs/spawn_egg_cat",
     variants: {
@@ -70,9 +60,7 @@ export default {
       },
     },
   },
-  "minecraft:cave_spider": {
-    texture: "textures/items/spawn_eggs/spawn_egg_cave_spider",
-  },
+  "minecraft:cave_spider": { texture: "textures/items/spawn_eggs/spawn_egg_cave_spider" },
   "minecraft:chicken": {
     texture: "textures/items/spawn_eggs/spawn_egg_chicken",
     variants: {
@@ -84,9 +72,7 @@ export default {
       },
     },
   },
-  "minecraft:cod": {
-    texture: "textures/items/spawn_eggs/spawn_egg_cod",
-  },
+  "minecraft:cod": { texture: "textures/items/spawn_eggs/spawn_egg_cod" },
   "minecraft:copper_golem": {
     texture: "textures/items/spawn_eggs/spawn_egg_copper_golem",
     variants: {
@@ -110,9 +96,7 @@ export default {
       },
     },
   },
-  "minecraft:creaking": {
-    texture: "textures/items/spawn_eggs/spawn_egg_creaking",
-  },
+  "minecraft:creaking": { texture: "textures/items/spawn_eggs/spawn_egg_creaking" },
   "minecraft:creeper": {
     texture: "textures/items/spawn_eggs/spawn_egg_creeper",
     variants: {
@@ -131,24 +115,12 @@ export default {
       "c.is_baby": "baby",
     },
   },
-  "minecraft:drowned": {
-    texture: "textures/items/spawn_eggs/spawn_egg_drowned",
-  },
-  "minecraft:elder_guardian": {
-    texture: "textures/items/spawn_eggs/spawn_egg_elder_guardian",
-  },
-  "minecraft:ender_dragon": {
-    texture: "textures/items/spawn_eggs/spawn_egg_ender_dragon",
-  },
-  "minecraft:enderman": {
-    texture: "textures/items/spawn_eggs/spawn_egg_enderman",
-  },
-  "minecraft:endermite": {
-    texture: "textures/items/spawn_eggs/spawn_egg_endermite",
-  },
-  "minecraft:evocation_illager": {
-    texture: "textures/items/spawn_eggs/spawn_egg_evoker",
-  },
+  "minecraft:drowned": { texture: "textures/items/spawn_eggs/spawn_egg_drowned" },
+  "minecraft:elder_guardian": { texture: "textures/items/spawn_eggs/spawn_egg_elder_guardian" },
+  "minecraft:ender_dragon": { texture: "textures/items/spawn_eggs/spawn_egg_ender_dragon" },
+  "minecraft:enderman": { texture: "textures/items/spawn_eggs/spawn_egg_enderman" },
+  "minecraft:endermite": { texture: "textures/items/spawn_eggs/spawn_egg_endermite" },
+  "minecraft:evocation_illager": { texture: "textures/items/spawn_eggs/spawn_egg_evoker" },
   "minecraft:fox": {
     texture: "textures/items/spawn_eggs/spawn_egg_fox",
     variants: {
@@ -169,21 +141,15 @@ export default {
       },
     },
   },
-  "minecraft:ghast": {
-    texture: "textures/items/spawn_eggs/spawn_egg_ghast",
-  },
-  "minecraft:glow_squid": {
-    texture: "textures/items/spawn_eggs/spawn_egg_glow_squid",
-  },
+  "minecraft:ghast": { texture: "textures/items/spawn_eggs/spawn_egg_ghast" },
+  "minecraft:glow_squid": { texture: "textures/items/spawn_eggs/spawn_egg_glow_squid" },
   "minecraft:goat": {
     texture: "textures/items/spawn_eggs/spawn_egg_goat",
     variants: {
       "c.is_baby": "baby",
     },
   },
-  "minecraft:guardian": {
-    texture: "textures/items/spawn_eggs/spawn_egg_guardian",
-  },
+  "minecraft:guardian": { texture: "textures/items/spawn_eggs/spawn_egg_guardian" },
   "minecraft:happy_ghast": {
     texture: "textures/items/spawn_eggs/spawn_egg_happy_ghast",
     variants: {
@@ -224,9 +190,7 @@ export default {
       "c.is_baby": "baby",
     },
   },
-  "minecraft:iron_golem": {
-    texture: "textures/items/spawn_eggs/spawn_egg_iron_golem",
-  },
+  "minecraft:iron_golem": { texture: "textures/items/spawn_eggs/spawn_egg_iron_golem" },
   "minecraft:llama": {
     texture: "textures/items/spawn_eggs/spawn_egg_llama",
     variants: {
@@ -292,9 +256,7 @@ export default {
       },
     },
   },
-  "minecraft:parched": {
-    texture: "textures/items/spawn_eggs/spawn_egg_parched",
-  },
+  "minecraft:parched": { texture: "textures/items/spawn_eggs/spawn_egg_parched" },
   "minecraft:parrot": {
     texture: "textures/items/spawn_eggs/spawn_egg_parrot",
     variants: {
@@ -307,9 +269,7 @@ export default {
       },
     },
   },
-  "minecraft:phantom": {
-    texture: "textures/items/spawn_eggs/spawn_egg_phantom",
-  },
+  "minecraft:phantom": { texture: "textures/items/spawn_eggs/spawn_egg_phantom" },
   "minecraft:pig": {
     texture: "textures/items/spawn_eggs/spawn_egg_pig",
     variants: {
@@ -331,9 +291,7 @@ export default {
       },
     },
   },
-  "minecraft:piglin_brute": {
-    texture: "textures/items/spawn_eggs/spawn_egg_piglin_brute",
-  },
+  "minecraft:piglin_brute": { texture: "textures/items/spawn_eggs/spawn_egg_piglin_brute" },
   "minecraft:pillager": {
     texture: "textures/items/spawn_eggs/spawn_egg_pillager",
     variants: {
@@ -346,9 +304,7 @@ export default {
       "c.is_baby": "baby",
     },
   },
-  "minecraft:pufferfish": {
-    texture: "textures/items/spawn_eggs/spawn_egg_pufferfish",
-  },
+  "minecraft:pufferfish": { texture: "textures/items/spawn_eggs/spawn_egg_pufferfish" },
   "minecraft:rabbit": {
     texture: "textures/items/spawn_eggs/spawn_egg_rabbit",
     variants: {
@@ -363,12 +319,8 @@ export default {
       },
     },
   },
-  "minecraft:ravager": {
-    texture: "textures/items/spawn_eggs/spawn_egg_ravager",
-  },
-  "minecraft:salmon": {
-    texture: "textures/items/spawn_eggs/spawn_egg_salmon",
-  },
+  "minecraft:ravager": { texture: "textures/items/spawn_eggs/spawn_egg_ravager" },
+  "minecraft:salmon": { texture: "textures/items/spawn_eggs/spawn_egg_salmon" },
   "minecraft:sheep": {
     texture: "textures/items/spawn_eggs/spawn_egg_sheep",
     variants: {
@@ -414,12 +366,8 @@ export default {
       },
     },
   },
-  "minecraft:silverfish": {
-    texture: "textures/items/spawn_eggs/spawn_egg_silverfish",
-  },
-  "minecraft:skeleton": {
-    texture: "textures/items/spawn_eggs/spawn_egg_skeleton",
-  },
+  "minecraft:silverfish": { texture: "textures/items/spawn_eggs/spawn_egg_silverfish" },
+  "minecraft:skeleton": { texture: "textures/items/spawn_eggs/spawn_egg_skeleton" },
   "minecraft:skeleton_horse": {
     texture: "textures/items/spawn_eggs/spawn_egg_skeleton_horse",
     variants: {
@@ -442,21 +390,15 @@ export default {
       "c.is_baby": "baby",
     },
   },
-  "minecraft:snow_golem": {
-    texture: "textures/items/spawn_eggs/spawn_egg_snow_golem",
-  },
-  "minecraft:spider": {
-    texture: "textures/items/spawn_eggs/spawn_egg_spider",
-  },
+  "minecraft:snow_golem": { texture: "textures/items/spawn_eggs/spawn_egg_snow_golem" },
+  "minecraft:spider": { texture: "textures/items/spawn_eggs/spawn_egg_spider" },
   "minecraft:squid": {
     texture: "textures/items/spawn_eggs/spawn_egg_squid",
     variants: {
       "c.is_baby": "baby",
     },
   },
-  "minecraft:stray": {
-    texture: "textures/items/spawn_eggs/spawn_egg_stray",
-  },
+  "minecraft:stray": { texture: "textures/items/spawn_eggs/spawn_egg_stray" },
   "minecraft:strider": {
     texture: "textures/items/spawn_eggs/spawn_egg_strider",
     variants: {
@@ -487,9 +429,7 @@ export default {
       },
     },
   },
-  "minecraft:tadpole": {
-    texture: "textures/items/spawn_eggs/spawn_egg_tadpole",
-  },
+  "minecraft:tadpole": { texture: "textures/items/spawn_eggs/spawn_egg_tadpole" },
   "minecraft:trader_llama": {
     texture: "textures/items/spawn_eggs/spawn_egg_trader_llama",
     variants: {
@@ -503,6 +443,7 @@ export default {
     },
   },
   "minecraft:tropicalfish": {
+    name: "tropical fish",
     texture: "textures/items/spawn_eggs/spawn_egg_tropicalfish",
     variants: {
       "c.color": {
@@ -542,16 +483,16 @@ export default {
       "c.variant,c.mark_variant": {
         "0,0": "kob",
         "0,1": "sunstreak",
-        "0,2": "brinely",
+        "0,2": "snooper",
         "0,3": "dasher",
-        "0,4": "clayfish",
+        "0,4": "brinely",
         "0,5": "spotty",
         "1,0": "flopper",
         "1,1": "stripey",
         "1,2": "glitter",
         "1,3": "blockfish",
         "1,4": "betty",
-        "1,5": "sunstreak",
+        "1,5": "clayfish",
       },
       "c.variant,c.mark_variant,c.color,c.color2": {
         "1,1,1,7": "anemone",
@@ -585,10 +526,9 @@ export default {
       "c.is_baby": "baby",
     },
   },
-  "minecraft:vex": {
-    texture: "textures/items/spawn_eggs/spawn_egg_vex",
-  },
+  "minecraft:vex": { texture: "textures/items/spawn_eggs/spawn_egg_vex" },
   "minecraft:villager_v2": {
+    name: "villager",
     texture: "textures/items/spawn_eggs/spawn_egg_villager",
     variants: {
       "c.variant": {
@@ -620,25 +560,14 @@ export default {
       },
       "c.is_baby": "baby",
     },
+    exclusions: ["!c.is_baby+c.variant"],
   },
-  "minecraft:vindicator": {
-    texture: "textures/items/spawn_eggs/spawn_egg_vindicator",
-  },
-  "minecraft:wandering_trader": {
-    texture: "textures/items/spawn_eggs/spawn_egg_wandering_trader",
-  },
-  "minecraft:warden": {
-    texture: "textures/items/spawn_eggs/spawn_egg_warden",
-  },
-  "minecraft:witch": {
-    texture: "textures/items/spawn_eggs/spawn_egg_witch",
-  },
-  "minecraft:wither": {
-    texture: "textures/items/spawn_eggs/spawn_egg_wither",
-  },
-  "minecraft:wither_skeleton": {
-    texture: "textures/items/spawn_eggs/spawn_egg_wither_skeleton",
-  },
+  "minecraft:vindicator": { texture: "textures/items/spawn_eggs/spawn_egg_vindicator" },
+  "minecraft:wandering_trader": { texture: "textures/items/spawn_eggs/spawn_egg_wandering_trader" },
+  "minecraft:warden": { texture: "textures/items/spawn_eggs/spawn_egg_warden" },
+  "minecraft:witch": { texture: "textures/items/spawn_eggs/spawn_egg_witch" },
+  "minecraft:wither": { texture: "textures/items/spawn_eggs/spawn_egg_wither" },
+  "minecraft:wither_skeleton": { texture: "textures/items/spawn_eggs/spawn_egg_wither_skeleton" },
   "minecraft:wolf": {
     texture: "textures/items/spawn_eggs/spawn_egg_wolf",
     variants: {
@@ -684,12 +613,14 @@ export default {
     },
   },
   "minecraft:zombie_pigman": {
+    name: "zombified piglin",
     texture: "textures/items/spawn_eggs/spawn_egg_zombified_piglin",
     variants: {
       "c.is_baby": "baby",
     },
   },
   "minecraft:zombie_villager_v2": {
+    name: "zombie villager",
     texture: "textures/items/spawn_eggs/spawn_egg_zombie_villager",
     variants: {
       "c.variant": {
@@ -721,5 +652,13 @@ export default {
       },
       "c.is_baby": "baby",
     },
+    exclusions: ["!c.is_baby+c.variant"],
   },
 };
+
+export interface EntityData {
+  name?: string;
+  texture?: string;
+  variants?: Record<string, unknown>;
+  exclusions?: string[];
+}

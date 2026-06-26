@@ -3,6 +3,7 @@ import { BIOME_TYPES_TOKEN } from "../../shared/global-tokens";
 import type { BiomeTypes, RawMessage } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
 import { BIOME_NAME_OVERRIDES } from "./biome-name-overrides";
+import { BIOME_EXCLUSIONS } from "./biome-exclusions";
 import { DifficultyLevel } from "../../player/player-settings";
 
 @singleton()
@@ -14,7 +15,10 @@ export class BiomeRegistry {
 
   private ensureInitialized() {
     if (!this._initialized) {
-      this.biomes = this.biomeTypes.getAll().map((b) => b.id);
+      this.biomes = this.biomeTypes
+        .getAll()
+        .map((b) => b.id)
+        .filter((b) => !BIOME_EXCLUSIONS.includes(b));
       this._initialized = true;
     }
   }

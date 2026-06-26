@@ -1,6 +1,6 @@
 import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
-import type { CustomCommandOrigin, CustomCommandResult, Player, System } from "@minecraft/server";
+import type { CustomCommandOrigin, CustomCommandResult, Player, RawMessage, System } from "@minecraft/server";
 import { CREATE_ACTION_FORM_TOKEN, CreateActionFormFn, PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, UNOBTAINABLE } from "../collection-constants";
 import { ItemRegistry } from "../../collections/item/item.registry";
@@ -13,9 +13,14 @@ import { PlayerCollection } from "../player-collection";
 import { capitalCase } from "change-case";
 import { DDUI, DDUI_TOKEN } from "../../ui/ui.tokens";
 import { CollectionFormData } from "../../shared/forms";
-import { formatId } from "../../shared/formatting";
+import { formatId, trimNamespace as removeNamespace } from "../../shared/formatting";
 import IDS from "../../data/_generated-internalIds.json";
-import { GRAY } from "../../shared/format-codes";
+import TEXTURES from "../../data/metadata";
+import ENTITIES from "../../collections/entity/entities";
+import EFFECTS from "../../collections/effect/effects";
+import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
+import { GRAY, ITALIC, RESET } from "../../shared/format-codes";
+import { PlayerSettingsService } from "../player-settings";
 
 const SLOT_COUNT = 136;
 
@@ -32,6 +37,7 @@ interface Category {
   label: string;
   icon: string;
   allIds: () => string[];
+  textures?: Record<string, string>;
   collectedCount: (keys: string[]) => { collected: number; total: number };
 }
 
@@ -43,6 +49,7 @@ export class PlayerBrowseCommand implements CommandHandler {
     @inject(SYSTEM_TOKEN) private readonly system: System,
     @inject(PLAYER_TOKEN) private readonly player: Player,
     @inject(PlayerCollection) private readonly playerCollection: PlayerCollection,
+    @inject(PlayerSettingsService) private readonly playerSettingsService: PlayerSettingsService,
     @inject(ItemRegistry) private readonly itemRegistry: ItemRegistry,
     @inject(BiomeRegistry) private readonly biomeRegistry: BiomeRegistry,
     @inject(EntityRegistry) private readonly entityRegistry: EntityRegistry,
@@ -72,7 +79,20 @@ export class PlayerBrowseCommand implements CommandHandler {
       key: ENTITY,
       label: "Entities",
       icon: "minecraft:creeper_head",
-      allIds: () => this.entityRegistry.allEntities(),
+      allIds: () => {
+        const difficulty = this.playerSettingsService.get().difficulty;
+        console.log("getting entities for difficulty", difficulty);
+        const entities = this.entityRegistry.allEntities(difficulty);
+        console.log("number of entities: ", entities.length);
+        return entities;
+      },
+      textures: Object.keys(ENTITIES).reduce(
+        (prev, curr) => {
+          prev[curr] = (ENTITIES as any)[curr].texture;
+          return prev;
+        },
+        {} as Record<string, string>
+      ),
       collectedCount: (keys) => this.entityRegistry.countCollectedEntities(keys),
     },
     {
@@ -91,7 +111,7 @@ export class PlayerBrowseCommand implements CommandHandler {
     },
     {
       key: UNOBTAINABLE,
-      label: "Special",
+      label: "Unobtainable",
       icon: "textures/blocks/mob_spawner",
       allIds: () => this.unobtainableRegistry.allUnobtainables(),
       collectedCount: (keys) => this.unobtainableRegistry.countCollectedUnobtainables(keys),
@@ -115,24 +135,62 @@ export class PlayerBrowseCommand implements CommandHandler {
       0
     );
     const totalItems = this.categories.reduce((sum, cat) => sum + cat.allIds().length, 0);
-    collectionForm.button("All", [`${GRAY}${totalCollected}/${totalItems}`], "textures/items/book_normal");
+    collectionForm.button(
+      "All",
+      [`${GRAY}${totalCollected}/${totalItems}`],
+      "textures/items/book_normal",
+      undefined,
+      (totalCollected / totalItems) * 100
+    );
 
     for (const cat of this.categories) {
-      const { collected, total } = cat.collectedCount(Object.keys(collection[cat.key] ?? {}));
-      collectionForm.button(cat.label, [`${GRAY}${collected}/${total}`], cat.icon);
+      const { collected } = cat.collectedCount(Object.keys(collection[cat.key] ?? {}));
+      const total = cat.allIds().length;
+      collectionForm.button(
+        cat.label,
+        [`${GRAY}${collected}/${total}`],
+        cat.icon,
+        undefined,
+        (collected / total) * 100
+      );
     }
 
-    const itemsToShow =
+    const thingsToShow =
       this.activeCategory === "all"
-        ? this.itemRegistry
-            .allItems()
-            .map((id) => [id, (IDS as any)[id]] as [string, number])
-            .sort((a, b) => a[1] - b[1])
-        : this.getCategoryItems(this.activeCategory);
+        ? this.categories
+            .flatMap((c) => c.allIds().map((id) => [id, c.key] as const))
+            .sort((a, b) => removeNamespace(a[0]).localeCompare(removeNamespace(b[0])))
+        : this.getCategoryItems(this.activeCategory).map((id) => [id, this.activeCategory]);
 
-    for (const item of itemsToShow) {
-      // if (slot >= SLOT_COUNT) break;
-      collectionForm.button(formatId(item[0]), [item[0], String(item[1])], item[0]);
+    for (const thing of thingsToShow) {
+      const [itemId, category] = thing;
+      let texture: string;
+      let name: RawMessage;
+      const percentComplete = this.playerCollection.hasCollected(category as any, itemId) ? 100 : 0;
+      if (category === "item") {
+        name = this.itemRegistry.formatItem(itemId);
+        texture = (TEXTURES.items as any)[itemId]?.textures[0] ?? itemId;
+      } else if (category === "entity") {
+        const entityId = itemId.split("+")[0];
+        texture = (ENTITIES as any)[entityId]?.texture ?? entityId;
+        name = this.entityRegistry.formatEntity(itemId);
+      } else if (category === "effect") {
+        name = this.effectRegistry.formatEffect(itemId);
+        texture = (EFFECTS as any)[itemId]?.texture ?? UNKNOWN_TEXTURE;
+      } else if (category === "enchantment") {
+        name = this.enchantmentRegistry.formatEnchantment(itemId);
+        texture = "textures/items/book_enchanted";
+      } else {
+        texture = itemId;
+        name = { text: formatId(itemId) };
+      }
+      collectionForm.button(
+        name,
+        [`${ITALIC}${GRAY}${category}${RESET}`, itemId],
+        texture || UNKNOWN_TEXTURE,
+        undefined,
+        percentComplete
+      );
     }
 
     collectionForm.show(this.player).then((result) => {
@@ -148,38 +206,20 @@ export class PlayerBrowseCommand implements CommandHandler {
     });
   }
 
-  private getCategoryItems(category: CategoryKey): [string, number][] {
+  private getCategoryItems(category: CategoryKey) {
     switch (category) {
       case ITEM:
-        return this.itemRegistry
-          .allItems()
-          .map((id) => [id, (IDS as any)[id]] as [string, number])
-          .sort((a, b) => a[1] - b[1]);
+        return this.itemRegistry.allItems().sort();
       case BIOME:
-        return this.biomeRegistry
-          .allBiomes()
-          .map((id) => [id, (IDS as any)[id]] as [string, number])
-          .sort((a, b) => a[1] - b[1]);
+        return this.biomeRegistry.allBiomes().sort();
       case ENTITY:
-        return this.entityRegistry
-          .allEntities()
-          .map((id) => [id, (IDS as any)[id]] as [string, number])
-          .sort((a, b) => a[1] - b[1]);
+        return this.entityRegistry.allEntities(this.playerSettingsService.get().difficulty).sort();
       case EFFECT:
-        return this.effectRegistry
-          .allEffects()
-          .map((id) => [id, (IDS as any)[id]] as [string, number])
-          .sort((a, b) => a[1] - b[1]);
+        return this.effectRegistry.allEffects().sort();
       case ENCHANTMENT:
-        return this.enchantmentRegistry
-          .allEnchantments()
-          .map((id) => [id, (IDS as any)[id]] as [string, number])
-          .sort((a, b) => a[1] - b[1]);
+        return this.enchantmentRegistry.allEnchantments().sort();
       case UNOBTAINABLE:
-        return this.unobtainableRegistry
-          .allUnobtainables()
-          .map((id) => [id, (IDS as any)[id]] as [string, number])
-          .sort((a, b) => a[1] - b[1]);
+        return this.unobtainableRegistry.allUnobtainables().sort();
       default:
         return [];
     }

@@ -1,4 +1,4 @@
-import type { Player } from "@minecraft/server";
+import type { Player, RawMessage } from "@minecraft/server";
 import type {} from "@minecraft/server-ui";
 import { typeIdToDataId, typeIdToID } from "./typeIds";
 import type { CreateActionFormFn } from "./global-tokens";
@@ -33,8 +33,8 @@ export class CollectionFormData {
   }
 
   button(
-    itemName: string,
-    itemDesc: string[] | undefined,
+    itemName: string | RawMessage,
+    itemDesc: Array<string | RawMessage> | undefined,
     texture: string,
     stackSize = 1,
     durability = 0,
@@ -43,11 +43,16 @@ export class CollectionFormData {
     const stackStr = `stack#${String(Math.min(Math.max(stackSize, 1), 99)).padStart(2, "0")}`;
     const durStr = `dur#${String(Math.min(Math.max(durability, 0), 99)).padStart(2, "0")}`;
 
-    const buttonRawtext: { rawtext: Array<{ text: string }> } = {
-      rawtext: [{ text: `${stackStr}${durStr}§r` }],
+    const buttonRawtext = {
+      rawtext: [{ text: `${stackStr}${durStr}§r` }] as RawMessage[],
     };
 
-    buttonRawtext.rawtext.push({ text: itemName ? `${itemName}§r` : "§r" });
+    if (typeof itemName === "string") {
+      buttonRawtext.rawtext.push({ text: `${itemName}` });
+    } else {
+      buttonRawtext.rawtext.push(itemName);
+    }
+    buttonRawtext.rawtext.push({ text: "§r" });
 
     if (Array.isArray(itemDesc) && itemDesc.length > 0) {
       for (const obj of itemDesc) {
@@ -57,7 +62,7 @@ export class CollectionFormData {
 
     const encodedTexture = encodeTexture(texture);
 
-    this.#buttonArray.push([buttonRawtext, encodedTexture as number]);
+    this.#buttonArray.push([buttonRawtext as any, encodedTexture as number]);
     return this;
   }
 

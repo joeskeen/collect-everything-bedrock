@@ -1,4 +1,4 @@
-import { inject, injectAll, Lifecycle, registry, scoped } from "tsyringe";
+import { delay, inject, injectAll, Lifecycle, registry, scoped } from "tsyringe";
 import { Logger } from "../shared/logging/logger";
 import {
   COLLECTOR,
@@ -13,6 +13,7 @@ import { BiomeCollector } from "../collections/biome/biome.collector";
 import { EffectCollector } from "../collections/effect/effect.collector";
 import { EnchantmentCollector } from "../collections/enchantment/enchantment.collector";
 import { EntityKilledCollector } from "../collections/entity/entity-killed.collector";
+import { EnderDragonCollector } from "../collections/entity/ender-dragon.collector";
 import { EntityNamedCollector } from "../collections/entity/entity-named.collector";
 import { EntityLeashedCollector } from "../collections/entity/entity-leashed.collector";
 import { EntityTamedCollector } from "../collections/entity/entity-tamed.collector";
@@ -34,6 +35,7 @@ const COLLECTION_KEY = `${NAMESPACE}:collection`;
   { token: COLLECTORS_TOKEN, useClass: BiomeCollector },
   { token: COLLECTORS_TOKEN, useClass: EffectCollector },
   { token: COLLECTORS_TOKEN, useClass: EnchantmentCollector },
+  { token: COLLECTORS_TOKEN, useClass: EnderDragonCollector },
   { token: COLLECTORS_TOKEN, useClass: EntityKilledCollector },
   { token: COLLECTORS_TOKEN, useClass: EntityNamedCollector },
   { token: COLLECTORS_TOKEN, useClass: EntityLeashedCollector },
@@ -63,6 +65,10 @@ export class PlayerCollection {
     this.updateScore();
     this.collectors.forEach((c) => c.run());
     this.logger.log(`Collection initialized.`);
+  }
+
+  hasCollected(category: keyof PlayerCollectionData, what: string) {
+    return !!this.collection[category]?.[what];
   }
 
   onCollect(category: keyof PlayerCollectionData, what: string, formatted: RawMessage) {

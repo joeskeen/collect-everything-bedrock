@@ -14,6 +14,7 @@ export class EnchantmentRegistry {
   private ensureInitialized() {
     if (!this._initialized) {
       this.enchantments = this.enchantmentTypes.getAll().map((e) => e.id);
+      console.log("all enchantments", this.enchantments.join("\n"));
       this._initialized = true;
     }
   }
