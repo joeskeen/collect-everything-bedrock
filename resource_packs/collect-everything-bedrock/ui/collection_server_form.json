@@ -171,12 +171,15 @@
           "type": "image",
           "texture": "$border_and_background_texture",
           "layer": 0,
-          "size": [323, 164],
+          "size": [323, 184],
           "controls": [
             {
               "container": {
                 "type": "panel",
                 "size": [313, 149],
+                "offset": [5, 5],
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
                 "controls": [
                   {
                     "stack": {
@@ -197,13 +200,16 @@
                           }
                         },
                         {
-                          "text@collection_ui.collection_label": {}
+                          "text@collection_ui.collection_label": {
+                            "offset": [0, -5]
+                          }
                         },
                         {
                           "top_row": {
                             "type": "stack_panel",
                             "orientation": "horizontal",
                             "size": [313, 18],
+                            "offset": [0, -3],
                             "layer": 1,
                             "collection_name": "form_buttons",
                             "controls": [
@@ -220,7 +226,8 @@
                         {
                           "scroll_view@common.scrolling_panel": {
                             "$scrolling_content": "collection_ui.grid_items",
-                            "$scrolling_pane_size": [313, 134]
+                            "$scrolling_pane_size": [313, 134],
+                            "offset": [0, 2]
                           }
                         }
                       ]
