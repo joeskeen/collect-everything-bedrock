@@ -205,11 +205,16 @@
                           }
                         },
                         {
+                          "spacing_vertical": {
+                            "type": "panel",
+                            "size": [0, 3]
+                          }
+                        },
+                        {
                           "top_row": {
                             "type": "stack_panel",
                             "orientation": "horizontal",
                             "size": [313, 18],
-                            "offset": [0, -3],
                             "layer": 1,
                             "collection_name": "form_buttons",
                             "controls": [
@@ -224,10 +229,15 @@
                           }
                         },
                         {
+                          "spacing_vertical": {
+                            "type": "panel",
+                            "size": [0, 3]
+                          }
+                        },
+                        {
                           "scroll_view@common.scrolling_panel": {
                             "$scrolling_content": "collection_ui.grid_items",
-                            "$scrolling_pane_size": [313, 134],
-                            "offset": [0, 2]
+                            "$scrolling_pane_size": [313, 134]
                           }
                         }
                       ]

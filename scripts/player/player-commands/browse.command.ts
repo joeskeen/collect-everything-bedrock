@@ -80,9 +80,7 @@ export class PlayerBrowseCommand implements CommandHandler {
       icon: getItemTexture("minecraft:creeper_head", false, this.itemRegistry.customItemCount()),
       allIds: () => {
         const difficulty = this.playerSettingsService.get().difficulty;
-        console.log("getting entities for difficulty", difficulty);
         const entities = this.entityRegistry.allEntities(difficulty);
-        console.log("number of entities: ", entities.length);
         return entities;
       },
       textures: Object.keys(ENTITIES).reduce(
