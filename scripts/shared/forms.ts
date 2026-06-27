@@ -31,7 +31,7 @@ export class CollectionFormData {
     const durStr = `dur#${String(Math.floor(Math.min(Math.max(durability, 0), 99))).padStart(2, "0")}`;
 
     const buttonRawtext = {
-      rawtext: [{ text: `${stackStr}${durStr}§r` }] as RawMessage[],
+      rawtext: [{ text: `${stackStr}${durStr}${RESET}` }] as RawMessage[],
     };
 
     if (typeof itemName === "string") {
@@ -39,7 +39,7 @@ export class CollectionFormData {
     } else {
       buttonRawtext.rawtext.push(itemName);
     }
-    buttonRawtext.rawtext.push({ text: "§r" });
+    buttonRawtext.rawtext.push({ text: RESET });
 
     if (Array.isArray(itemDesc) && itemDesc.length > 0) {
       for (const obj of itemDesc) {
