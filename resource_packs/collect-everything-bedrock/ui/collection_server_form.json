@@ -177,7 +177,7 @@
               "container": {
                 "type": "panel",
                 "size": [313, 149],
-                "offset": [5, 5],
+                "offset": [5, 2],
                 "anchor_from": "top_left",
                 "anchor_to": "top_left",
                 "controls": [
@@ -199,17 +199,8 @@
                             ]
                           }
                         },
-                        {
-                          "text@collection_ui.collection_label": {
-                            "offset": [0, -5]
-                          }
-                        },
-                        {
-                          "spacing_vertical": {
-                            "type": "panel",
-                            "size": [0, 3]
-                          }
-                        },
+                        { "text@collection_ui.collection_label": {} },
+                        { "spacing_vertical": { "type": "panel", "size": [0, 3] } },
                         {
                           "top_row": {
                             "type": "stack_panel",
@@ -228,12 +219,7 @@
                             ]
                           }
                         },
-                        {
-                          "spacing_vertical": {
-                            "type": "panel",
-                            "size": [0, 3]
-                          }
-                        },
+                        { "spacing_vertical": { "type": "panel", "size": [0, 3] } },
                         {
                           "scroll_view@common.scrolling_panel": {
                             "$scrolling_content": "collection_ui.grid_items",

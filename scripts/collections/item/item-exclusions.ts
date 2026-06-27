@@ -51,6 +51,8 @@ export const EXCLUDED_ITEMS = [
   "minecraft:repeating_command_block",
   "minecraft:structure_block",
   "minecraft:structure_void",
+  "minecraft:suspicious_gravel",
+  "minecraft:suspicious_sand",
   "minecraft:trial_spawner",
   "minecraft:vault",
   // spawn eggs

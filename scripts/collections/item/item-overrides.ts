@@ -5,6 +5,7 @@ export default {
   "minecraft:glow_berries": { texture: "textures/items/glow_berries" },
   "minecraft:ominous_trial_key": { texture: "textures/items/ominous_trial_key" },
   "minecraft:ominous_vault": { texture: "textures/blocks/vault_side_on_ominous" },
+  "minecraft:trial_key": { texture: "textures/items/trial_key" },
   "minecraft:wind_charge": { texture: "textures/items/wind_charge" },
 
   // spears

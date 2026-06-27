@@ -14,6 +14,8 @@ export const UNOBTAINABLE_BUT_BREAKABLE = [
   "minecraft:mob_spawner",
   "minecraft:ominous_vault",
   "minecraft:reinforced_deepslate",
+  "minecraft:suspicious_gravel",
+  "minecraft:suspicious_sand",
   "minecraft:trial_spawner",
   "minecraft:vault",
 ];
