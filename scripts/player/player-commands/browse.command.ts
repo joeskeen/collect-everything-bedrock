@@ -166,7 +166,7 @@ export class PlayerBrowseCommand implements CommandHandler {
       const { collected } = cat.collectedCount(Object.keys(collection[cat.key] ?? {}));
       const total = cat.allIds().length;
       navButtons.push([
-        { text: cat.label },
+        { text: capitalCase(cat.label) },
         [{ text: `${GRAY}${collected}/${total}` }],
         cat.icon,
         undefined,
