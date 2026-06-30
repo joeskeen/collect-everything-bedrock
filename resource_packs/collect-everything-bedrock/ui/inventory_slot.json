@@ -2,10 +2,47 @@
   "namespace": "collect_everything",
 
   "inventory_slot_button": {
+    "$is_hidden|default": false,
     "type": "panel",
     "size": ["100%c", "100%c"],
     "ignored": "(#collection_index < $reserved_button_length)",
-    "visible": "((#collection_index > $reserved_button_length or #collection_index = $reserved_button_length) and not #form_button_text = '')",
+    // "visible": "((#collection_index > $reserved_button_length or #collection_index = $reserved_button_length) and not #form_button_text = '')",
+    "bindings": [
+      {
+        "binding_name": "#null",
+        "binding_type": "collection",
+        "binding_condition": "none",
+        "binding_collection_name": "form_buttons"
+      },
+      {
+        "binding_name": "#null",
+        "binding_type": "collection_details",
+        "binding_collection_name": "form_buttons"
+      },
+      {
+        "binding_name": "#form_button_text",
+        "binding_type": "collection",
+        "binding_collection_name": "form_buttons"
+      },
+      // {
+      //   "binding_name": "#null",
+      //   "binding_type": "view",
+      //   "source_property_name": "((#collection_index > $reserved_button_length or #collection_index = $reserved_button_length) and not #form_button_text = '')",
+      //   "target_property_name": "#visible"
+      // },
+      {
+        "binding_name": "#null",
+        "binding_type": "view",
+        "source_property_name": "(#collection_index < $reserved_button_length)",
+        "target_property_name": "$is_hidden"
+      }
+    ],
+    "controls": [{ "@inventory_slot_button_internal": {} }]
+  },
+
+  "inventory_slot_button_internal@common.button": {
+    "$pressed_button_name": "button.form_button_click",
+    "size": ["100%c", "100%c"],
     "bindings": [
       {
         "binding_name": "#null",
@@ -23,26 +60,33 @@
         "binding_type": "collection",
         "binding_collection_name": "form_buttons"
       }
-      // {
-      //   "binding_name": "#null",
-      //   "binding_type": "view",
-      //   "source_property_name": "((#collection_index > $reserved_button_length or #collection_index = $reserved_button_length) and not #form_button_text = '')",
-      //   "target_property_name": "#visible"
-      // },
-      // {
-      //   "binding_name": "#null",
-      //   "binding_type": "view",
-      //   "source_property_name": "",
-      //   "target_property_name": "ignored"
-      // }
     ],
-    "controls": [{ "@inventory_slot_button_internal": {} }]
+    "default_control": "inventory_slot_default_view",
+    "hover_control": "inventory_slot_hover_view",
+    "pressed_control": "inventory_slot_pressed_view",
+    "controls": [
+      { "inventory_slot_default_view@inventory_cell": {} },
+      { "inventory_slot_hover_view@inventory_cell": { "$hover": true } },
+      { "inventory_slot_pressed_view@inventory_cell": { "$pressed": true } }
+    ]
   },
 
-  "inventory_slot_button_internal@common.button": {
-    "$pressed_button_name": "button.form_button_click",
-    "size": ["100%c", "100%c"],
-    "ignored": "(#collection_index < $reserved_button_length or #form_button_text = '')",
+  "inventory_cell": {
+    "type": "panel",
+    "size": [18, 18],
+    "$hover|default": false,
+    "$pressed|default": false,
+    "controls": [
+      { "item@inventory_item": {} },
+      { "background@inventory_cell_background": {} },
+      { "highlight@inventory_cell_highlight": { "visible": "($hover or $pressed)" } },
+      { "focus_border@inventory_cell_focus_border": { "visible": "($hover or $pressed)" } }
+    ]
+  },
+
+  "inventory_item": {
+    "type": "panel",
+    "size": [18, 18],
     "bindings": [
       {
         "binding_name": "#null",
@@ -83,21 +127,6 @@
         "target_property_name": "#item_id_aux"
       }
     ],
-    "default_control": "inventory_slot_default_view",
-    "hover_control": "inventory_slot_hover_view",
-    "pressed_control": "inventory_slot_pressed_view",
-    "controls": [
-      { "inventory_slot_default_view@inventory_slot": {} },
-      { "inventory_slot_hover_view@inventory_slot": { "$hover": true } },
-      { "inventory_slot_pressed_view@inventory_slot": { "$pressed": true } }
-    ]
-  },
-
-  "inventory_slot": {
-    "type": "panel",
-    "size": [18, 18],
-    "$hover|default": false,
-    "$pressed|default": false,
     "controls": [
       // if texture is a number, it renders via inventory item renderer
       {
@@ -110,49 +139,34 @@
       },
       // if texture is a texture path, it renders as an image
       { "@item_texture": {} },
-      { "@inventory_slot_amount": {} },
-      { "@inventory_slot_bar": {} },
-      { "@inventory_slot_background": {} },
-      {
-        "@inventory_slot_highlight": {
-          "visible": "($hover or $pressed)"
-        }
-      },
-      {
-        "@inventory_slot_focus_border": {
-          "visible": "($hover or $pressed)"
-        }
-      },
-      {
-        "@item_details": {
-          "visible": "$hover"
-        }
-      }
+      { "@inventory_item_amount": {} },
+      { "@inventory_item_bar": {} },
+      { "@inventory_item_details": { "visible": "$hover" } }
     ]
   },
 
-  "inventory_slot_background": {
+  "inventory_cell_background": {
     "type": "image",
     "texture": "textures/ui/item_background",
     "size": [18, 18],
     "layer": 2
   },
 
-  "inventory_slot_highlight": {
+  "inventory_cell_highlight": {
     "type": "image",
     "size": [18, 18],
     "texture": "textures/ui/highlight_slot",
     "layer": 3
   },
 
-  "inventory_slot_focus_border": {
+  "inventory_cell_focus_border": {
     "type": "image",
     "size": [18, 18],
     "texture": "textures/ui/focus_border_white",
     "layer": 4
   },
 
-  "inventory_slot_bar": {
+  "inventory_item_bar": {
     "type": "image",
     "texture": "textures/ui/d_b",
     "size": [14, 2],
@@ -219,7 +233,7 @@
     ]
   },
 
-  "inventory_slot_amount": {
+  "inventory_item_amount": {
     "type": "panel",
     "controls": [
       {
@@ -292,7 +306,7 @@
     ]
   },
 
-  "item_details": {
+  "inventory_item_details": {
     "type": "custom",
     "renderer": "hover_text_renderer",
     "allow_clipping": false,
