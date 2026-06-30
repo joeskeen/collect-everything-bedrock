@@ -1,4 +1,4 @@
 {
-  "$border_and_background_texture": "textures/ui/dialog_background_opaque",
-  "$collection_index": 0
+  "$collect_everything_data_prefix": "§c§o§l§l§e§c§t§i§o§n",
+  "$reserved_button_length": 32
 }

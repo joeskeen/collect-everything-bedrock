@@ -1,13 +1,25 @@
 {
-  "format_version": "1.20.0",
+  "format_version": "1.26.0",
   "minecraft:item": {
     "description": {
       "identifier": "collecteverything:checklist",
-      "category": "items"
+      "menu_category": {
+        "category": "items"
+      }
     },
     "components": {
-      "minecraft:icon": "checklist",
-      "minecraft:render_offsets": "book",
+      "minecraft:icon": {
+        "textures": {
+          "default": "checklist"
+        }
+      },
+      "minecraft:allow_off_hand": true,
+      "minecraft:can_destroy_in_creative": false,
+      "minecraft:fire_resistant": {
+        "value": true
+      },
+      "minecraft:interact_button": "View Collection",
+      "minecraft:rarity": "common",
       "minecraft:display_name": {
         "value": "item.collecteverything.checklist.name"
       }

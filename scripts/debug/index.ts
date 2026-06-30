@@ -10,6 +10,20 @@ export function registerDebugProviders() {
 }
 
 system.run(() => {
+  system.afterEvents.scriptEventReceive.subscribe((e) => {
+    console.log(
+      "script event received",
+      JSON.stringify({
+        id: e.id,
+        initiator: e.initiator?.id,
+        message: e.message,
+        sourceBlock: e.sourceBlock?.typeId,
+        sourceEntity: e.sourceEntity?.id,
+        sourceType: e.sourceType,
+      })
+    );
+  });
+  system.runTimeout(() => system.sendScriptEvent("collecteverything:test", "does this work?"), 100);
   world.afterEvents.itemUse.subscribe((e) => {
     if (e.itemStack.typeId === "collecteverything:checklist") {
       // console.log("success!");

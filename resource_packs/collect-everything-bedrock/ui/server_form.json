@@ -4,14 +4,14 @@
     "type": "panel",
     "controls": [
       {
-        "collection_ui@collection_ui.collection_panel": {
+        "collection_browser_screen@collect_everything.collection_browser_screen": {
           "bindings": [
-            {
-              "binding_name": "#title_text"
-            },
+            // expose the long_form's title text as a variable for children
+            { "binding_name": "#title_text", "binding_type": "global" },
             {
               "binding_type": "view",
-              "source_property_name": "(not ((#title_text - '§c§o§l§l§e§c§t§i§o§n') = #title_text))",
+              // only show this form if the title of the form starts with our special data prefix string
+              "source_property_name": "(not ((#title_text - $collect_everything_data_prefix - ':collection_browser') = #title_text))",
               "target_property_name": "#visible"
             }
           ]

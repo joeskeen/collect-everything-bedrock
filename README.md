@@ -65,4 +65,11 @@ ln -s ~/.var/app/io.mrarm.mcpelauncher/data/mcpelauncher/games/com.mojang/minecr
 2. Load your test world
 3. Run `/reload`
 
+## Thanks and Acknowledgments
+
+- Knarfy: thanks for the idea, the Java add-on, and the awesome video series!
+- Herobrine643928: thanks for making Chest-UI, as this was my starting point for the graphical Collection Browser!
+- Smell of Curry: thanks for the tutorial videos and Smelly API code!
+- Minecraft Bedrock team: thanks for making extensibility possible on MCBE!
+
 ## Sponsor this add-on to include your name in an upcoming easter-egg!

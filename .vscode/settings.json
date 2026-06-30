@@ -36,5 +36,10 @@
     "collecteverything"
   ],
   "editor.tabSize": 2,
-  "eslint.experimental.useFlatConfig": true
+  "eslint.experimental.useFlatConfig": true,
+  "files.associations": {
+    "*.mclint": "jsonc",
+    "**/resource_packs/**/*.json": "jsonc",
+    "**/behavior_packs/**/*.json": "jsonc"
+  }
 }

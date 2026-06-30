@@ -20,6 +20,8 @@ import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
 import { BOLD, GRAY, ITALIC, RESET } from "../../shared/format-codes";
 import { PlayerSettingsService } from "../player-settings";
 
+const RESERVED_BUTTONS = 32;
+
 type CategoryKey =
   | typeof ITEM
   | typeof BIOME
@@ -139,30 +141,42 @@ export class PlayerBrowseCommand implements CommandHandler {
     const collectionForm = new CollectionFormData(this.createActionForm).title(
       `Collection - ${BOLD}${THEME[this.activeCategory] ?? ""}${capitalCase(this.activeCategory)}`
     );
+    const buttons: Array<Parameters<typeof collectionForm.button>> = [];
+    const navButtons: Array<Parameters<typeof collectionForm.button>> = [];
 
     const totalCollected = this.categories.reduce(
       (sum, cat) => sum + cat.collectedCount(Object.keys(collection[cat.key] ?? {})).collected,
       0
     );
     const totalItems = this.categories.reduce((sum, cat) => sum + cat.allIds().length, 0);
-    collectionForm.button(
+
+    // insert navigation buttons at the bottom of the list
+    // this makes it WAY easier to deal with since the grid
+    // will always start at the beginning of the list
+    navButtons.push([
       { text: "All" },
       [{ text: `${GRAY}${totalCollected}/${totalItems}` }],
       "textures/items/book_normal",
       undefined,
-      Math.floor((totalCollected / totalItems) * 100)
-    );
+      Math.floor((totalCollected / totalItems) * 100),
+    ]);
+    buttons.push(navButtons[navButtons.length - 1]);
 
     for (const cat of this.categories) {
       const { collected } = cat.collectedCount(Object.keys(collection[cat.key] ?? {}));
       const total = cat.allIds().length;
-      collectionForm.button(
+      navButtons.push([
         { text: cat.label },
         [{ text: `${GRAY}${collected}/${total}` }],
         cat.icon,
         undefined,
-        Math.floor((collected / total) * 100)
-      );
+        Math.floor((collected / total) * 100),
+      ]);
+      buttons.push(navButtons[navButtons.length - 1]);
+    }
+
+    while (buttons.length < RESERVED_BUTTONS) {
+      buttons.push([{ text: "" }, [], ""]);
     }
 
     const category = this.categories.find((c) => c.key === this.activeCategory);
@@ -177,27 +191,51 @@ export class PlayerBrowseCommand implements CommandHandler {
       const category = this.categories.find((c) => c.key === categoryId)!;
       let texture: string | number = category.resolveTexture(id);
       let name: RawMessage = category.getName(id);
-      const percentComplete = this.playerCollection.hasCollected(category as any, id) ? 100 : 0;
-      collectionForm.button(
+      const percentComplete = this.playerCollection.hasCollected(category.key, id) ? 100 : 0;
+      buttons.push([
         name,
         [{ text: `${ITALIC}${THEME[categoryId] ?? GRAY}${category.label}${RESET}` }, { text: `${ITALIC}${GRAY}${id}` }],
         texture ?? UNKNOWN_TEXTURE,
         undefined,
-        percentComplete
-      );
+        percentComplete,
+      ]);
     }
 
-    collectionForm.show(this.player).then((result) => {
-      if (result.canceled || result.selection === undefined) return;
-      const selection = result.selection;
-      if (selection === 0) {
-        this.activeCategory = "all";
-        this.system.run(() => this.showForm());
-      } else if (selection <= this.categories.length) {
-        this.activeCategory = this.categories[selection - 1].key;
-        this.system.run(() => this.showForm());
-      }
-    });
+    for (const button of buttons) {
+      collectionForm.button(...button);
+    }
+
+    collectionForm
+      .show(this.player)
+      .then((result) => {
+        console.log(
+          "result",
+          JSON.stringify({
+            canceled: result?.canceled,
+            selection: result?.selection,
+            cancelationReason: result?.cancelationReason,
+          })
+        );
+        if (result.canceled || result.selection === undefined) return;
+
+        const selection = result.selection;
+
+        // TODO: show item detail
+        if (selection > RESERVED_BUTTONS) return;
+
+        const navIndex = 0;
+        if (selection === navIndex) {
+          this.activeCategory = "all";
+          this.system.run(() => this.showForm());
+        } else if (selection < navButtons.length) {
+          this.activeCategory = this.categories[selection - 1].key;
+          this.system.run(() => this.showForm());
+        }
+      })
+      .catch((err) => {
+        console.log("error", err);
+      })
+      .finally(() => console.log("done"));
   }
 }
 
