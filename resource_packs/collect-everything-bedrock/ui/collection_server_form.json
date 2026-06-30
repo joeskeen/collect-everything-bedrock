@@ -18,13 +18,13 @@
   "collection_browser_modal": {
     "type": "stack_panel",
     "orientation": "vertical",
-    "size": [316, 162],
+    "size": [320, 162],
     "controls": [{ "top_panel@top_panel": {} }, { "main_panel@main_panel": {} }]
   },
 
   "top_panel": {
     "type": "panel",
-    "size": [315, 20],
+    "size": [320, 20],
     "anchor_from": "top_left",
     "anchor_to": "top_left",
     "controls": [{ "category_buttons@category_buttons": {} }, { "top_right_panel@top_right_panel": {} }]
@@ -147,6 +147,7 @@
     "type": "image",
     "texture": "textures/ui/TabTopBackRightMostDark",
     "size": [85, 24],
+    "offset": [-2, 0],
     "anchor_from": "top_right",
     "anchor_to": "top_right",
     "layer": 0,
