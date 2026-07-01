@@ -1,4 +1,4 @@
 {
-  "$collect_everything_data_prefix": "§c§o§l§l§e§c§t§i§o§n",
-  "$reserved_button_length": 32
+  "$collect_everything_data_prefix": "__collection_form__",
+  "$category_count": 7
 }

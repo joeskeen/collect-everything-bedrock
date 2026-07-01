@@ -5,7 +5,7 @@
     "$is_hidden|default": false,
     "type": "panel",
     "size": ["100%c", "100%c"],
-    "ignored": "(#collection_index < $reserved_button_length)",
+    // "ignored": "(#collection_index < $reserved_button_length)",
     // "visible": "((#collection_index > $reserved_button_length or #collection_index = $reserved_button_length) and not #form_button_text = '')",
     "bindings": [
       {
@@ -23,19 +23,19 @@
         "binding_name": "#form_button_text",
         "binding_type": "collection",
         "binding_collection_name": "form_buttons"
-      },
+      }
       // {
       //   "binding_name": "#null",
       //   "binding_type": "view",
       //   "source_property_name": "((#collection_index > $reserved_button_length or #collection_index = $reserved_button_length) and not #form_button_text = '')",
       //   "target_property_name": "#visible"
       // },
-      {
-        "binding_name": "#null",
-        "binding_type": "view",
-        "source_property_name": "(#collection_index < $reserved_button_length)",
-        "target_property_name": "$is_hidden"
-      }
+      // {
+      //   "binding_name": "#null",
+      //   "binding_type": "view",
+      //   "source_property_name": "(#collection_index < $reserved_button_length)",
+      //   "target_property_name": "$is_hidden"
+      // }
     ],
     "controls": [{ "@inventory_slot_button_internal": {} }]
   },
@@ -113,6 +113,7 @@
       },
       {
         "binding_type": "view",
+        // if the first 8 bytes of the #form_button_texture string isn't 'textures', show this (numerical id texture)
         "source_property_name": "(not (('%.8s' * #form_button_texture) = 'textures'))",
         "target_property_name": "#visible"
       },
@@ -170,7 +171,6 @@
     "type": "image",
     "texture": "textures/ui/d_b",
     "size": [14, 2],
-    // "layer": 8,
     "anchor_from": "bottom_middle",
     "anchor_to": "bottom_middle",
     "offset": [0, -1.5],
@@ -186,7 +186,8 @@
       },
       {
         "binding_type": "view",
-        "source_property_name": "((#form_button_text - 'dur#00') = #form_button_text)",
+        // detect presence of 'percent' field
+        "source_property_name": "(not ((#form_button_text - '|percent|:') = #form_button_text))",
         "target_property_name": "#visible"
       }
     ],
@@ -214,7 +215,8 @@
             },
             {
               "binding_type": "view",
-              "source_property_name": "((%.14s * #form_button_text) - (%.12s * #form_button_text))",
+              // extract 'percent' field value
+              "source_property_name": "(('%.23s' * #form_button_text) - ('%.20s' * #form_button_text)",
               "target_property_name": "#ratio"
             },
             {
@@ -224,6 +226,7 @@
             },
             {
               "binding_type": "view",
+              // calculate percentage as value between 0 and 1
               "source_property_name": "(($clip_max - #ratio_1) / $clip_max)",
               "target_property_name": "#clip_ratio"
             }
@@ -242,11 +245,8 @@
           "offset": [0, 1],
           "shadow": true,
           "text_alignment": "left",
-          // "anchor_from": "bottom_right",
-          // "anchor_to": "bottom_right",
           "color": "$tool_tip_text",
-          // "layer": 6,
-          "text": "#stack_size",
+          "text": "",
           "bindings": [
             {
               "binding_name": "#null",
@@ -264,17 +264,18 @@
               "binding_type": "collection",
               "binding_collection_name": "form_buttons"
             },
+            // {
+            //   "binding_name": "#null",
+            //   "binding_type": "view",
+            //   // detect presence of 'count' field
+            //   "source_property_name": "(not ((#form_button_text - '|count|:') = #form_button_text))",
+            //   "target_property_name": "#visible"
+            // },
             {
-              "binding_name": "#null",
-              "binding_type": "view",
-              "source_property_name": "((#form_button_text - 'stack#01') = #form_button_text)",
-              "target_property_name": "#visible"
-            },
-            {
-              "binding_name": "#null",
-              "binding_type": "view",
-              "source_property_name": "(('§z') + (('%.8s' * #form_button_text) - ('%.6s' * #form_button_text)))",
-              "target_property_name": "#stack_size"
+              // extract 'count' field value
+              "binding_name": "(('§z') + #collection_index)", // "(('%.10s' * #form_button_text) - ('%.8s' * #form_button_text)",
+              "binding_name_override": "#text",
+              "binding_collection_name": "form_buttons"
             }
           ]
         }
@@ -319,7 +320,7 @@
       },
       {
         "binding_type": "view",
-        "source_property_name": "(#form_button_text - ('%.14s' * #form_button_text))",
+        "source_property_name": "(#form_button_text - ('%.23s' * #form_button_text))",
         "target_property_name": "#hover_text"
       },
       {

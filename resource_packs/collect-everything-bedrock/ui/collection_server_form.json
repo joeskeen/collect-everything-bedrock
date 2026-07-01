@@ -18,13 +18,16 @@
   "collection_browser_modal": {
     "type": "stack_panel",
     "orientation": "vertical",
-    "size": [320, 162],
+    "size": [325, 162],
+    "$item_count": "((('%.52s' * #title_text) - ('%.47s' * #title_text)))",
+    // "$active_index": "(('%.36s' * #title_text) - ('%.34s' * #title_text))",
+    // "$title_display_text": "(#title_text - ('%.53s' * #title_text))",
     "controls": [{ "top_panel@top_panel": {} }, { "main_panel@main_panel": {} }]
   },
 
   "top_panel": {
     "type": "panel",
-    "size": [320, 20],
+    "size": [325, 20],
     "anchor_from": "top_left",
     "anchor_to": "top_left",
     "controls": [{ "category_buttons@category_buttons": {} }, { "top_right_panel@top_right_panel": {} }]
@@ -160,34 +163,39 @@
           "offset": [-5, 4],
           "orientation": "horizontal",
           "collection_name": "form_buttons",
-
           "controls": [
             {
               "search_button@toolbar_button": {
                 "$icon_control": "search_icon",
                 "$tooltip_text": "Search",
-                "collection_index": 28
+                "bindings": [
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(0 + (('%.53s' * #title_text) - ('%.48s' * #title_text)) + $category_count)",
+                    "target_property_name": "#collection_index"
+                  }
+                ]
               }
             },
             {
               "recent_button@toolbar_button": {
                 "$icon_control": "recent_icon",
                 "$tooltip_text": "Recent",
-                "collection_index": 29
+                "collection_index": "(1 + $item_count + $category_count)"
               }
             },
             {
               "settings_button@toolbar_button": {
                 "$icon_control": "settings_icon",
                 "$tooltip_text": "Settings",
-                "collection_index": 30
+                "collection_index": "(2 + $item_count + $category_count)"
               }
             },
             {
               "help_button@toolbar_button": {
                 "$icon_control": "help_icon",
                 "$tooltip_text": "Help",
-                "collection_index": 31
+                "collection_index": "(3 + $item_count + $category_count)"
               }
             },
             {
@@ -202,14 +210,18 @@
 
   "modal_title": {
     "type": "label",
-    "text": "#title_text",
+    "text": "#display_text", // "#title_text",
     "color": "$title_text_color",
     "anchor_from": "top_left",
     "anchor_to": "top_left",
-    "offset": [7, 7]
-    // "layer": 2,
-    // "anchor_from": "top_left",
-    // "anchor_to": "top_left"
+    "offset": [7, 7],
+    "bindings": [
+      {
+        "binding_type": "view",
+        "source_property_name": "(('§z') + (('%.52s' * #title_text) - ('%.47s' * #title_text)))",
+        "target_property_name": "#display_text"
+      }
+    ]
   },
 
   "category_buttons": {
@@ -221,26 +233,14 @@
     "anchor_to": "top_left",
     "layer": 1,
     "collection_name": "form_buttons",
-    "bindings": [
-      {
-        "binding_name": "#form_button_length",
-        "binding_name_override": "#length",
-        "binding_condition": "once"
-      },
-      {
-        "source_property_name": "(#length - $reserved_button_length)",
-        "target_property_name": "#collection_index",
-        "binding_type": "view"
-      }
-    ],
     "controls": [
-      { "@inventory_slot_tab": { "collection_index": 0 } },
-      { "@inventory_slot_tab": { "collection_index": 1 } },
-      { "@inventory_slot_tab": { "collection_index": 2 } },
-      { "@inventory_slot_tab": { "collection_index": 3 } },
-      { "@inventory_slot_tab": { "collection_index": 4 } },
-      { "@inventory_slot_tab": { "collection_index": 5 } },
-      { "@inventory_slot_tab": { "collection_index": 6 } }
+      { "all_tab@inventory_slot_tab": { "collection_index": 0 } },
+      { "items_tab@inventory_slot_tab": { "collection_index": 1 } },
+      { "biomes_tab@inventory_slot_tab": { "collection_index": 2 } },
+      { "entities_tab@inventory_slot_tab": { "collection_index": 3 } },
+      { "effects_tab@inventory_slot_tab": { "collection_index": 4 } },
+      { "enchantments_tab@inventory_slot_tab": { "collection_index": 5 } },
+      { "unobtainables_tab@inventory_slot_tab": { "collection_index": 6 } }
     ]
   },
 
@@ -326,7 +326,7 @@
             {
               "@common.scrolling_panel": {
                 "$scrolling_content": "collect_everything.collection_browser_grid",
-                "$scrolling_pane_size": [306, 134]
+                "$scrolling_pane_size": [315, 134]
               }
             }
           ]
@@ -338,6 +338,7 @@
   "collection_browser_grid": {
     "type": "grid",
     "size": ["100%", "default"], // full-width; auto-height
+    "offset": [0, -18],
     "grid_item_template": "collect_everything.inventory_slot_button",
     "collection_name": "form_buttons",
     "$item_collection_name": "form_buttons",

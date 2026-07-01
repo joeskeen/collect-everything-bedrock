@@ -11,7 +11,7 @@
             {
               "binding_type": "view",
               // only show this form if the title of the form starts with our special data prefix string
-              "source_property_name": "(not ((#title_text - $collect_everything_data_prefix - ':collection_browser') = #title_text))",
+              "source_property_name": "(not ((#title_text - $collect_everything_data_prefix) = #title_text))",
               "target_property_name": "#visible"
             }
           ]

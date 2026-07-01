@@ -11,7 +11,7 @@ import { EnchantmentRegistry } from "../../collections/enchantment/enchantment.r
 import { UnobtainableRegistry } from "../../collections/unobtainable/unobtainable.registry";
 import { PlayerCollection } from "../player-collection";
 import { capitalCase } from "change-case";
-import { CollectionFormData } from "../../shared/forms";
+import { CollectionFormData } from "../../ui/forms";
 import { trimNamespace as removeNamespace } from "../../shared/formatting";
 import { getItemTexture } from "../../collections/item/item-texture";
 import ENTITIES from "../../collections/entity/entities";
@@ -21,6 +21,7 @@ import { BOLD, GRAY, ITALIC, RESET } from "../../shared/format-codes";
 import { PlayerSettingsService } from "../player-settings";
 
 const RESERVED_BUTTONS = 32;
+const GRID_ROW_LENGTH = 17;
 
 type CategoryKey =
   | typeof ITEM
@@ -150,15 +151,13 @@ export class PlayerBrowseCommand implements CommandHandler {
     );
     const totalItems = this.categories.reduce((sum, cat) => sum + cat.allIds().length, 0);
 
-    // insert navigation buttons at the bottom of the list
-    // this makes it WAY easier to deal with since the grid
-    // will always start at the beginning of the list
     navButtons.push([
       { text: "All" },
       [{ text: `${GRAY}${totalCollected}/${totalItems}` }],
       "textures/items/book_normal",
       undefined,
       Math.floor((totalCollected / totalItems) * 100),
+      "all",
     ]);
     buttons.push(navButtons[navButtons.length - 1]);
 
@@ -171,12 +170,18 @@ export class PlayerBrowseCommand implements CommandHandler {
         cat.icon,
         undefined,
         Math.floor((collected / total) * 100),
+        cat.key,
       ]);
       buttons.push(navButtons[navButtons.length - 1]);
     }
 
-    while (buttons.length < RESERVED_BUTTONS) {
-      buttons.push([{ text: "" }, [], ""]);
+    buttons.push([{ text: "Search" }, [], "", undefined, undefined, "search"]);
+    buttons.push([{ text: "Recent" }, [], "", undefined, undefined, "recent"]);
+    buttons.push([{ text: "Settings" }, [], "", undefined, undefined, "settings"]);
+    buttons.push([{ text: "Help" }, [], "", undefined, undefined, "help"]);
+    const filler: Parameters<typeof collectionForm.button> = [{}, [], "", undefined, undefined, undefined];
+    while (buttons.length < GRID_ROW_LENGTH) {
+      buttons.push(filler);
     }
 
     const category = this.categories.find((c) => c.key === this.activeCategory);
@@ -185,6 +190,9 @@ export class PlayerBrowseCommand implements CommandHandler {
       : this.categories // 'all'
           .flatMap((c) => c.allIds().map((id) => [id, c.key] as const))
           .sort((a, b) => removeNamespace(a[0]).localeCompare(removeNamespace(b[0])));
+
+    collectionForm.itemsCount(thingsToShow.length);
+    collectionForm.activeTab(this.categories.findIndex((c) => c.key === category?.key) + 1);
 
     for (const thing of thingsToShow) {
       const [id, categoryId] = thing;
@@ -198,6 +206,7 @@ export class PlayerBrowseCommand implements CommandHandler {
         texture ?? UNKNOWN_TEXTURE,
         undefined,
         percentComplete,
+        `${categoryId};${id}`,
       ]);
     }
 
@@ -214,6 +223,7 @@ export class PlayerBrowseCommand implements CommandHandler {
             canceled: result?.canceled,
             selection: result?.selection,
             cancelationReason: result?.cancelationReason,
+            selectedButtonValue: result?.selectedButtonValue,
           })
         );
         if (result.canceled || result.selection === undefined) return;
