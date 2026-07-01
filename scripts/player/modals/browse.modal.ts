@@ -2,8 +2,10 @@ import { inject, Lifecycle, scoped } from "tsyringe";
 import type { Player, RawMessage, System } from "@minecraft/server";
 import {
   CREATE_ACTION_FORM_TOKEN,
+  CREATE_MESSAGE_FORM_TOKEN,
   CREATE_MODAL_FORM_TOKEN,
   CreateActionFormFn,
+  CreateMessageFormFn,
   CreateModalFormFn,
   PLAYER_TOKEN,
   SYSTEM_TOKEN,
@@ -60,13 +62,13 @@ export class BrowserModal {
       this.system.run(() => this.show());
     },
     search: async () => {
-      const form = this.createModalForm();
-      await form.title("Search Collection").label("This feature is not yet implemented.").show(this.player);
+      const form = this.createMessageForm().title("Search Collection").body("This feature is not yet implemented.");
+      await form.show(this.player);
       this.system.run(() => this.show());
     },
     recent: async () => {
-      const form = this.createModalForm();
-      await form.title("Recent Collection").label("This feature is not yet implemented.").show(this.player);
+      const form = this.createMessageForm().title("Recent Collection").body("This feature is not yet implemented.");
+      await form.show(this.player);
       this.system.run(() => this.show());
     },
     settings: async () => {
@@ -76,13 +78,15 @@ export class BrowserModal {
       });
     },
     help: async () => {
-      const form = this.createModalForm();
-      await form.title("Help").label("This feature is not yet implemented.").show(this.player);
+      const form = this.createMessageForm()
+        .title("Collect Everything! Help")
+        .body("This feature is not yet implemented.");
+      await form.show(this.player);
       this.system.run(() => this.show());
     },
     details: async (id) => {
-      const form = this.createModalForm();
-      await form.title(id).label(`This feature is not yet implemented for ${id}.`).show(this.player);
+      const form = this.createMessageForm().title(id).body(`This feature is not yet implemented.`);
+      await form.show(this.player);
       this.system.run(() => this.show());
     },
   };
@@ -99,7 +103,7 @@ export class BrowserModal {
     @inject(EnchantmentRegistry) private readonly enchantmentRegistry: EnchantmentRegistry,
     @inject(UnobtainableRegistry) private readonly unobtainableRegistry: UnobtainableRegistry,
     @inject(CREATE_ACTION_FORM_TOKEN) private readonly createActionForm: CreateActionFormFn,
-    @inject(CREATE_MODAL_FORM_TOKEN) private readonly createModalForm: CreateModalFormFn,
+    @inject(CREATE_MESSAGE_FORM_TOKEN) private readonly createMessageForm: CreateMessageFormFn,
     @inject(SettingsModal) private readonly settingsModal: SettingsModal
   ) {}
 
@@ -251,15 +255,15 @@ export class BrowserModal {
     collectionForm
       .show(this.player)
       .then((result) => {
-        console.log(
-          "result",
-          JSON.stringify({
-            canceled: result?.canceled,
-            selection: result?.selection,
-            cancelationReason: result?.cancelationReason,
-            selectedButtonValue: result?.selectedButtonValue,
-          })
-        );
+        // console.log(
+        //   "result",
+        //   JSON.stringify({
+        //     canceled: result?.canceled,
+        //     selection: result?.selection,
+        //     cancelationReason: result?.cancelationReason,
+        //     selectedButtonValue: result?.selectedButtonValue,
+        //   })
+        // );
         if (result.canceled || result.selectedButtonValue === undefined || result.selectedButtonValue === null) {
           return;
         }
@@ -276,7 +280,6 @@ export class BrowserModal {
       })
       .catch((err) => {
         console.log("error", err);
-      })
-      .finally(() => console.log("done"));
+      });
   }
 }

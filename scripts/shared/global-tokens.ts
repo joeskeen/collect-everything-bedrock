@@ -13,7 +13,7 @@ import type {
   World,
   EntityComponentTypes,
 } from "@minecraft/server";
-import type { ActionFormData, ModalFormData } from "@minecraft/server-ui";
+import type { ActionFormData, MessageFormData, ModalFormData } from "@minecraft/server-ui";
 import { InjectionToken } from "tsyringe";
 
 export const SYSTEM_TOKEN: InjectionToken<System> = Symbol("global @minecraft/server `system`");
@@ -55,3 +55,6 @@ export const CREATE_MODAL_FORM_TOKEN: InjectionToken<CreateModalFormFn> = Symbol
 
 export type CreateActionFormFn = () => ActionFormData;
 export const CREATE_ACTION_FORM_TOKEN: InjectionToken<CreateActionFormFn> = Symbol("action form creation function");
+
+export type CreateMessageFormFn = () => MessageFormData;
+export const CREATE_MESSAGE_FORM_TOKEN: InjectionToken<CreateMessageFormFn> = Symbol("message form creation function");

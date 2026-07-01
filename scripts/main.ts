@@ -19,6 +19,7 @@ import {
   BIOME_TYPES_TOKEN,
   BLOCK_TYPES_TOKEN,
   CREATE_ACTION_FORM_TOKEN,
+  CREATE_MESSAGE_FORM_TOKEN,
   CREATE_MODAL_FORM_TOKEN,
   DIMENSION_TYPES_TOKEN,
   EFFECT_TYPES_TOKEN,
@@ -44,11 +45,13 @@ import {
   ObservableBoolean,
   ObservableNumber,
   ObservableString,
+  MessageFormData,
 } from "@minecraft/server-ui";
 
 // registerDebugProviders();
 container.registerInstance(DDUI_TOKEN, { CustomForm, ObservableBoolean, ObservableNumber, ObservableString });
 container.registerInstance(CREATE_MODAL_FORM_TOKEN, () => new ModalFormData());
+container.registerInstance(CREATE_MESSAGE_FORM_TOKEN, () => new MessageFormData());
 container.registerInstance(CREATE_ACTION_FORM_TOKEN, () => new ActionFormData());
 container.registerInstance(LOG_SETTINGS_TOKEN, getLogSettings);
 container.registerInstance(SYSTEM_TOKEN, system);
