@@ -1,7 +1,14 @@
 import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
 import type { CustomCommandOrigin, CustomCommandResult, Player, RawMessage, System } from "@minecraft/server";
-import { CREATE_ACTION_FORM_TOKEN, CreateActionFormFn, PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
+import {
+  CREATE_ACTION_FORM_TOKEN,
+  CREATE_MODAL_FORM_TOKEN,
+  CreateActionFormFn,
+  CreateModalFormFn,
+  PLAYER_TOKEN,
+  SYSTEM_TOKEN,
+} from "../../shared/global-tokens";
 import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME, UNOBTAINABLE } from "../collection-constants";
 import { ItemRegistry } from "../../collections/item/item.registry";
 import { BiomeRegistry } from "../../collections/biome/biome.registry";
@@ -31,6 +38,8 @@ type CategoryKey =
   | typeof ENCHANTMENT
   | typeof UNOBTAINABLE;
 
+const categoryKeys: (CategoryKey | "all")[] = ["all", ITEM, BIOME, ENTITY, EFFECT, ENCHANTMENT, UNOBTAINABLE];
+
 interface Category {
   key: CategoryKey;
   label: string;
@@ -45,6 +54,37 @@ interface Category {
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerBrowseCommand implements CommandHandler {
   private activeCategory: CategoryKey | "all" = "all";
+  private readonly actions: Record<string, (id: string) => void | Promise<void>> = {
+    category: (id) => {
+      this.activeCategory = id as CategoryKey;
+      this.system.run(() => this.showForm());
+    },
+    search: async () => {
+      const form = this.createModalForm();
+      await form.title("Search Collection").label("This feature is not yet implemented.").show(this.player);
+      this.system.run(() => this.showForm());
+    },
+    recent: async () => {
+      const form = this.createModalForm();
+      await form.title("Recent Collection").label("This feature is not yet implemented.").show(this.player);
+      this.system.run(() => this.showForm());
+    },
+    settings: async () => {
+      const form = this.createModalForm();
+      await form.title("Settings").label("This feature is not yet implemented.").show(this.player);
+      this.system.run(() => this.showForm());
+    },
+    help: async () => {
+      const form = this.createModalForm();
+      await form.title("Help").label("This feature is not yet implemented.").show(this.player);
+      this.system.run(() => this.showForm());
+    },
+    details: async (id) => {
+      const form = this.createModalForm();
+      await form.title(id).label(`This feature is not yet implemented for ${id}.`).show(this.player);
+      this.system.run(() => this.showForm());
+    },
+  };
 
   constructor(
     @inject(SYSTEM_TOKEN) private readonly system: System,
@@ -57,7 +97,8 @@ export class PlayerBrowseCommand implements CommandHandler {
     @inject(EffectRegistry) private readonly effectRegistry: EffectRegistry,
     @inject(EnchantmentRegistry) private readonly enchantmentRegistry: EnchantmentRegistry,
     @inject(UnobtainableRegistry) private readonly unobtainableRegistry: UnobtainableRegistry,
-    @inject(CREATE_ACTION_FORM_TOKEN) private readonly createActionForm: CreateActionFormFn
+    @inject(CREATE_ACTION_FORM_TOKEN) private readonly createActionForm: CreateActionFormFn,
+    @inject(CREATE_MODAL_FORM_TOKEN) private readonly createModalForm: CreateModalFormFn
   ) {}
 
   private readonly categories: Category[] = [
@@ -143,7 +184,6 @@ export class PlayerBrowseCommand implements CommandHandler {
       `Collection - ${BOLD}${THEME[this.activeCategory] ?? ""}${capitalCase(this.activeCategory)}`
     );
     const buttons: Array<Parameters<typeof collectionForm.button>> = [];
-    const navButtons: Array<Parameters<typeof collectionForm.button>> = [];
 
     const totalCollected = this.categories.reduce(
       (sum, cat) => sum + cat.collectedCount(Object.keys(collection[cat.key] ?? {})).collected,
@@ -151,7 +191,7 @@ export class PlayerBrowseCommand implements CommandHandler {
     );
     const totalItems = this.categories.reduce((sum, cat) => sum + cat.allIds().length, 0);
 
-    navButtons.push([
+    buttons.push([
       { text: "All" },
       [{ text: `${GRAY}${totalCollected}/${totalItems}` }],
       "textures/items/book_normal",
@@ -159,12 +199,11 @@ export class PlayerBrowseCommand implements CommandHandler {
       Math.floor((totalCollected / totalItems) * 100),
       "all",
     ]);
-    buttons.push(navButtons[navButtons.length - 1]);
 
     for (const cat of this.categories) {
       const { collected } = cat.collectedCount(Object.keys(collection[cat.key] ?? {}));
       const total = cat.allIds().length;
-      navButtons.push([
+      buttons.push([
         { text: capitalCase(cat.label) },
         [{ text: `${GRAY}${collected}/${total}` }],
         cat.icon,
@@ -172,7 +211,6 @@ export class PlayerBrowseCommand implements CommandHandler {
         Math.floor((collected / total) * 100),
         cat.key,
       ]);
-      buttons.push(navButtons[navButtons.length - 1]);
     }
 
     buttons.push([{ text: "Search" }, [], "", undefined, undefined, "search"]);
@@ -226,20 +264,18 @@ export class PlayerBrowseCommand implements CommandHandler {
             selectedButtonValue: result?.selectedButtonValue,
           })
         );
-        if (result.canceled || result.selection === undefined) return;
+        if (result.canceled || result.selectedButtonValue === undefined || result.selectedButtonValue === null) {
+          return;
+        }
 
-        const selection = result.selection;
+        const selection = result.selectedButtonValue as string;
 
-        // TODO: show item detail
-        if (selection > RESERVED_BUTTONS) return;
-
-        const navIndex = 0;
-        if (selection === navIndex) {
-          this.activeCategory = "all";
-          this.system.run(() => this.showForm());
-        } else if (selection < navButtons.length) {
-          this.activeCategory = this.categories[selection - 1].key;
-          this.system.run(() => this.showForm());
+        if (selection in this.actions) {
+          this.actions[selection](selection);
+        } else if (categoryKeys.includes(selection as CategoryKey)) {
+          this.actions.category(selection);
+        } else {
+          this.actions.details(selection);
         }
       })
       .catch((err) => {

@@ -5,8 +5,6 @@
     "$is_hidden|default": false,
     "type": "panel",
     "size": ["100%c", "100%c"],
-    // "ignored": "(#collection_index < $reserved_button_length)",
-    // "visible": "((#collection_index > $reserved_button_length or #collection_index = $reserved_button_length) and not #form_button_text = '')",
     "bindings": [
       {
         "binding_name": "#null",
@@ -24,18 +22,6 @@
         "binding_type": "collection",
         "binding_collection_name": "form_buttons"
       }
-      // {
-      //   "binding_name": "#null",
-      //   "binding_type": "view",
-      //   "source_property_name": "((#collection_index > $reserved_button_length or #collection_index = $reserved_button_length) and not #form_button_text = '')",
-      //   "target_property_name": "#visible"
-      // },
-      // {
-      //   "binding_name": "#null",
-      //   "binding_type": "view",
-      //   "source_property_name": "(#collection_index < $reserved_button_length)",
-      //   "target_property_name": "$is_hidden"
-      // }
     ],
     "controls": [{ "@inventory_slot_button_internal": {} }]
   },
@@ -140,7 +126,6 @@
       },
       // if texture is a texture path, it renders as an image
       { "@item_texture": {} },
-      { "@inventory_item_amount": {} },
       { "@inventory_item_bar": {} },
       { "@inventory_item_details": { "visible": "$hover" } }
     ]
@@ -167,13 +152,26 @@
     "layer": 4
   },
 
+  /*
+"button_highlight_dark_background_white_foreground": {
+    "type": "custom",
+    "renderer": "gradient_renderer",
+    "color1": [0.58, 0.58, 0.58, 1],
+    "color2": [0.58, 0.58, 0.58, 1],
+    "size": ["100%", "100%"]
+  },
+*/
+
   "inventory_item_bar": {
-    "type": "image",
-    "texture": "textures/ui/d_b",
+    "type": "custom",
+    "renderer": "gradient_renderer",
+    "color1": [0, 0, 0, 1],
+    "color2": [0, 0, 0, 1],
     "size": [14, 2],
     "anchor_from": "bottom_middle",
     "anchor_to": "bottom_middle",
     "offset": [0, -1.5],
+    "layer": 8,
     "bindings": [
       {
         "binding_type": "collection_details",
@@ -186,8 +184,8 @@
       },
       {
         "binding_type": "view",
-        // detect presence of 'percent' field
-        "source_property_name": "(not ((#form_button_text - '|percent|:') = #form_button_text))",
+        // only show if percent is not 0
+        "source_property_name": "((#form_button_text - '|percent|:000') = #form_button_text)",
         "target_property_name": "#visible"
       }
     ],
@@ -201,7 +199,7 @@
           "offset": [0, -0.5],
           "clip_pixelperfect": false,
           "clip_direction": "left",
-          "$clip_max": 99,
+          "$clip_max": 100,
           "$one": 1.0,
           "bindings": [
             {
@@ -229,53 +227,6 @@
               // calculate percentage as value between 0 and 1
               "source_property_name": "(($clip_max - #ratio_1) / $clip_max)",
               "target_property_name": "#clip_ratio"
-            }
-          ]
-        }
-      }
-    ]
-  },
-
-  "inventory_item_amount": {
-    "type": "panel",
-    "controls": [
-      {
-        "item_amount": {
-          "type": "label",
-          "offset": [0, 1],
-          "shadow": true,
-          "text_alignment": "left",
-          "color": "$tool_tip_text",
-          "text": "",
-          "bindings": [
-            {
-              "binding_name": "#null",
-              "binding_type": "collection",
-              "binding_condition": "none",
-              "binding_collection_name": "form_buttons"
-            },
-            {
-              "binding_name": "#null",
-              "binding_type": "collection_details",
-              "binding_collection_name": "form_buttons"
-            },
-            {
-              "binding_name": "#form_button_text",
-              "binding_type": "collection",
-              "binding_collection_name": "form_buttons"
-            },
-            // {
-            //   "binding_name": "#null",
-            //   "binding_type": "view",
-            //   // detect presence of 'count' field
-            //   "source_property_name": "(not ((#form_button_text - '|count|:') = #form_button_text))",
-            //   "target_property_name": "#visible"
-            // },
-            {
-              // extract 'count' field value
-              "binding_name": "(('§z') + #collection_index)", // "(('%.10s' * #form_button_text) - ('%.8s' * #form_button_text)",
-              "binding_name_override": "#text",
-              "binding_collection_name": "form_buttons"
             }
           ]
         }

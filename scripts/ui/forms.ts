@@ -80,7 +80,7 @@ export class CollectionFormData {
     const response = await form.show(player);
     return {
       ...response,
-      selectedButtonValue: response.selection ? this.buttonArray[response.selection][2] : undefined,
+      selectedButtonValue: typeof response.selection === "number" ? this.buttonArray[response.selection][2] : undefined,
     };
   }
 }
