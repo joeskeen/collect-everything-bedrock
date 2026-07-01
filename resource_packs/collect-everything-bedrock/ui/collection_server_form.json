@@ -347,7 +347,7 @@
             },
             {
               "binding_type": "view",
-              "source_property_name": "(#collection_index = (('%.36s' * #title_text) - ('%.34s' * #title_text) * 1))",
+              "source_property_name": "(#collection_index = (('%.36s' * #title_text) - ('%.34s' * #title_text)))",
               "target_property_name": "#visible"
             }
           ]
