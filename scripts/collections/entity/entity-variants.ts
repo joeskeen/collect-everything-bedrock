@@ -76,6 +76,7 @@ export function createVariantCounter(entitiesOverride?: Record<string, EntityDat
       const newCombo = Object.entries(partMap)
         .map(([k, v]) => formatVariantValue(k, v))
         .filter((v): v is string => v !== null)
+        .sort()
         .join("+");
 
       if (!seen.has(newCombo)) {
@@ -124,7 +125,7 @@ export function createVariantCounter(entitiesOverride?: Record<string, EntityDat
 
     function generateCombinations(index: number, current: string[]): string[] {
       if (index === variantDefinitions.length) {
-        return [current.join("+")];
+        return [current.sort().join("+")];
       }
 
       const { key, values } = variantDefinitions[index];

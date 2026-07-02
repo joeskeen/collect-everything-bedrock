@@ -323,8 +323,8 @@ describe("enumerateEntityVariants", () => {
     expect(adultVariants.every((v) => v.match(/\bvariant:\d+/) && v.includes("mark_variant:"))).toBe(true);
   });
 
-  it("returns empty array for unknown entity id", () => {
-    expect(emptyCounter.enumerateEntityVariants("minecraft:unknown")).toEqual([]);
+  it("returns base item id for unknown entity id", () => {
+    expect(emptyCounter.enumerateEntityVariants("minecraft:unknown")).toEqual(["minecraft:unknown"]);
   });
 
   it("looks up entity by id from passed-in entities map", () => {
@@ -425,7 +425,7 @@ describe("output format matches identifyEntity", () => {
         "c.mark_variant": { "0": "x" },
       },
     });
-    expect(variants).toContain("variant:0+mark_variant:0");
+    expect(variants).toContain("mark_variant:0+variant:0");
   });
 
   it("matches format from entity-name.spec.ts examples", () => {
@@ -443,8 +443,8 @@ describe("output format matches identifyEntity", () => {
         "c.mark_variant": { "0": "no markings", "1": "white stockings" },
       },
     });
-    expect(horseVariants).toContain("variant:0+mark_variant:0");
-    expect(horseVariants).toContain("variant:0+mark_variant:1");
+    expect(horseVariants).toContain("mark_variant:0+variant:0");
+    expect(horseVariants).toContain("mark_variant:1+variant:0");
   });
 
   it("enumerateEntityVariants includes entity ID prefix matching identifyEntity format", () => {

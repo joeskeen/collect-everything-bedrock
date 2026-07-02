@@ -14,7 +14,7 @@ export class CollectEverythingAddOn {
 
   startUp(event: StartupEvent) {
     this.commandManager.onStartUp(event);
-    this.checklistItem.init();
+    this.checklistItem.onStartUp(event);
   }
 
   run() {

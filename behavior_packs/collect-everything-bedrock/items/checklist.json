@@ -18,10 +18,13 @@
       "minecraft:fire_resistant": {
         "value": true
       },
-      "minecraft:interact_button": "View Collection",
       "minecraft:rarity": "common",
       "minecraft:display_name": {
         "value": "item.collecteverything.checklist.name"
+      },
+      "minecraft:block_placer": {
+        "block": "collecteverything:checklist",
+        "replace_block_item": true
       }
     }
   }
