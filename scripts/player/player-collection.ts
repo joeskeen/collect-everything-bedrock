@@ -71,12 +71,13 @@ export class PlayerCollection {
     return !!this.collection[category]?.[what];
   }
 
-  onCollect(category: keyof PlayerCollectionData, what: string, formatted: RawMessage) {
-    if (this.collection[category]?.[what]) {
+  onCollect(id: string, formatted: RawMessage) {
+    const [category, what] = id.includes(";") ? id.split(";") : ["", id];
+    if (!category || !what || !this.collection[category as keyof PlayerCollectionData]?.[what]) {
       return;
     }
     try {
-      this.collection[category][what] = this.system.currentTick;
+      this.collection[category as keyof PlayerCollectionData][what] = this.system.currentTick;
 
       this.save();
 

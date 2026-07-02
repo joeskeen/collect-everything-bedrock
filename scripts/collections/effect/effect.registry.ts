@@ -1,12 +1,22 @@
 import { inject, singleton } from "tsyringe";
 import { EFFECT_TYPES_TOKEN } from "../../shared/global-tokens";
-import type { Effect, EffectTypes, RawMessage } from "@minecraft/server";
+import type { Effect, EffectTypes } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
 import { EXCLUDED_EFFECTS } from "./effect-exclusions";
 import { DifficultyLevel } from "../../player/player-settings";
+import { EFFECT } from "../../player/collection-constants";
+import type { Registry } from "../registry";
+import EFFECTS from "./effects";
+import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
 
 @singleton()
-export class EffectRegistry {
+export class EffectRegistry implements Registry<Effect> {
+  readonly key = EFFECT;
+
+  getIcon(): string | number {
+    return "textures/ui/particles";
+  }
+
   private _initialized = false;
   private effects: string[] = [];
 
@@ -22,34 +32,41 @@ export class EffectRegistry {
     }
   }
 
-  identify(effect: Effect) {
-    return [effect.typeId, `${effect.typeId}+${effect.amplifier}`];
+  identify(effect: Effect): string[] {
+    return [`${this.key};${effect.typeId}`, `${this.key};${effect.typeId}+${effect.amplifier}`];
   }
 
-  formatEffect(effectId: string): RawMessage {
-    return { text: formatId(effectId) };
+  format(id: string): string {
+    const rawId = id.includes(";") ? id.split(";")[1] : id;
+    return formatId(rawId);
   }
 
-  findEffectsByKeyword(word: string): string[] {
+  findByKeyword(word: string): string[] {
     return this.effectTypes
       .getAll()
       .filter((et) => et.getName().includes(word))
-      .map((et) => et.getName());
+      .map((et) => `${this.key};${et.getName()}`);
   }
 
-  countCollectedEffects(effects: string[]) {
+  count(items: string[]) {
     this.ensureInitialized();
-    const builtInCount = effects.filter((e) => this.effects.includes(e)).length;
-    return { collected: builtInCount, extra: effects.length - builtInCount, total: this.effects.length };
+    const rawItems = items.map((i) => (i.includes(";") ? i.split(";")[1] : i));
+    const builtInCount = rawItems.filter((e) => this.effects.includes(e)).length;
+    return { collected: builtInCount, extra: items.length - builtInCount, total: this.effects.length };
   }
 
-  allEffects(difficultyLevel: DifficultyLevel = "basic") {
+  all(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
-    return [...this.effects];
+    return this.effects.map((id) => `${this.key};${id}`);
   }
 
   effectCount(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return this.effects.length;
+  }
+
+  resolveTexture(id: string): string | number {
+    const rawId = id.includes(";") ? id.split(";")[1] : id;
+    return EFFECTS[rawId as keyof typeof EFFECTS]?.texture ?? UNKNOWN_TEXTURE;
   }
 }

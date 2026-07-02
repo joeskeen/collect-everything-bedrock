@@ -1,13 +1,21 @@
 import { inject, singleton } from "tsyringe";
 import { ITEM_COMPONENT_TYPES_TOKEN, ITEM_TYPES_TOKEN } from "../../shared/global-tokens";
-import type { ItemComponentTypes, ItemStack, ItemTypes, RawMessage } from "@minecraft/server";
+import type { ItemComponentTypes, ItemStack, ItemTypes } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
 import { EXCLUDED_ITEMS } from "./item-exclusions";
 import { DifficultyLevel } from "../../player/player-settings";
-import { capitalCase } from "change-case";
+import { ITEM } from "../../player/collection-constants";
+import type { Registry } from "../registry";
+import { getItemTexture } from "./item-texture";
 
 @singleton()
-export class ItemRegistry {
+export class ItemRegistry implements Registry<ItemStack> {
+  readonly key = ITEM;
+
+  getIcon(): string | number {
+    return getItemTexture("minecraft:diamond", false, this._customItemCount);
+  }
+
   private _initialized = false;
   private _customItemCount = 0;
   private items: string[] = [];
@@ -37,55 +45,45 @@ export class ItemRegistry {
     return this._customItemCount;
   }
 
-  identifyItem(itemStack: ItemStack): string[] {
+  identify(itemStack: ItemStack): string[] {
     const { Potion } = this.itemComponentTypes;
     const potionComponent = itemStack.getComponent(Potion);
     if (potionComponent) {
       return [
-        itemStack.typeId,
-        `${itemStack.typeId}+${potionComponent.potionDeliveryType.id}`,
-        `${itemStack.typeId}+${potionComponent.potionEffectType.id}`,
-        `${itemStack.typeId}+${potionComponent.potionDeliveryType.id}+${potionComponent.potionEffectType.id}`,
+        `${this.key};${itemStack.typeId}`,
+        `${this.key};${itemStack.typeId}+${potionComponent.potionDeliveryType.id}`,
+        `${this.key};${itemStack.typeId}+${potionComponent.potionEffectType.id}`,
+        `${this.key};${itemStack.typeId}+${potionComponent.potionDeliveryType.id}+${potionComponent.potionEffectType.id}`,
       ];
     } else if (itemStack.typeId === "minecraft:bed") {
       const color = /^item\.bed\.(.+)\.name$/.exec(itemStack.localizationKey)?.[1];
-      // console.log("bed color", capitalCase(color ?? ""));
-      return [itemStack.typeId, `${itemStack.typeId}+${color}`];
+      return [`${this.key};${itemStack.typeId}`, `${this.key};${itemStack.typeId}+${color}`];
     } else {
-      return [itemStack.typeId];
+      return [`${this.key};${itemStack.typeId}`];
     }
   }
 
-  formatItem(fullItemId: string): RawMessage {
-    const [itemId, ...variants] = fullItemId.split("+");
-    const localizationKey = this.itemTypes.get(itemId)?.localizationKey;
-    const isBed = itemId === "minecraft:bed"; // TODO: I need to make pluggable formatter
-    const isMusicDisc = itemId.startsWith("minecraft:music_disc");
-    const isBanner = itemId === "minecraft:banner";
-    const formatted = {
-      rawtext: [
-        !isBed && !isMusicDisc && !isBanner && localizationKey
-          ? { translate: localizationKey }
-          : { text: formatId(itemId) },
-      ],
-    };
+  format(fullItemId: string): string {
+    const rawId = fullItemId.includes(";") ? fullItemId.split(";")[1] : fullItemId;
+    const [itemId, ...variants] = rawId.split("+");
+    let formatted = formatId(itemId);
     if (variants.length) {
-      formatted.rawtext.push({ text: ` (${variants.map((id) => formatId(id)).join(", ")})` });
+      formatted += ` (${variants.map((id) => formatId(id)).join(", ")})`;
     }
-    // console.log(JSON.stringify(formatted));
     return formatted;
   }
 
-  findItemsByKeyword(word: string): string[] {
+  findByKeyword(word: string): string[] {
     return this.itemTypes
       .getAll()
       .filter((it) => it.id.includes(word))
-      .map((it) => it.id);
+      .map((it) => `${this.key};${it.id}`);
   }
 
-  countCollectedItems(items: string[]) {
+  count(items: string[]) {
     this.ensureInitialized();
-    const builtInCount = items.filter((i) => this.items.includes(i)).length;
+    const rawItems = items.map((i) => (i.includes(";") ? i.split(";")[1] : i));
+    const builtInCount = rawItems.filter((i) => this.items.includes(i)).length;
     return {
       collected: builtInCount,
       extra: items.length - builtInCount,
@@ -93,13 +91,18 @@ export class ItemRegistry {
     };
   }
 
-  allItems(difficultyLevel: DifficultyLevel = "basic") {
+  all(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
-    return [...this.items];
+    return this.items.map((id) => `${this.key};${id}`);
   }
 
   itemCount(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return this.items.length;
+  }
+
+  resolveTexture(id: string): string | number {
+    const rawId = id.includes(";") ? id.split(";")[1] : id;
+    return getItemTexture(rawId, false, this._customItemCount);
   }
 }

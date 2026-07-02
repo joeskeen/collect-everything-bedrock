@@ -30,7 +30,9 @@ export class EntityKilledCollector implements Runnable, Disposable {
     const damagingEntity = damageSource.damagingEntity;
     if (!damagingEntity || damagingEntity.id !== this.player.id) return;
 
-    const ids = this.entityRegistry.identifyEntity(event.deadEntity);
-    ids.forEach((id) => this.collector.collect(ENTITY, id, this.entityRegistry.formatEntity(id)));
+    const ids = this.entityRegistry.identify(event.deadEntity);
+    ids.forEach((id: string) => {
+      this.collector.collect(id, { text: this.entityRegistry.format(id) });
+    });
   };
 }

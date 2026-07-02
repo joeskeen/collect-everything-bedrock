@@ -37,7 +37,7 @@ export class EnderDragonCollector implements Runnable {
         continue;
       }
 
-      playerContainer.resolve(PlayerCollection).onCollect(ENTITY, event.deadEntity.typeId, { text: "Ender Dragon" });
+      playerContainer.resolve(PlayerCollection).onCollect(`${ENTITY};${event.deadEntity.typeId}`, { text: "Ender Dragon" });
     }
   };
 }

@@ -34,8 +34,10 @@ export class ItemCollector implements Runnable, Disposable {
     const previousItem = event.beforeItemStack;
 
     if (newItem && newItem?.typeId !== previousItem?.typeId) {
-      const ids = this.itemRegistry.identifyItem(newItem);
-      ids.forEach((id) => this.collector.collect(ITEM, id, this.itemRegistry.formatItem(id)));
+      const ids = this.itemRegistry.identify(newItem);
+      ids.forEach((id) => {
+        this.collector.collect(id, { text: this.itemRegistry.format(id) });
+      });
     }
   };
 }

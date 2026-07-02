@@ -28,7 +28,8 @@ export class UnobtainableCollector implements Runnable, Disposable {
 
     const blockId = event.brokenBlockPermutation.type.id;
     if (this.unobtainableRegistry.isUnobtainable(blockId)) {
-      this.collector.collect(UNOBTAINABLE, blockId, this.unobtainableRegistry.formatUnobtainable(blockId));
+      const prefixedId = this.unobtainableRegistry.identify(blockId)[0];
+      this.collector.collect(prefixedId, { text: this.unobtainableRegistry.format(prefixedId) });
     }
   };
 }

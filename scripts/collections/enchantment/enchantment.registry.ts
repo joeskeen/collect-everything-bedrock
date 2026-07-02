@@ -1,15 +1,24 @@
 import { inject, singleton } from "tsyringe";
 import { ENCHANTMENT_TYPES_TOKEN } from "../../shared/global-tokens";
-import type { EnchantmentTypes, ItemComponentTypes, ItemEnchantableComponent, RawMessage } from "@minecraft/server";
+import type { ItemEnchantableComponent } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
 import { DifficultyLevel } from "../../player/player-settings";
+import { ENCHANTMENT } from "../../player/collection-constants";
+import type { Registry } from "../registry";
+import { getItemTexture } from "../item/item-texture";
 
 @singleton()
-export class EnchantmentRegistry {
+export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | undefined> {
+  readonly key = ENCHANTMENT;
+
+  getIcon(): string | number {
+    return getItemTexture("minecraft:enchanted_book", true, 0);
+  }
+
   private _initialized = false;
   private enchantments: string[] = [];
 
-  constructor(@inject(ENCHANTMENT_TYPES_TOKEN) private readonly enchantmentTypes: typeof EnchantmentTypes) {}
+  constructor(@inject(ENCHANTMENT_TYPES_TOKEN) private readonly enchantmentTypes: typeof import("@minecraft/server").EnchantmentTypes) {}
 
   private ensureInitialized() {
     if (!this._initialized) {
@@ -18,37 +27,43 @@ export class EnchantmentRegistry {
     }
   }
 
-  identify(enchantComponent?: ItemEnchantableComponent) {
+  identify(enchantComponent?: ItemEnchantableComponent): string[] {
     if (!enchantComponent) {
       return [];
     }
-    return enchantComponent.getEnchantments().flatMap((e) => [e.type.id, `${e.type.id}+${e.level}`]);
+    return enchantComponent.getEnchantments().flatMap((e) => [`${this.key};${e.type.id}`, `${this.key};${e.type.id}+${e.level}`]);
   }
 
-  formatEnchantment(enchantmentId: string): RawMessage {
-    return { text: formatId(enchantmentId) };
+  format(id: string): string {
+    const rawId = id.includes(";") ? id.split(";")[1] : id;
+    return formatId(rawId);
   }
 
-  findEnchantmentsByKeyword(word: string): string[] {
+  findByKeyword(word: string): string[] {
     return this.enchantmentTypes
       .getAll()
       .filter((et) => et.id.includes(word))
-      .map((et) => et.id);
+      .map((et) => `${this.key};${et.id}`);
   }
 
-  countCollectedEnchantments(enchantments: string[]) {
+  count(items: string[]) {
     this.ensureInitialized();
-    const builtInCount = enchantments.filter((e) => this.enchantments.includes(e)).length;
-    return { collected: builtInCount, extra: enchantments.length - builtInCount, total: this.enchantments.length };
+    const rawItems = items.map((i) => (i.includes(";") ? i.split(";")[1] : i));
+    const builtInCount = rawItems.filter((e) => this.enchantments.includes(e)).length;
+    return { collected: builtInCount, extra: items.length - builtInCount, total: this.enchantments.length };
   }
 
-  allEnchantments(difficultyLevel: DifficultyLevel = "basic") {
+  all(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
-    return [...this.enchantments];
+    return this.enchantments.map((id) => `${this.key};${id}`);
   }
 
   enchantmentCount(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return this.enchantments.length;
+  }
+
+  resolveTexture(): string | number {
+    return getItemTexture("minecraft:enchanted_book", true, 0);
   }
 }

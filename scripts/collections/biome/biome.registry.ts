@@ -1,17 +1,26 @@
 import { inject, singleton } from "tsyringe";
 import { BIOME_TYPES_TOKEN } from "../../shared/global-tokens";
-import type { BiomeTypes, RawMessage } from "@minecraft/server";
+import type { BiomeTypes } from "@minecraft/server";
 import { formatId } from "../../shared/formatting";
 import { BIOME_NAME_OVERRIDES } from "./biome-name-overrides";
 import { BIOME_EXCLUSIONS } from "./biome-exclusions";
 import { DifficultyLevel } from "../../player/player-settings";
 import BIOMES from "./biomes";
 import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
+import { BIOME } from "../../player/collection-constants";
+import type { Registry } from "../registry";
+import { getItemTexture } from "../item/item-texture";
 
 type KnownBiomeId = keyof typeof BIOMES;
 
 @singleton()
-export class BiomeRegistry {
+export class BiomeRegistry implements Registry {
+  readonly key = BIOME;
+
+  getIcon(): string | number {
+    return getItemTexture("minecraft:oak_sapling", false, 0);
+  }
+
   private _initialized = false;
   private biomes: string[] = [];
 
@@ -27,20 +36,22 @@ export class BiomeRegistry {
     }
   }
 
-  resolveTexture(biomeId: string): string | number {
-    if (biomeId in BIOMES) {
-      const metadata = BIOMES[biomeId as KnownBiomeId];
+  resolveTexture(id: string): string | number {
+    const rawId = id.includes(";") ? id.split(";")[1] : id;
+    if (rawId in BIOMES) {
+      const metadata = BIOMES[rawId as KnownBiomeId];
       return metadata.texture;
     }
 
     return UNKNOWN_TEXTURE;
   }
 
-  formatBiome(biomeId: string): RawMessage {
-    return { text: BIOME_NAME_OVERRIDES[biomeId] ?? formatId(biomeId) };
+  format(id: string): string {
+    const rawId = id.includes(";") ? id.split(";")[1] : id;
+    return BIOME_NAME_OVERRIDES[rawId] ?? formatId(rawId);
   }
 
-  findBiomesByKeyword(word: string): string[] {
+  findByKeyword(word: string): string[] {
     return this.biomeTypes
       .getAll()
       .filter(
@@ -49,22 +60,27 @@ export class BiomeRegistry {
           bt.getTags().filter((t) => t.includes(word)) ||
           BIOME_NAME_OVERRIDES[bt.id]?.toLowerCase().includes(word)
       )
-      .map((bt) => bt.id);
+      .map((bt) => `${this.key};${bt.id}`);
   }
 
-  countCollectedBiomes(biomes: string[]) {
+  count(items: string[]) {
     this.ensureInitialized();
-    const builtInCount = biomes.filter((b) => this.biomes.includes(b)).length;
-    return { collected: builtInCount, extra: biomes.length - builtInCount, total: this.biomes.length };
+    const rawItems = items.map((i) => (i.includes(";") ? i.split(";")[1] : i));
+    const builtInCount = rawItems.filter((b) => this.biomes.includes(b)).length;
+    return { collected: builtInCount, extra: items.length - builtInCount, total: this.biomes.length };
   }
 
-  allBiomes(difficultyLevel: DifficultyLevel = "basic") {
+  all(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
-    return [...this.biomes];
+    return this.biomes.map((id) => `${this.key};${id}`);
   }
 
   biomeCount(difficultyLevel: DifficultyLevel = "basic") {
     this.ensureInitialized();
     return this.biomes.length;
+  }
+
+  identify(biomeId?: string): string[] {
+    return biomeId ? [`${this.key};${biomeId}`] : [];
   }
 }

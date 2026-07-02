@@ -29,8 +29,10 @@ export class EntityNamedCollector implements Runnable, Disposable {
     }
 
     if (event.beforeItemStack?.typeId === "minecraft:name_tag") {
-      const ids = this.entityRegistry.identifyEntity(event.target);
-      ids.forEach((id) => this.collector.collect(ENTITY, id, this.entityRegistry.formatEntity(id)));
+      const ids = this.entityRegistry.identify(event.target);
+      ids.forEach((id: string) => {
+        this.collector.collect(id, { text: this.entityRegistry.format(id) });
+      });
     }
   };
 }

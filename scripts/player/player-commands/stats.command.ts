@@ -2,17 +2,12 @@ import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
 import type { CustomCommandResult, Player, System } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
-import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME, UNOBTAINABLE } from "../collection-constants";
+import { THEME, PlayerCollectionData } from "../collection-constants";
 import { capitalCase } from "change-case";
 import { percent } from "../../shared/formatting";
 import { GOLD, GRAY, RESET } from "../../shared/format-codes";
-import { BiomeRegistry } from "../../collections/biome/biome.registry";
-import { EntityRegistry } from "../../collections/entity/entity.registry";
-import { ItemRegistry } from "../../collections/item/item.registry";
-import { EffectRegistry } from "../../collections/effect/effect.registry";
-import { EnchantmentRegistry } from "../../collections/enchantment/enchantment.registry";
-import { UnobtainableRegistry } from "../../collections/unobtainable/unobtainable.registry";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
+import { RegistryCollection } from "../../collections/index";
 
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerStatsCommand implements CommandHandler {
@@ -20,31 +15,17 @@ export class PlayerStatsCommand implements CommandHandler {
     @inject(SYSTEM_TOKEN) private readonly system: System,
     @inject(PLAYER_TOKEN) private readonly player: Player,
     @inject(PlayerCollection) private readonly collection: PlayerCollection,
-    @inject(BiomeRegistry) private readonly biomeRegistry: BiomeRegistry,
-    @inject(EntityRegistry) private readonly entityRegistry: EntityRegistry,
-    @inject(ItemRegistry) private readonly itemRegistry: ItemRegistry,
-    @inject(EffectRegistry) private readonly effectRegistry: EffectRegistry,
-    @inject(EnchantmentRegistry) private readonly enchantmentRegistry: EnchantmentRegistry,
-    @inject(UnobtainableRegistry) private readonly unobtainableRegistry: UnobtainableRegistry
+    @inject(RegistryCollection) private readonly registries: RegistryCollection
   ) {}
 
   handleCommand(event: any): CustomCommandResult {
     this.system.run(() => {
       const collection = this.collection.getCollection();
-      const collectionProgress = [
-        { category: BIOME, ...this.biomeRegistry.countCollectedBiomes(Object.keys(collection[BIOME] ?? {})) },
-        { category: ENTITY, ...this.entityRegistry.countCollectedEntities(Object.keys(collection[ENTITY] ?? {})) },
-        { category: ITEM, ...this.itemRegistry.countCollectedItems(Object.keys(collection[ITEM] ?? {})) },
-        { category: EFFECT, ...this.effectRegistry.countCollectedEffects(Object.keys(collection[EFFECT] ?? {})) },
-        {
-          category: ENCHANTMENT,
-          ...this.enchantmentRegistry.countCollectedEnchantments(Object.keys(collection[ENCHANTMENT] ?? {})),
-        },
-        {
-          category: UNOBTAINABLE,
-          ...this.unobtainableRegistry.countCollectedUnobtainables(Object.keys(collection[UNOBTAINABLE] ?? {})),
-        },
-      ];
+      const collectionProgress = this.registries.registries.map((registry) => ({
+        category: registry.key,
+        ...registry.count(Object.keys(collection[registry.key as keyof PlayerCollectionData] ?? {})),
+      }));
+
       const totalProgress = {
         collected: collectionProgress.reduce((prev, curr) => prev + curr.collected, 0),
         total: collectionProgress.reduce((prev, curr) => prev + curr.total, 0),
@@ -54,7 +35,7 @@ export class PlayerStatsCommand implements CommandHandler {
         collectionProgress
           .map(
             (c) =>
-              `${THEME[c.category]}${capitalCase(c.category)}${RESET}: ${c.collected}/${c.total || "?"} (${percent(c.collected, c.total)}) ${c.extra ? "+" + c.extra : ""}`
+              `${THEME[c.category as keyof typeof THEME] ?? GRAY}${capitalCase(c.category)}${RESET}: ${c.collected}/${c.total || "?"} (${percent(c.collected, c.total)}) ${c.extra ? "+" + c.extra : ""}`
           )
           .join("\n"),
         `${GOLD}Total: ${totalProgress.collected}/${totalProgress.total} (${percent(totalProgress.collected, totalProgress.total)})\n`,

@@ -35,7 +35,8 @@ export class BiomeCollector implements Runnable, Disposable {
       const id = currentBiome?.id;
       if (id && id !== this.lastBiome) {
         this.lastBiome = id;
-        this.collector.collect(BIOME, id, this.biomeRegistry.formatBiome(id));
+        const prefixedId = this.biomeRegistry.identify(id)[0];
+        this.collector.collect(prefixedId, { text: this.biomeRegistry.format(prefixedId) });
       }
     } catch {
       // player is outside of world boundary, ignore
