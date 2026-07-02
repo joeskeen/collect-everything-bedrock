@@ -1,0 +1,26 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "collecteverything:checklist_from_iron"
+        },
+        "tags": ["crafting_table"],
+        "pattern": [
+            "X",
+            "P",
+            "A"
+        ],
+        "key": {
+            "X": {"item": "minecraft:iron_nugget"},
+            "P": {"item": "minecraft:paper"},
+            "A": {"tag": "minecraft:planks"}
+        },
+        "unlock": [
+            {"item": "minecraft:paper"}
+        ],
+        "result": {
+            "item": "collecteverything:checklist",
+            "count": 1
+        }
+    }
+}

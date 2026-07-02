@@ -28,6 +28,8 @@ import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
 import { BOLD, GRAY, ITALIC, RESET } from "../../shared/format-codes";
 import { PlayerSettingsService } from "../player-settings";
 import { SettingsModal } from "./settings.modal";
+import { HelpModal } from "./help.modal";
+import { SessionModal } from "./session.modal";
 
 const RESERVED_BUTTONS = 32;
 const GRID_ROW_LENGTH = 17;
@@ -67,9 +69,10 @@ export class BrowserModal {
       this.system.run(() => this.show());
     },
     recent: async () => {
-      const form = this.createMessageForm().title("Recent Collection").body("This feature is not yet implemented.");
-      await form.show(this.player);
-      this.system.run(() => this.show());
+      this.system.run(async () => {
+        await this.sessionModal.show();
+        this.show();
+      });
     },
     settings: async () => {
       this.system.run(async () => {
@@ -78,11 +81,16 @@ export class BrowserModal {
       });
     },
     help: async () => {
-      const form = this.createMessageForm()
-        .title("Collect Everything! Help")
-        .body("This feature is not yet implemented.");
-      await form.show(this.player);
-      this.system.run(() => this.show());
+      this.system.run(async () => {
+        await this.helpModal.show();
+        this.show();
+      });
+    },
+    session: async () => {
+      this.system.run(async () => {
+        await this.sessionModal.show();
+        this.show();
+      });
     },
     details: async (id) => {
       const form = this.createMessageForm().title(id).body(`This feature is not yet implemented.`);
@@ -104,7 +112,9 @@ export class BrowserModal {
     @inject(UnobtainableRegistry) private readonly unobtainableRegistry: UnobtainableRegistry,
     @inject(CREATE_ACTION_FORM_TOKEN) private readonly createActionForm: CreateActionFormFn,
     @inject(CREATE_MESSAGE_FORM_TOKEN) private readonly createMessageForm: CreateMessageFormFn,
-    @inject(SettingsModal) private readonly settingsModal: SettingsModal
+    @inject(SettingsModal) private readonly settingsModal: SettingsModal,
+    @inject(HelpModal) private readonly helpModal: HelpModal,
+    @inject(SessionModal) private readonly sessionModal: SessionModal
   ) {}
 
   private readonly categories: Category[] = [
