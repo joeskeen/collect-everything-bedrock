@@ -2,14 +2,14 @@ import { inject, singleton } from "tsyringe";
 import { PlayerManager } from "./player-manager";
 import { CommandManager } from "./command-manager";
 import type { StartupEvent } from "@minecraft/server";
-import { CollectionChecklistItemDefinition } from "../items/collection-checklist";
+import { CollectionChecklistItem } from "../items/collection-checklist.item";
 
 @singleton()
 export class CollectEverythingAddOn {
   constructor(
     @inject(PlayerManager) private playerManager: PlayerManager,
     @inject(CommandManager) private commandManager: CommandManager,
-    @inject(CollectionChecklistItemDefinition) private checklistItem: CollectionChecklistItemDefinition
+    @inject(CollectionChecklistItem) private checklistItem: CollectionChecklistItem
   ) {}
 
   startUp(event: StartupEvent) {

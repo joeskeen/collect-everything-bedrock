@@ -6,7 +6,7 @@ import { PlayerManager } from "../system/player-manager";
 import { Logger } from "../shared/logging/logger";
 
 @singleton()
-export class CollectionChecklistItemDefinition {
+export class CollectionChecklistItem {
   constructor(
     @inject(Logger) private readonly logger: Logger,
     @inject(WORLD_TOKEN) private readonly world: World,
@@ -29,6 +29,7 @@ export class CollectionChecklistItemDefinition {
       return;
     }
     const browserModal = playerContainer.resolve(BrowserModal);
+    player.playSound("block.click");
     browserModal.show();
   }
 }
