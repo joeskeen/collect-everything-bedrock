@@ -3,6 +3,7 @@ import type {
   DimensionTypes,
   EffectTypes,
   EnchantmentTypes,
+  EquipmentSlot,
   ItemComponentTypes,
   ItemEnchantableComponent,
   ItemTypes,
@@ -44,6 +45,9 @@ export const ITEM_COMPONENT_TYPES_TOKEN: InjectionToken<typeof ItemComponentType
 );
 export const ENTITY_COMPONENT_TYPES_TOKEN: InjectionToken<typeof EntityComponentTypes> = Symbol(
   "EntityComponentTypes from @minecraft/server"
+);
+export const EQUIPMENT_SLOT_TOKEN: InjectionToken<typeof EquipmentSlot> = Symbol(
+  "EquipmentSlot enum from @minecraft/server"
 );
 export const ITEM_ENCHANTABLE_COMPONENT_TOKEN: InjectionToken<typeof ItemEnchantableComponent> = Symbol(
   "ItemEnchantableComponent from @minecraft/server"

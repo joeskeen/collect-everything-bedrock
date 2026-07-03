@@ -32,7 +32,7 @@ export class EntityKilledCollector implements Runnable, Disposable {
 
     const ids = this.entityRegistry.identify(event.deadEntity);
     ids.forEach((id: string) => {
-      this.collector.collect(id, { text: this.entityRegistry.format(id) });
+      this.collector.collect(id);
     });
   };
 }

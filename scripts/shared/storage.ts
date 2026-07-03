@@ -17,6 +17,12 @@ export abstract class StorageBase {
     this.storageSource.setDynamicProperty(key, text);
     console.log(`saved ${key}: ${text.length} characters`);
   }
+  keys(): string[] {
+    return (this.storageSource as World).getDynamicPropertyIds();
+  }
+  deleteKey(key: string): void {
+    this.storageSource.setDynamicProperty(key);
+  }
 }
 
 @singleton()

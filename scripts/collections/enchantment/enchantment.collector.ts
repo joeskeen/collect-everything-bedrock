@@ -50,7 +50,7 @@ export class EnchantmentCollector implements Runnable, Disposable {
 
     const enchantments = this.enchantmentRegistry.identify(newItem.getComponent(this.itemComponentTypes.Enchantable));
     for (const enchantmentId of enchantments) {
-      this.collector.collect(enchantmentId, { text: this.enchantmentRegistry.format(enchantmentId) });
+      this.collector.collect(enchantmentId);
     }
   };
 }

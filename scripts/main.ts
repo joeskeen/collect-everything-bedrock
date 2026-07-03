@@ -13,6 +13,7 @@ import {
   ItemComponentTypes,
   ItemEnchantableComponent,
   EntityComponentTypes,
+  EquipmentSlot,
 } from "@minecraft/server";
 import { CollectEverythingAddOn } from "./system/collect-everything-add-on";
 import {
@@ -26,6 +27,7 @@ import {
   ENCHANTMENT_TYPES_TOKEN,
   ENTITY_COMPONENT_TYPES_TOKEN,
   ENTITY_TYPES_TOKEN,
+  EQUIPMENT_SLOT_TOKEN,
   ITEM_COMPONENT_TYPES_TOKEN,
   ITEM_ENCHANTABLE_COMPONENT_TOKEN,
   ITEM_TYPES_TOKEN,
@@ -65,6 +67,7 @@ container.registerInstance(ENTITY_TYPES_TOKEN, EntityTypes);
 container.registerInstance(BLOCK_TYPES_TOKEN, BlockTypes);
 container.registerInstance(ITEM_COMPONENT_TYPES_TOKEN, ItemComponentTypes);
 container.registerInstance(ENTITY_COMPONENT_TYPES_TOKEN, EntityComponentTypes);
+container.registerInstance(EQUIPMENT_SLOT_TOKEN, EquipmentSlot);
 container.registerInstance(ITEM_ENCHANTABLE_COMPONENT_TOKEN, ItemEnchantableComponent);
 const logger = container.resolve(Logger);
 

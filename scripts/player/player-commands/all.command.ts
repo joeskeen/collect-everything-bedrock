@@ -5,7 +5,7 @@ import {
   customCommandParamType as customCommandParamTypes,
   customCommandStatuses,
 } from "../../system/add-on-command";
-import type { Player, RawMessage, CustomCommandResult, System, CustomCommandOrigin } from "@minecraft/server";
+import type { Player, CustomCommandResult, System, CustomCommandOrigin } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
 import { THEME, PlayerCollectionData } from "../collection-constants";
 import { GRAY, MINECOIN_GOLD, RESET } from "../../shared/format-codes";
@@ -30,42 +30,25 @@ export class PlayerAllCommand implements CommandHandler {
     this.system.run(() => {
       const difficulty = this.playerSettingsService.get().difficulty;
 
-      const allData = this.registries.registries.map((registry) => {
-        const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
-        return {
-          category: registry.key,
-          isCollected: (k: string) => {
-            const rawId = k.includes(";") ? k.split(";")[1] : k;
-            return !!collection?.[rawId];
-          },
-          allEntries: () =>
-            registry
-              .all(difficulty)
-              .sort()
-              .filter((e: string) => e.includes(filter)),
-          format: (k: string) => registry.format(k),
-        };
-      });
+      this.player.sendMessage(`${MINECOIN_GOLD}=== All ${filter ? `"${filter}"` : ""} ===`);
 
-      const message: RawMessage = {
-        rawtext: [
-          { text: `${MINECOIN_GOLD}=== All ${filter ? `"${filter}"` : ""} ===${RESET}\n` },
-          ...allData.flatMap((x) => {
-            const entries = x.allEntries().map((k: string) => {
-              const formatted = x.format(k);
-              const color = x.isCollected(k) ? THEME[x.category as keyof typeof THEME] : GRAY;
-              return [{ text: color }, { text: formatted }, { text: RESET }, { text: ", " }] as RawMessage[];
-            });
-            return [
-              { text: `${THEME[x.category as keyof typeof THEME] ?? GRAY}${capitalCase(x.category)}${RESET}: ` },
-              ...entries.flat(),
-              { text: "\n" },
-            ];
-          }),
-          { text: "\n" },
-        ],
-      };
-      this.player.sendMessage(message);
+      for (const registry of this.registries.registries.filter((r) => r.key !== "all")) {
+        const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
+        const entries = registry
+          .all(difficulty)
+          .sort()
+          .filter((e: string) => e.includes(filter))
+          .map((k: string) => {
+            const rawId = k.includes(";") ? k.split(";")[1] : k;
+            const color = collection?.[rawId] ? (THEME[registry.key as keyof typeof THEME] ?? "") : GRAY;
+            return `${color}${registry.format(k)}${RESET}`;
+          });
+
+        if (entries.length > 0) {
+          const categoryColor = THEME[registry.key as keyof typeof THEME] ?? GRAY;
+          this.player.sendMessage(`${categoryColor}${capitalCase(registry.key)}${RESET}: ${entries.join(", ")}`);
+        }
+      }
     });
     return { status: customCommandStatuses.Success };
   }

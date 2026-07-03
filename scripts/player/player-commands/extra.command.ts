@@ -1,6 +1,6 @@
 import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
-import type { Player, RawMessage, CustomCommandResult, System } from "@minecraft/server";
+import type { Player, CustomCommandResult, System } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
 import { THEME, PlayerCollectionData } from "../collection-constants";
 import { GOLD, GRAY, ITALIC, RESET } from "../../shared/format-codes";
@@ -19,42 +19,41 @@ export class PlayerExtraCommand implements CommandHandler {
 
   handleCommand(event: any): CustomCommandResult {
     this.system.run(() => {
-      const extraData: Array<{ category: string; entries: { name: string; rawId: string }[] }> = [];
+      const hasExtra = this.registries.registries
+        .filter((r) => r.key !== "all")
+        .some((registry) => {
+          const collectedKeys = Object.keys(
+            this.collection.getCollection(registry.key as keyof PlayerCollectionData) ?? {}
+          );
+          return registry.getExtra(collectedKeys).length > 0;
+        });
 
-      for (const registry of this.registries.registries) {
-        const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
-        const collectedKeys = Object.keys(collection ?? {});
-        const entries = registry
-          .getExtra(collectedKeys)
-          .sort()
-          .map((k: string) => ({
-            name: registry.format(k),
-            rawId: k.includes(";") ? k.split(";")[1] : k,
-          }));
-
-        if (entries.length > 0) {
-          extraData.push({ category: registry.key, entries });
-        }
-      }
-
-      if (extraData.length === 0) {
-        this.player.sendMessage(`${GOLD}No extra items collected.${GRAY}`);
+      if (!hasExtra) {
+        this.player.sendMessage(`${GOLD}No extra items collected.`);
         return;
       }
 
-      const message: RawMessage = {
-        rawtext: [
-          { text: `${GOLD}=== Extra ===${RESET}\n` },
-          {
-            text: `${GRAY}The following items were collected but are not recognized by the Collect Everything! add-on:${RESET}\n`,
-          },
-          ...extraData.flatMap((x) => [
-            { text: `${THEME[x.category as keyof typeof THEME] ?? GRAY}${capitalCase(x.category)}${RESET}\n` },
-            ...x.entries.flatMap((e) => [{ text: `  ${e.name} ` }, { text: `${ITALIC}${GRAY}${e.rawId}${RESET}\n` }]),
-          ]),
-        ],
-      };
-      this.player.sendMessage(message);
+      this.player.sendMessage(
+        `${GOLD}=== Extra ===\n${GRAY}The following items were collected but are not recognized by the Collect Everything! add-on:`
+      );
+
+      for (const registry of this.registries.registries.filter((r) => r.key !== "all")) {
+        const collectedKeys = Object.keys(
+          this.collection.getCollection(registry.key as keyof PlayerCollectionData) ?? {}
+        );
+        const entries = registry
+          .getExtra(collectedKeys)
+          .sort()
+          .map((k: string) => {
+            const rawId = k.includes(";") ? k.split(";")[1] : k;
+            return `${registry.format(k)} ${ITALIC}${GRAY}${rawId}`;
+          });
+
+        if (entries.length > 0) {
+          const categoryColor = THEME[registry.key as keyof typeof THEME] ?? GRAY;
+          this.player.sendMessage(`${categoryColor}${capitalCase(registry.key)}${RESET}\n${entries.join("\n")}`);
+        }
+      }
     });
     return { status: customCommandStatuses.Success };
   }

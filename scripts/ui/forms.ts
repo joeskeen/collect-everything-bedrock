@@ -1,4 +1,4 @@
-import type { Player, RawMessage } from "@minecraft/server";
+import type { Player } from "@minecraft/server";
 import type { CreateActionFormFn } from "../shared/global-tokens";
 import { DataSchema, encodeItemData } from "./data-encoder";
 import { RESET } from "../shared/format-codes";
@@ -17,7 +17,7 @@ export const formButtonDataSchema: DataSchema = {
 export interface CollectionFormResponse extends ActionFormResponse {
   selectedButtonValue?: unknown;
 }
-export type ButtonData = [text: RawMessage, texture: number | string | undefined, value: unknown];
+export type ButtonData = [text: string, texture: number | string | undefined, value: unknown];
 
 export class CollectionFormData {
   private titleText: string = RESET;
@@ -43,29 +43,20 @@ export class CollectionFormData {
   }
 
   button(
-    itemName: RawMessage,
-    itemDesc: RawMessage[] | undefined,
+    itemName: string,
+    itemDesc: string[] | undefined,
     texture: string | number,
     count = 1,
     percent = 0,
     buttonValue: unknown = undefined
   ): this {
     const header = encodeItemData({ count, percent }, formButtonDataSchema);
-
-    const buttonRawtext = {
-      rawtext: [{ text: header }, itemName, { text: RESET }],
-    };
-
+    let buttonText = `${header}${itemName}${RESET}`;
     if (Array.isArray(itemDesc) && itemDesc.length > 0) {
-      for (const obj of itemDesc) {
-        buttonRawtext.rawtext.push({ text: "\n" });
-        buttonRawtext.rawtext.push(obj);
-      }
+      buttonText += "\n" + itemDesc.join("\n");
     }
-
     const encodedTexture = texture;
-
-    this.buttonArray.push([buttonRawtext, encodedTexture, buttonValue]);
+    this.buttonArray.push([buttonText, encodedTexture, buttonValue]);
     return this;
   }
 

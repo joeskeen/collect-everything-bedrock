@@ -14,6 +14,8 @@ export const ALL_REGISTRY_TOKEN = Symbol("AllRegistry aggregate registry");
 export class AllRegistry implements Registry<string> {
   readonly key = "all";
 
+  private validIdsCache = new Map<DifficultyLevel, Set<string>>();
+
   getIcon(): string | number {
     return "textures/items/book_normal";
   }
@@ -26,6 +28,13 @@ export class AllRegistry implements Registry<string> {
     @inject(EnchantmentRegistry) private readonly enchantmentRegistry: EnchantmentRegistry,
     @inject(UnobtainableRegistry) private readonly unobtainableRegistry: UnobtainableRegistry
   ) {}
+
+  validIds(difficulty: DifficultyLevel): Set<string> {
+    if (!this.validIdsCache.has(difficulty)) {
+      this.validIdsCache.set(difficulty, new Set(this.all(difficulty)));
+    }
+    return this.validIdsCache.get(difficulty)!;
+  }
 
   private get registries(): Registry[] {
     return [
@@ -65,7 +74,7 @@ export class AllRegistry implements Registry<string> {
   }
 
   getExtra(collectedKeys: string[]) {
-    return this.registries.flatMap((r) => r.getExtra(collectedKeys));
+    return [];
   }
 
   enumerateVariants(id: string, difficulty: DifficultyLevel): string[] {

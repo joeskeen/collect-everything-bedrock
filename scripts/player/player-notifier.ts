@@ -1,19 +1,12 @@
-import type { Player, RawMessage, System, TitleDisplayOptions } from "@minecraft/server";
+import type { Player, System, TitleDisplayOptions } from "@minecraft/server";
 import { Disposable } from "../shared/disposable";
 import { Logger } from "../shared/logging/logger";
-import { PLAYER_INITIALIZATION_DELAY_TICKS, QUEUE_PROCESSING_INTERVAL_TICKS } from "../shared/ticks";
+import { QUEUE_PROCESSING_INTERVAL_TICKS } from "../shared/ticks";
 import { inject, Lifecycle, scoped } from "tsyringe";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../shared/global-tokens";
 
-/**
- * calculate a good amount of time to show a message based on its length, with a minimum of 2 seconds and a maximum of 10 seconds
- * @param text
- * @returns
- */
-export function messageDurationTicks(message: RawMessage) {
-  const text = JSON.stringify(message);
-  // formula (ms): Duration = min(max(message length * 50, 2000), 10000)
-  const length = text.length;
+export function messageDurationTicks(message: string) {
+  const length = message.length;
   const ms = Math.min(Math.max(length * 50, 2000), 10000);
   const ticks = Math.ceil(ms / 50);
   return ticks;
@@ -21,7 +14,7 @@ export function messageDurationTicks(message: RawMessage) {
 
 export interface Message {
   type: "actionbar" | "title" | "subtitle";
-  content: RawMessage;
+  content: string;
   duration?: number;
 }
 
@@ -36,11 +29,11 @@ export class PlayerNotifier implements Disposable {
     @inject(SYSTEM_TOKEN) private readonly system: System
   ) {}
 
-  toast(message: RawMessage) {
+  toast(message: string) {
     this.addMessage({ type: "actionbar", content: message });
   }
 
-  title(title: RawMessage, subtitle?: RawMessage) {
+  title(title: string, subtitle?: string) {
     this.addMessage({ type: "title", content: title });
     if (subtitle) {
       this.addMessage({ type: "subtitle", content: subtitle });

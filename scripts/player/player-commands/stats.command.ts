@@ -24,13 +24,15 @@ export class PlayerStatsCommand implements CommandHandler {
     this.system.run(() => {
       const difficulty = this.playerSettingsService.get().difficulty;
 
-      const collectionProgress = this.registries.registries.map((registry) => {
-        const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
-        return {
-          category: registry.key,
-          ...registry.count(Object.keys(collection ?? {}), difficulty),
-        };
-      });
+      const collectionProgress = this.registries.registries
+        .filter((r) => r.key !== "all")
+        .map((registry) => {
+          const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
+          return {
+            category: registry.key,
+            ...registry.count(Object.keys(collection ?? {}), difficulty),
+          };
+        });
 
       const totalProgress = {
         collected: collectionProgress.reduce((prev, curr) => prev + curr.collected, 0),

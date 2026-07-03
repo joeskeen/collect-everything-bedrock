@@ -1,9 +1,7 @@
 import { InjectionToken } from "tsyringe";
 import { Runnable } from "../shared/runnable";
 import { DARK_GREEN, RED, AQUA, LIGHT_PURPLE, MATERIAL_COPPER, MATERIAL_DIAMOND } from "../shared/format-codes";
-import { RawMessage } from "@minecraft/server";
-
-export type CollectFn = (id: string, formatted: RawMessage) => void;
+export type CollectFn = (id: string) => void;
 export type Collector = { collect: CollectFn };
 export const COLLECTOR: InjectionToken<Collector> = Symbol(
   "Access to the function for reporting having collected something"
@@ -38,6 +36,15 @@ export interface PlayerCollectionData {
 }
 
 export type RegistryKey = keyof PlayerCollectionData | "all";
+
+export const COLLECTED_PREFIX = "collected;";
+
+export interface CollectedMetadata {
+  collectedOnTick: number;
+  collectedNTimes: number;
+  lastCollectedOnTick: number;
+}
+
 export function emptyCollection(): PlayerCollectionData {
   return {
     [BIOME]: {},

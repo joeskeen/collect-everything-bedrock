@@ -1,7 +1,7 @@
 import { Lifecycle, scoped, inject } from "tsyringe";
 import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../global-tokens";
 import { LOG_SETTINGS_TOKEN, LogSettings } from "./log-settings";
-import type { Player, RawMessage, System, World } from "@minecraft/server";
+import type { Player, System, World } from "@minecraft/server";
 import { BLUE, DARK_AQUA, DARK_GRAY, GRAY, MINECOIN_GOLD, RED, RESET } from "../format-codes";
 
 @scoped(Lifecycle.ContainerScoped)
@@ -33,14 +33,7 @@ export class Logger {
   }
 
   private concat(messages: any[]) {
-    return messages
-      .map((m) => {
-        if (typeof m === "object" && "rawtext" in m) {
-          return m.rawtext.map((x: RawMessage) => x.text ?? x.translate).join(" ");
-        }
-        return String(m);
-      })
-      .join("; ");
+    return messages.map((m) => String(m)).join("; ");
   }
 
   private prefix() {

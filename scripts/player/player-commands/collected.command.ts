@@ -1,22 +1,12 @@
 import { inject, Lifecycle, scoped } from "tsyringe";
 import { addOnCommand, CommandHandler, customCommandStatuses } from "../../system/add-on-command";
-import type { Player, RawMessage, CustomCommandResult, System } from "@minecraft/server";
+import type { Player, CustomCommandResult, System } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
-import {
-  BIOME,
-  EFFECT,
-  ENCHANTMENT,
-  ENTITY,
-  ITEM,
-  THEME,
-  UNOBTAINABLE,
-  PlayerCollectionData,
-} from "../collection-constants";
+import { THEME, PlayerCollectionData } from "../collection-constants";
 import { GOLD, GRAY, RESET } from "../../shared/format-codes";
 import { capitalCase } from "change-case";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import { RegistryCollection } from "../../collections/index";
-import type { Registry } from "../../collections/registry";
 import { PlayerSettingsService } from "../player-settings";
 
 @scoped(Lifecycle.ContainerScoped)
@@ -32,9 +22,10 @@ export class PlayerCollectedCommand implements CommandHandler {
   handleCommand(event: any): CustomCommandResult {
     this.system.run(() => {
       const difficulty = this.playerSettingsService.get().difficulty;
-      const collectedData: Array<{ category: string; entries: string[] }> = [];
 
-      for (const registry of this.registries.registries) {
+      this.player.sendMessage(`${GOLD}=== Collected ===`);
+
+      for (const registry of this.registries.registries.filter((r) => r.key !== "all")) {
         const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
         const entries = registry
           .all(difficulty)
@@ -46,22 +37,10 @@ export class PlayerCollectedCommand implements CommandHandler {
           .map((k: string) => registry.format(k));
 
         if (entries.length > 0) {
-          collectedData.push({ category: registry.key, entries });
+          const categoryColor = THEME[registry.key as keyof typeof THEME] ?? GRAY;
+          this.player.sendMessage(`${categoryColor}${capitalCase(registry.key)}${RESET}: ${entries.join(", ")}`);
         }
       }
-
-      const message: RawMessage = {
-        rawtext: [
-          { text: `${GOLD}=== Collected ===${GRAY}\n` },
-          ...collectedData.flatMap((x) => [
-            { text: `${THEME[x.category as keyof typeof THEME] ?? GRAY}${capitalCase(x.category)}${RESET}: ` },
-            ...x.entries.flatMap((e) => [{ text: e }, { text: ", " }]),
-            { text: "\n" },
-          ]),
-          { text: "\n" },
-        ],
-      };
-      this.player.sendMessage(message);
     });
     return { status: customCommandStatuses.Success };
   }

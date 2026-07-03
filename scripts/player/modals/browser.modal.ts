@@ -99,8 +99,8 @@ export class BrowserModal {
       const prefixedKeys = Object.keys(collection ?? {}).map((k) => `${reg.key};${k}`);
       const { collected, total } = reg.count(prefixedKeys, difficulty);
       buttons.push([
-        { text: capitalCase(reg.key) },
-        [{ text: `${GRAY}${collected}/${total} (${percent(collected, total, false)})` }],
+        capitalCase(reg.key),
+        [`${GRAY}${collected}/${total} (${percent(collected, total, false)})`],
         reg.getIcon(),
         undefined,
         Math.floor((collected / total) * 100),
@@ -108,11 +108,11 @@ export class BrowserModal {
       ]);
     }
 
-    buttons.push([{ text: "Search" }, [], "", undefined, undefined, "search"]);
-    buttons.push([{ text: "Recent" }, [], "", undefined, undefined, "recent"]);
-    buttons.push([{ text: "Settings" }, [], "", undefined, undefined, "settings"]);
-    buttons.push([{ text: "Help" }, [], "", undefined, undefined, "help"]);
-    const filler: Parameters<typeof collectionForm.button> = [{}, [], "", undefined, undefined, undefined];
+    buttons.push(["Search", [], "", undefined, undefined, "search"]);
+    buttons.push(["Recent", [], "", undefined, undefined, "recent"]);
+    buttons.push(["Settings", [], "", undefined, undefined, "settings"]);
+    buttons.push(["Help", [], "", undefined, undefined, "help"]);
+    const filler: Parameters<typeof collectionForm.button> = ["", [], "", undefined, undefined, undefined];
     while (buttons.length < GRID_ROW_LENGTH) {
       buttons.push(filler);
     }
@@ -141,10 +141,10 @@ export class BrowserModal {
       const collected = this.playerCollection.hasCollected(categoryKey as keyof PlayerCollectionData, rawId);
       const percentComplete = collected ? 100 : 0;
       buttons.push([
-        { text: name },
+        name,
         [
-          { text: `${ITALIC}${THEME[categoryKey as keyof typeof THEME] ?? GRAY}${capitalCase(categoryKey)}${RESET}` },
-          { text: collected ? "Collected" : "Not Collected" },
+          `${ITALIC}${THEME[categoryKey as keyof typeof THEME] ?? GRAY}${capitalCase(categoryKey)}${RESET}`,
+          collected ? "Collected" : "Not Collected",
         ],
         texture ?? UNKNOWN_TEXTURE,
         undefined,

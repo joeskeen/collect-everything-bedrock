@@ -39,7 +39,7 @@ export class EffectCollector implements Runnable, Disposable {
           if (this.activeEffects.has(id)) continue;
 
           this.activeEffects.add(id);
-          this.collector.collect(id, { text: this.effectRegistry.format(id) });
+          this.collector.collect(id);
         }
       }
       this.activeEffects = new Set(resolvedIds);

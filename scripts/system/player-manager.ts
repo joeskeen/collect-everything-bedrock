@@ -6,8 +6,8 @@ import { PlayerCollection } from "../player/player-collection";
 import { PlayerNotifier } from "../player/player-notifier";
 import { PlayerSettingsService } from "../player/player-settings";
 import { WOOD_SWORD } from "../shared/emoji";
-import { BLUE, BOLD } from "../shared/format-codes";
-import { PLAYER_INITIALIZATION_DELAY_TICKS } from "../shared/ticks";
+import { BLUE, BOLD, GRAY, GREEN, ITALIC, RED } from "../shared/format-codes";
+import { PLAYER_LOOKUP_RETRY_INTERVAL_TICKS } from "../shared/ticks";
 import { COLLECTOR, Collector } from "../player/collection-constants";
 
 @singleton()
@@ -35,10 +35,21 @@ export class PlayerManager {
   async initializePlayer(playerName: string) {
     this.logger.log(`${WOOD_SWORD} Player joined: ${BOLD + BLUE + playerName}`);
 
-    // if you try to get a player before they are fully loaded you will get an error
-    await new Promise((resolve) => this.system.runTimeout(() => resolve(undefined), PLAYER_INITIALIZATION_DELAY_TICKS));
+    const immediatePlayer = this.world.getPlayers({ name: playerName })[0];
+    if (immediatePlayer) {
+      immediatePlayer.sendMessage(`${GRAY}${ITALIC}(Collect Everything!) Initializing...`);
+    }
 
-    const player = this.world.getPlayers({ name: playerName })[0];
+    let player = immediatePlayer;
+    let retries = 0;
+    while (!player && retries < 5) {
+      await new Promise((resolve) =>
+        this.system.runTimeout(() => resolve(undefined), PLAYER_LOOKUP_RETRY_INTERVAL_TICKS)
+      );
+      player = this.world.getPlayers({ name: playerName })[0];
+      retries++;
+    }
+
     if (!player) {
       this.logger.warn(`Player ${playerName} not found in the world. Cannot initialize.`);
       return;
@@ -64,8 +75,10 @@ export class PlayerManager {
       const collection = playerContainer.resolve(PlayerCollection);
       collection.run();
 
+      player.sendMessage(`${GREEN}(Collect Everything!) Ready to collect!`);
       this.logger.log(`Player ${playerName} initialized successfully.`);
     } catch (err) {
+      player.sendMessage(`${RED}(Collect Everything!) Initialization failed. Some features may not work.`);
       this.logger.error(`Error initializing ${playerName}:`, err, (err as Error).stack);
     }
   }
