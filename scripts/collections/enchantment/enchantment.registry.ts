@@ -7,6 +7,7 @@ import { ENCHANTMENT } from "../../player/collection-constants";
 import type { Registry } from "../registry";
 import { getItemTexture } from "../item/item-texture";
 import { ItemRegistry } from "../item/item.registry";
+import enchantmentOverrides from "./enchantment-overrides";
 
 @singleton()
 export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | undefined> {
@@ -70,14 +71,15 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
     const rawId = id.includes(";") ? id.split(";")[1] : id;
     const parts = rawId.split("+");
     const enchantId = parts[0];
+    const displayName = enchantmentOverrides[enchantId] ?? formatId(enchantId);
     if (parts.length > 1) {
       const maxLevel = this.enchantmentMaxLevels.get(enchantId) ?? 1;
       if (maxLevel > 1) {
         const level = parseInt(parts[1], 10);
-        return `${formatId(enchantId)} ${toRoman(level)}`;
+        return `${displayName} ${toRoman(level)}`;
       }
     }
-    return formatId(enchantId);
+    return displayName;
   }
 
   findByKeyword(word: string): string[] {
