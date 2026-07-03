@@ -2,7 +2,7 @@ import { Lifecycle, scoped, inject } from "tsyringe";
 import { PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../global-tokens";
 import { LOG_SETTINGS_TOKEN, LogSettings } from "./log-settings";
 import type { Player, System, World } from "@minecraft/server";
-import { BLUE, DARK_AQUA, DARK_GRAY, GRAY, MINECOIN_GOLD, RED, RESET } from "../format-codes";
+import { BLUE, DARK_AQUA, DARK_GRAY, GRAY, GREEN, MINECOIN_GOLD, RED, RESET } from "../format-codes";
 
 @scoped(Lifecycle.ContainerScoped)
 export class Logger {
@@ -12,6 +12,11 @@ export class Logger {
     @inject(LOG_SETTINGS_TOKEN) private readonly settings: LogSettings,
     @inject(PLAYER_TOKEN, { isOptional: true }) private readonly player: Player
   ) {}
+
+  debug(...messages: any[]) {
+    if (!this.settings().levels.includes("debug")) return;
+    this.output(`${this.brackets(GREEN + "debug")} ${this.concat(messages)}`);
+  }
 
   log(...messages: any[]) {
     if (!this.settings().levels.includes("log")) return;

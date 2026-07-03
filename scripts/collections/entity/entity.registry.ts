@@ -7,7 +7,7 @@ import { getEntityDisplayName } from "./entity-name";
 import { createVariantCounter } from "./entity-variants";
 import { DifficultyLevel } from "../../player/player-settings";
 import { ENTITY } from "../../player/collection-constants";
-import type { Registry } from "../registry";
+import type { Registry, Thing } from "../registry";
 import ENTITIES from "./entities";
 import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
 import { getItemTexture } from "../item/item-texture";
@@ -28,6 +28,8 @@ export class EntityRegistry implements Registry<Entity> {
     insane: [],
   };
   private variantCounter = createVariantCounter();
+  private formatCache = new Map<string, string>();
+  private cachedAllCache = new Map<DifficultyLevel, Thing[]>();
 
   constructor(@inject(ENTITY_TYPES_TOKEN) private readonly entityTypes: typeof EntityTypes) {}
 
@@ -59,8 +61,32 @@ export class EntityRegistry implements Registry<Entity> {
   }
 
   format(id: string): string {
-    const rawId = id.includes(";") ? id.split(";")[1] : id;
-    return getEntityDisplayName(rawId);
+    if (!this.formatCache.has(id)) {
+      const rawId = id.includes(";") ? id.split(";")[1] : id;
+      this.formatCache.set(id, getEntityDisplayName(rawId));
+    }
+    return this.formatCache.get(id)!;
+  }
+
+  all(difficulty: DifficultyLevel): Thing[] {
+    if (!this.cachedAllCache.has(difficulty)) {
+      this.ensureInitialized();
+      const rawIds = this.entitiesByDifficulty[difficulty];
+      const prefixedIds = rawIds.map((id) => `${this.key};${id}`);
+      const formatted = prefixedIds.map((id) => this.format(id));
+      const indices = Array.from({ length: prefixedIds.length }, (_, i) => i);
+      indices.sort((a, b) => formatted[a].toLowerCase().localeCompare(formatted[b].toLowerCase()));
+      this.cachedAllCache.set(
+        difficulty,
+        indices.map((i) => ({
+          id: prefixedIds[i],
+          displayName: formatted[i],
+          texture: this.resolveTexture(prefixedIds[i]),
+          registry: this,
+        }))
+      );
+    }
+    return this.cachedAllCache.get(difficulty)!;
   }
 
   findByKeyword(word: string): string[] {
@@ -84,11 +110,6 @@ export class EntityRegistry implements Registry<Entity> {
       ...this.entitiesByDifficulty.insane,
     ]);
     return collectedKeys.filter((key) => !allKnown.has(key)).map((key) => `${this.key};${key}`);
-  }
-
-  all(difficultyLevel: DifficultyLevel = "basic"): string[] {
-    this.ensureInitialized();
-    return this.entitiesByDifficulty[difficultyLevel].map((id) => `${this.key};${id}`);
   }
 
   entityTypeCount(difficultyLevel: DifficultyLevel = "basic"): number {

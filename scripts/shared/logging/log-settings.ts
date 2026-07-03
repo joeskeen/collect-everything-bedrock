@@ -1,4 +1,4 @@
-type LogLevels = "log" | "warn" | "error";
+type LogLevels = "debug" | "log" | "warn" | "error";
 
 export const LOG_SETTINGS_STORAGE_KEY = "collecteverything:log_settings";
 

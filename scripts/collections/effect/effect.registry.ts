@@ -5,7 +5,7 @@ import { formatId, toRoman } from "../../shared/formatting";
 import { EXCLUDED_EFFECTS } from "./effect-exclusions";
 import { DifficultyLevel } from "../../player/player-settings";
 import { EFFECT } from "../../player/collection-constants";
-import type { Registry } from "../registry";
+import type { Registry, Thing } from "../registry";
 import EFFECTS, { EffectData } from "./effects";
 import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
 
@@ -21,6 +21,8 @@ export class EffectRegistry implements Registry<Effect> {
   private effects: string[] = [];
   private effectsByDifficulty: Record<string, string[]> = { basic: [], committed: [], insane: [] };
   private allVariantKeys = new Set<string>();
+  private formatCache = new Map<string, string>();
+  private cachedAllCache = new Map<DifficultyLevel, Thing[]>();
 
   constructor(@inject(EFFECT_TYPES_TOKEN) private readonly effectTypes: typeof EffectTypes) {}
 
@@ -72,17 +74,44 @@ export class EffectRegistry implements Registry<Effect> {
   }
 
   format(id: string): string {
-    const rawId = id.includes(";") ? id.split(";")[1] : id;
-    const parts = rawId.split("+");
-    const effectId = parts[0];
-    if (parts.length > 1) {
-      const meta = this.getMeta(effectId);
-      if (meta && meta.maxAmplifier > 0) {
-        const amplifier = parseInt(parts[1], 10);
-        return `${formatId(effectId)} ${toRoman(amplifier + 1)}`;
+    if (!this.formatCache.has(id)) {
+      const rawId = id.includes(";") ? id.split(";")[1] : id;
+      const parts = rawId.split("+");
+      const effectId = parts[0];
+      if (parts.length > 1) {
+        const meta = this.getMeta(effectId);
+        if (meta && meta.maxAmplifier > 0) {
+          const amplifier = parseInt(parts[1], 10);
+          this.formatCache.set(id, `${formatId(effectId)} ${toRoman(amplifier + 1)}`);
+        } else {
+          this.formatCache.set(id, formatId(effectId));
+        }
+      } else {
+        this.formatCache.set(id, formatId(effectId));
       }
     }
-    return formatId(effectId);
+    return this.formatCache.get(id)!;
+  }
+
+  all(difficulty: DifficultyLevel): Thing[] {
+    if (!this.cachedAllCache.has(difficulty)) {
+      this.ensureInitialized();
+      const rawIds = this.effectsByDifficulty[difficulty];
+      const prefixedIds = rawIds.map((id) => `${this.key};${id}`);
+      const formatted = prefixedIds.map((id) => this.format(id));
+      const indices = Array.from({ length: prefixedIds.length }, (_, i) => i);
+      indices.sort((a, b) => formatted[a].toLowerCase().localeCompare(formatted[b].toLowerCase()));
+      this.cachedAllCache.set(
+        difficulty,
+        indices.map((i) => ({
+          id: prefixedIds[i],
+          displayName: formatted[i],
+          texture: this.resolveTexture(prefixedIds[i]),
+          registry: this,
+        }))
+      );
+    }
+    return this.cachedAllCache.get(difficulty)!;
   }
 
   findByKeyword(word: string): string[] {
@@ -131,11 +160,6 @@ export class EffectRegistry implements Registry<Effect> {
     const maxAmp = meta?.maxAmplifier ?? 0;
     const excludedCount = meta?.excludedAmplifiers?.filter((a) => a <= maxAmp).length ?? 0;
     return maxAmp + 2 - excludedCount;
-  }
-
-  all(difficultyLevel: DifficultyLevel = "basic") {
-    this.ensureInitialized();
-    return this.effectsByDifficulty[difficultyLevel].map((id) => `${this.key};${id}`);
   }
 
   effectCount(difficultyLevel: DifficultyLevel = "basic") {

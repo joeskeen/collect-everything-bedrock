@@ -6,9 +6,8 @@ import { COLLECTED_PREFIX, CollectedMetadata, PlayerCollectionData, THEME } from
 import { PlayerCollection } from "../player-collection";
 import { RegistryCollection } from "../../collections/index";
 import { PlayerStorage } from "../../shared/storage";
-import { capitalCase } from "change-case";
 import { BOLD, RESET } from "../../shared/format-codes";
-import { collectionDay, timeAgo } from "../../shared/formatting";
+import { capitalCase, collectionDay, timeAgo } from "../../shared/formatting";
 import type { DDUI } from "../../ui/ui.tokens";
 
 @scoped(Lifecycle.ContainerScoped)

@@ -4,8 +4,7 @@ import { PLAYER_SESSION_TOKEN, PLAYER_TOKEN, PlayerSession, SYSTEM_TOKEN } from 
 import { DDUI_TOKEN } from "../../ui/ui.tokens";
 import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME, UNOBTAINABLE } from "../collection-constants";
 import { PlayerCollection } from "../player-collection";
-import { capitalCase } from "change-case";
-import { timeAgo } from "../../shared/formatting";
+import { capitalCase, timeAgo } from "../../shared/formatting";
 import { GRAY, RESET } from "../../shared/format-codes";
 import type { DDUI } from "../../ui/ui.tokens";
 import { PlayerSettingsService } from "../player-settings";
@@ -74,6 +73,11 @@ export class SessionModal {
 
     for (const progress of collectionProgress) {
       const sessionCollected = progress.collected.filter((entry) => validIds.has(`${progress.category};${entry.what}`));
+      sessionCollected.sort((a, b) => {
+        const nameA = this.allRegistry.format(`${progress.category};${a.what}`);
+        const nameB = this.allRegistry.format(`${progress.category};${b.what}`);
+        return nameA.toLowerCase().localeCompare(nameB.toLowerCase());
+      });
       if (sessionCollected.length > 0) {
         const lines = sessionCollected
           .map(

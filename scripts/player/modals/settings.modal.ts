@@ -50,6 +50,7 @@ export class SettingsModal {
       await form.show();
       const difficultyLevel = difficulty.getData();
       this.playerSettings.change({
+        ...this.playerSettings.get(),
         difficulty: options[difficultyLevel],
       });
     } catch (e) {

@@ -6,12 +6,19 @@ export interface CollectedCount {
   total: number;
 }
 
+export interface Thing {
+  id: string;
+  displayName: string;
+  texture: string | number;
+  registry: Registry;
+}
+
 export interface Registry<TIdentifyInput = unknown> {
   readonly key: string;
 
   getIcon(): string | number;
 
-  all(difficulty: DifficultyLevel): string[];
+  all(difficulty: DifficultyLevel): Thing[];
 
   count(items: string[], difficulty: DifficultyLevel): CollectedCount;
 

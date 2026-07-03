@@ -4,7 +4,7 @@ import type { Player, CustomCommandResult, System } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
 import { THEME, PlayerCollectionData } from "../collection-constants";
 import { GOLD, GRAY, ITALIC, RESET } from "../../shared/format-codes";
-import { capitalCase } from "change-case";
+import { capitalCase } from "../../shared/formatting";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import { RegistryCollection } from "../../collections/index";
 

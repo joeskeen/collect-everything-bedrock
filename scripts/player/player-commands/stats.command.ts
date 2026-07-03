@@ -3,8 +3,7 @@ import { addOnCommand, CommandHandler, customCommandStatuses } from "../../syste
 import type { CustomCommandResult, Player, System } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
 import { THEME, PlayerCollectionData } from "../collection-constants";
-import { capitalCase } from "change-case";
-import { percent } from "../../shared/formatting";
+import { capitalCase, percent } from "../../shared/formatting";
 import { GOLD, GRAY, RESET } from "../../shared/format-codes";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import { RegistryCollection } from "../../collections/index";

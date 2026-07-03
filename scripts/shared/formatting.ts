@@ -1,8 +1,17 @@
-import { capitalCase } from "change-case";
 import { PERCENT_SYMBOL } from "./format-codes";
 
 export function trimNamespace(what: string): string {
   return what.replace(/^[^:]+:/, "");
+}
+
+export function capitalCase(input: string | undefined | null): string {
+  if (!input) return "";
+  return input
+    .replace(/[_-]+/g, " ")
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .trim();
 }
 
 export function formatId(what: string): string {

@@ -8,7 +8,7 @@ import { DifficultyLevel } from "../../player/player-settings";
 import BIOMES from "./biomes";
 import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
 import { BIOME } from "../../player/collection-constants";
-import type { Registry } from "../registry";
+import type { Registry, Thing } from "../registry";
 import { getItemTexture } from "../item/item-texture";
 
 type KnownBiomeId = keyof typeof BIOMES;
@@ -23,6 +23,8 @@ export class BiomeRegistry implements Registry {
 
   private _initialized = false;
   private biomes: string[] = [];
+  private formatCache = new Map<string, string>();
+  private cachedAllCache = new Map<DifficultyLevel, Thing[]>();
 
   constructor(@inject(BIOME_TYPES_TOKEN) private readonly biomeTypes: typeof BiomeTypes) {}
 
@@ -47,8 +49,31 @@ export class BiomeRegistry implements Registry {
   }
 
   format(id: string): string {
-    const rawId = id.includes(";") ? id.split(";")[1] : id;
-    return BIOME_NAME_OVERRIDES[rawId] ?? formatId(rawId);
+    if (!this.formatCache.has(id)) {
+      const rawId = id.includes(";") ? id.split(";")[1] : id;
+      this.formatCache.set(id, BIOME_NAME_OVERRIDES[rawId] ?? formatId(rawId));
+    }
+    return this.formatCache.get(id)!;
+  }
+
+  all(difficulty: DifficultyLevel): Thing[] {
+    if (!this.cachedAllCache.has(difficulty)) {
+      this.ensureInitialized();
+      const prefixedIds = this.biomes.map((id) => `${this.key};${id}`);
+      const formatted = prefixedIds.map((id) => this.format(id));
+      const indices = Array.from({ length: prefixedIds.length }, (_, i) => i);
+      indices.sort((a, b) => formatted[a].toLowerCase().localeCompare(formatted[b].toLowerCase()));
+      this.cachedAllCache.set(
+        difficulty,
+        indices.map((i) => ({
+          id: prefixedIds[i],
+          displayName: formatted[i],
+          texture: this.resolveTexture(prefixedIds[i]),
+          registry: this,
+        }))
+      );
+    }
+    return this.cachedAllCache.get(difficulty)!;
   }
 
   findByKeyword(word: string): string[] {
@@ -72,10 +97,7 @@ export class BiomeRegistry implements Registry {
 
   getExtra(collectedKeys: string[]) {
     this.ensureInitialized();
-    const allKnown = new Set<string>();
-    for (const id of this.all()) {
-      allKnown.add(id.includes(";") ? id.split(";")[1] : id);
-    }
+    const allKnown = new Set(this.biomes);
     return collectedKeys.filter((key) => !allKnown.has(key)).map((key) => `${this.key};${key}`);
   }
 
@@ -85,11 +107,6 @@ export class BiomeRegistry implements Registry {
 
   countVariants(id: string): number {
     return 1;
-  }
-
-  all(difficultyLevel: DifficultyLevel = "basic") {
-    this.ensureInitialized();
-    return this.biomes.map((id) => `${this.key};${id}`);
   }
 
   biomeCount(difficultyLevel: DifficultyLevel = "basic") {

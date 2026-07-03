@@ -9,7 +9,7 @@ import type { Player, CustomCommandResult, System, CustomCommandOrigin } from "@
 import { PlayerCollection } from "../player-collection";
 import { THEME, PlayerCollectionData } from "../collection-constants";
 import { GRAY, MINECOIN_GOLD, RESET } from "../../shared/format-codes";
-import { capitalCase } from "change-case";
+import { capitalCase } from "../../shared/formatting";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import { RegistryCollection } from "../../collections/index";
 import { PlayerSettingsService } from "../player-settings";
@@ -36,12 +36,11 @@ export class PlayerAllCommand implements CommandHandler {
         const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
         const entries = registry
           .all(difficulty)
-          .sort()
-          .filter((e: string) => e.includes(filter))
-          .map((k: string) => {
-            const rawId = k.includes(";") ? k.split(";")[1] : k;
+          .filter(({ id }) => id.includes(filter))
+          .map(({ id, displayName }) => {
+            const rawId = id.includes(";") ? id.split(";")[1] : id;
             const color = collection?.[rawId] ? (THEME[registry.key as keyof typeof THEME] ?? "") : GRAY;
-            return `${color}${registry.format(k)}${RESET}`;
+            return `${color}${displayName}${RESET}`;
           });
 
         if (entries.length > 0) {

@@ -5,7 +5,7 @@ import { EntityRegistry } from "./entity/entity.registry";
 import { EffectRegistry } from "./effect/effect.registry";
 import { EnchantmentRegistry } from "./enchantment/enchantment.registry";
 import { UnobtainableRegistry } from "./unobtainable/unobtainable.registry";
-import type { Registry, CollectedCount } from "./registry";
+import type { Registry, CollectedCount, Thing } from "./registry";
 import { DifficultyLevel } from "../player/player-settings";
 
 export const ALL_REGISTRY_TOKEN = Symbol("AllRegistry aggregate registry");
@@ -15,6 +15,8 @@ export class AllRegistry implements Registry<string> {
   readonly key = "all";
 
   private validIdsCache = new Map<DifficultyLevel, Set<string>>();
+  private formatCache = new Map<string, string>();
+  private cachedAllCache = new Map<DifficultyLevel, Thing[]>();
 
   getIcon(): string | number {
     return "textures/items/book_normal";
@@ -31,7 +33,7 @@ export class AllRegistry implements Registry<string> {
 
   validIds(difficulty: DifficultyLevel): Set<string> {
     if (!this.validIdsCache.has(difficulty)) {
-      this.validIdsCache.set(difficulty, new Set(this.all(difficulty)));
+      this.validIdsCache.set(difficulty, new Set(this.registries.flatMap((r) => r.all(difficulty).map((t) => t.id))));
     }
     return this.validIdsCache.get(difficulty)!;
   }
@@ -54,10 +56,6 @@ export class AllRegistry implements Registry<string> {
   private getRegistryForId(id: string): Registry {
     const [category] = id.includes(";") ? id.split(";") : [""];
     return this.getRegistryByKey(category) ?? this.itemRegistry;
-  }
-
-  all(difficulty: DifficultyLevel): string[] {
-    return this.registries.flatMap((r) => r.all(difficulty));
   }
 
   count(ids: string[], difficulty: DifficultyLevel): CollectedCount {
@@ -94,7 +92,32 @@ export class AllRegistry implements Registry<string> {
   }
 
   format(id: string): string {
-    return this.getRegistryForId(id).format(id);
+    if (!this.formatCache.has(id)) {
+      this.formatCache.set(id, this.getRegistryForId(id).format(id));
+    }
+    return this.formatCache.get(id)!;
+  }
+
+  all(difficulty: DifficultyLevel): Thing[] {
+    if (!this.cachedAllCache.has(difficulty)) {
+      const ids = this.registries.flatMap((r) => r.all(difficulty).map((t) => t.id));
+      const formatted = ids.map((id) => this.format(id));
+      const indices = Array.from({ length: ids.length }, (_, i) => i);
+      indices.sort((a, b) => formatted[a].toLowerCase().localeCompare(formatted[b].toLowerCase()));
+      this.cachedAllCache.set(
+        difficulty,
+        indices.map((i) => {
+          const reg = this.getRegistryForId(ids[i]);
+          return {
+            id: ids[i],
+            displayName: formatted[i],
+            texture: reg.resolveTexture(ids[i]),
+            registry: reg,
+          };
+        })
+      );
+    }
+    return this.cachedAllCache.get(difficulty)!;
   }
 
   findByKeyword(word: string): string[] {

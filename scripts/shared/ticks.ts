@@ -4,4 +4,3 @@ export const POLLING_INTERVAL_TICKS = 50;
 export const CORRELATING_EVENT_INTERVAL_TICKS = 3;
 
 // delays
-export const PLAYER_LOOKUP_RETRY_INTERVAL_TICKS = 20;

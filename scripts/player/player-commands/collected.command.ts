@@ -4,7 +4,7 @@ import type { Player, CustomCommandResult, System } from "@minecraft/server";
 import { PlayerCollection } from "../player-collection";
 import { THEME, PlayerCollectionData } from "../collection-constants";
 import { GOLD, GRAY, RESET } from "../../shared/format-codes";
-import { capitalCase } from "change-case";
+import { capitalCase } from "../../shared/formatting";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import { RegistryCollection } from "../../collections/index";
 import { PlayerSettingsService } from "../player-settings";
@@ -29,12 +29,11 @@ export class PlayerCollectedCommand implements CommandHandler {
         const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
         const entries = registry
           .all(difficulty)
-          .filter((k: string) => {
-            const rawId = k.includes(";") ? k.split(";")[1] : k;
+          .filter(({ id }) => {
+            const rawId = id.includes(";") ? id.split(";")[1] : id;
             return !!collection?.[rawId];
           })
-          .sort()
-          .map((k: string) => registry.format(k));
+          .map(({ displayName }) => displayName);
 
         if (entries.length > 0) {
           const categoryColor = THEME[registry.key as keyof typeof THEME] ?? GRAY;

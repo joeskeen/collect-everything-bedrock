@@ -49,8 +49,9 @@ import {
   ObservableString,
   MessageFormData,
 } from "@minecraft/server-ui";
+import { registerDebugProviders } from "./debug/index";
 
-// registerDebugProviders();
+registerDebugProviders();
 container.registerInstance(DDUI_TOKEN, { CustomForm, ObservableBoolean, ObservableNumber, ObservableString });
 container.registerInstance(CREATE_MODAL_FORM_TOKEN, () => new ModalFormData());
 container.registerInstance(CREATE_MESSAGE_FORM_TOKEN, () => new MessageFormData());

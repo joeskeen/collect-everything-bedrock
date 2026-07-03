@@ -5,7 +5,7 @@ import { formatId } from "../../shared/formatting";
 import { EXCLUDED_ITEMS } from "./item-exclusions";
 import { DifficultyLevel } from "../../player/player-settings";
 import { ITEM } from "../../player/collection-constants";
-import type { Registry } from "../registry";
+import type { Registry, Thing } from "../registry";
 import { getItemTexture } from "./item-texture";
 import { IdentifyItem } from "./identify-item";
 import { createItemVariantCounter } from "./item-variants";
@@ -23,6 +23,8 @@ export class ItemRegistry implements Registry<ItemStack> {
   private items: string[] = [];
   private variantCounter = createItemVariantCounter();
   private allItemVariants = new Set<string>();
+  private formatCache = new Map<string, string>();
+  private cachedAllCache = new Map<DifficultyLevel, Thing[]>();
 
   constructor(
     @inject(ITEM_TYPES_TOKEN) private readonly itemTypes: typeof ItemTypes,
@@ -68,13 +70,36 @@ export class ItemRegistry implements Registry<ItemStack> {
   }
 
   format(fullItemId: string): string {
-    const rawId = fullItemId.includes(";") ? fullItemId.split(";")[1] : fullItemId;
-    const [itemId, ...variants] = rawId.split("+");
-    let formatted = formatId(itemId);
-    if (variants.length) {
-      formatted += ` (${variants.map((id) => formatId(id)).join(", ")})`;
+    if (!this.formatCache.has(fullItemId)) {
+      const rawId = fullItemId.includes(";") ? fullItemId.split(";")[1] : fullItemId;
+      const [itemId, ...variants] = rawId.split("+");
+      let formatted = formatId(itemId);
+      if (variants.length) {
+        formatted += ` (${variants.map((id) => formatId(id)).join(", ")})`;
+      }
+      this.formatCache.set(fullItemId, formatted);
     }
-    return formatted;
+    return this.formatCache.get(fullItemId)!;
+  }
+
+  all(difficulty: DifficultyLevel): Thing[] {
+    if (!this.cachedAllCache.has(difficulty)) {
+      this.ensureInitialized();
+      const prefixedIds = this.items.map((id) => `${this.key};${id}`);
+      const formatted = prefixedIds.map((id) => this.format(id));
+      const indices = Array.from({ length: prefixedIds.length }, (_, i) => i);
+      indices.sort((a, b) => formatted[a].toLowerCase().localeCompare(formatted[b].toLowerCase()));
+      this.cachedAllCache.set(
+        difficulty,
+        indices.map((i) => ({
+          id: prefixedIds[i],
+          displayName: formatted[i],
+          texture: this.resolveTexture(prefixedIds[i]),
+          registry: this,
+        }))
+      );
+    }
+    return this.cachedAllCache.get(difficulty)!;
   }
 
   findByKeyword(word: string): string[] {
@@ -103,11 +128,6 @@ export class ItemRegistry implements Registry<ItemStack> {
         return !this.allItemVariants.has(suffix);
       })
       .map((key) => `${this.key};${key}`);
-  }
-
-  all(difficultyLevel: DifficultyLevel = "basic") {
-    this.ensureInitialized();
-    return this.items.map((id) => `${this.key};${id}`);
   }
 
   itemCount(difficultyLevel: DifficultyLevel = "basic") {

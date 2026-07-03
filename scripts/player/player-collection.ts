@@ -26,7 +26,7 @@ import { PlayerNotifier } from "./player-notifier";
 import { PlayerSettingsService } from "./player-settings";
 import { SOLID_STAR } from "../shared/emoji";
 import { BOLD, GRAY, ITALIC } from "../shared/format-codes";
-import { capitalCase } from "change-case";
+import { capitalCase } from "../shared/formatting";
 import type { ItemStack, Player, System, World } from "@minecraft/server";
 import { EQUIPMENT_SLOT_TOKEN, PLAYER_TOKEN, SYSTEM_TOKEN, WORLD_TOKEN } from "../shared/global-tokens";
 import { CollectionScoreboard } from "../system/scoreboard";

@@ -2,7 +2,8 @@ import { inject, singleton } from "tsyringe";
 import { formatId } from "../../shared/formatting";
 import { UNOBTAINABLE_BUT_BREAKABLE } from "./unobtainables";
 import { UNOBTAINABLE } from "../../player/collection-constants";
-import type { Registry } from "../registry";
+import { DifficultyLevel } from "../../player/player-settings";
+import type { Registry, Thing } from "../registry";
 import { getItemTexture } from "../item/item-texture";
 import { ItemRegistry } from "../item/item.registry";
 
@@ -15,14 +16,38 @@ export class UnobtainableRegistry implements Registry {
   }
 
   private unobtainables: string[] = [];
+  private formatCache = new Map<string, string>();
+  private cachedAllCache = new Map<DifficultyLevel, Thing[]>();
 
   constructor(@inject(ItemRegistry) private readonly itemRegistry: ItemRegistry) {
     this.unobtainables = [...UNOBTAINABLE_BUT_BREAKABLE];
   }
 
   format(id: string): string {
-    const rawId = id.includes(";") ? id.split(";")[1] : id;
-    return formatId(rawId);
+    if (!this.formatCache.has(id)) {
+      const rawId = id.includes(";") ? id.split(";")[1] : id;
+      this.formatCache.set(id, formatId(rawId));
+    }
+    return this.formatCache.get(id)!;
+  }
+
+  all(difficulty: DifficultyLevel): Thing[] {
+    if (!this.cachedAllCache.has(difficulty)) {
+      const prefixedIds = this.unobtainables.map((id) => `${this.key};${id}`);
+      const formatted = prefixedIds.map((id) => this.format(id));
+      const indices = Array.from({ length: prefixedIds.length }, (_, i) => i);
+      indices.sort((a, b) => formatted[a].toLowerCase().localeCompare(formatted[b].toLowerCase()));
+      this.cachedAllCache.set(
+        difficulty,
+        indices.map((i) => ({
+          id: prefixedIds[i],
+          displayName: formatted[i],
+          texture: this.resolveTexture(prefixedIds[i]),
+          registry: this,
+        }))
+      );
+    }
+    return this.cachedAllCache.get(difficulty)!;
   }
 
   isUnobtainable(id: string): boolean {
@@ -41,10 +66,7 @@ export class UnobtainableRegistry implements Registry {
   }
 
   getExtra(collectedKeys: string[]) {
-    const allKnown = new Set<string>();
-    for (const id of this.all()) {
-      allKnown.add(id.includes(";") ? id.split(";")[1] : id);
-    }
+    const allKnown = new Set(this.unobtainables);
     return collectedKeys.filter((key) => !allKnown.has(key)).map((key) => `${this.key};${key}`);
   }
 
@@ -54,10 +76,6 @@ export class UnobtainableRegistry implements Registry {
 
   countVariants(id: string): number {
     return 1;
-  }
-
-  all() {
-    return this.unobtainables.map((id) => `${this.key};${id}`);
   }
 
   unobtainableCount() {

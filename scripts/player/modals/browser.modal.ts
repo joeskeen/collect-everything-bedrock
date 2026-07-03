@@ -12,26 +12,23 @@ import { THEME, PlayerCollectionData, RegistryKey } from "../collection-constant
 import { RegistryCollection } from "../../collections/index";
 import { AllRegistry } from "../../collections/all-registry";
 import { PlayerCollection } from "../player-collection";
-import { capitalCase } from "change-case";
 import { CollectionFormData } from "../../ui/forms";
-import { percent, trimNamespace as removeNamespace } from "../../shared/formatting";
+import { capitalCase, percent } from "../../shared/formatting";
 import { BOLD, GRAY, ITALIC, RESET } from "../../shared/format-codes";
 import { PlayerSettingsService } from "../player-settings";
 import { SettingsModal } from "./settings.modal";
 import { HelpModal } from "./help.modal";
 import { SessionModal } from "./session.modal";
 import { DetailsModal } from "./details.modal";
-import type { Registry } from "../../collections/registry";
 import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
 
 const GRID_ROW_LENGTH = 17;
 
 @scoped(Lifecycle.ContainerScoped)
 export class BrowserModal {
-  private activeCategory = "all";
   private readonly actions: Record<string, (id: string) => void | Promise<void>> = {
     category: (id) => {
-      this.activeCategory = id;
+      this.playerSettingsService.change({ ...this.playerSettingsService.get(), activeCategory: id });
       this.system.run(() => this.show());
     },
     search: async () => {
@@ -87,10 +84,10 @@ export class BrowserModal {
   ) {}
 
   show() {
-    const difficulty = this.playerSettingsService.get().difficulty;
+    const { difficulty, activeCategory } = this.playerSettingsService.get();
     const registries = this.registryCollection.registries;
     const collectionForm = new CollectionFormData(this.createActionForm).title(
-      `Collection - ${BOLD}${THEME[this.activeCategory as keyof typeof THEME] ?? ""}${capitalCase(this.activeCategory)}`
+      `Collection - ${BOLD}${THEME[activeCategory as keyof typeof THEME] ?? ""}${capitalCase(activeCategory)}`
     );
     const buttons: Array<Parameters<typeof collectionForm.button>> = [];
 
@@ -117,16 +114,8 @@ export class BrowserModal {
       buttons.push(filler);
     }
 
-    const registry = registries.find((r) => r.key === this.activeCategory);
-    const formatRegistry = registry ?? this.allRegistry;
-    const allItems = registry
-      ? registry.all(difficulty).map((id) => [id, registry] as const)
-      : registries.flatMap((r) => r.all(difficulty).map((id) => [id, r] as const));
-    const thingsToShow = allItems.sort((a, b) => {
-      const nameA = formatRegistry.format(a[0]);
-      const nameB = formatRegistry.format(b[0]);
-      return nameA.toLowerCase().localeCompare(nameB.toLowerCase());
-    });
+    const registry = registries.find((r) => r.key === activeCategory);
+    const thingsToShow = registry ? registry.all(difficulty) : this.allRegistry.all(difficulty);
 
     collectionForm.itemsCount(thingsToShow.length);
     const activeIndex = registries.findIndex((r) => r.key === registry?.key);
@@ -134,14 +123,12 @@ export class BrowserModal {
       collectionForm.activeTab(activeIndex);
     }
 
-    for (const [id, reg] of thingsToShow) {
-      const texture = reg.resolveTexture(id);
-      const name = reg.format(id);
+    for (const { id, displayName, texture, registry: reg } of thingsToShow) {
       const [categoryKey, rawId] = id.includes(";") ? id.split(";") : [reg.key, id];
       const collected = this.playerCollection.hasCollected(categoryKey as keyof PlayerCollectionData, rawId);
       const percentComplete = collected ? 100 : 0;
       buttons.push([
-        name,
+        displayName,
         [
           `${ITALIC}${THEME[categoryKey as keyof typeof THEME] ?? GRAY}${capitalCase(categoryKey)}${RESET}`,
           collected ? "Collected" : "Not Collected",

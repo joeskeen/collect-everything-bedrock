@@ -14,6 +14,9 @@ export class AdminSettingsModal {
   async show(player: Player): Promise<void> {
     const currentSettings = getLogSettings();
 
+    const debug = new this.ddui.ObservableBoolean(currentSettings.levels.includes("debug"), {
+      clientWritable: true,
+    });
     const log = new this.ddui.ObservableBoolean(currentSettings.levels.includes("log"), {
       clientWritable: true,
     });
@@ -32,6 +35,7 @@ export class AdminSettingsModal {
 
     const form = new this.ddui.CustomForm(player, "Collect Everything! Admin Settings")
       .header("Logging Levels")
+      .toggle("debug", debug)
       .toggle("log", log)
       .toggle("warn", warn)
       .toggle("error", error)
@@ -42,7 +46,8 @@ export class AdminSettingsModal {
 
     try {
       await form.show();
-      const levels: ("log" | "warn" | "error")[] = [];
+      const levels: ("debug" | "log" | "warn" | "error")[] = [];
+      if (debug.getData()) levels.push("debug");
       if (log.getData()) levels.push("log");
       if (warn.getData()) levels.push("warn");
       if (error.getData()) levels.push("error");

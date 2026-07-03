@@ -5,6 +5,7 @@ import { NAMESPACE } from "../shared/constants";
 export type DifficultyLevel = "basic" | "committed" | "insane";
 export interface PlayerSettings {
   difficulty: DifficultyLevel;
+  activeCategory: string;
 }
 
 const STORAGE_KEY = NAMESPACE + ":settings";
@@ -12,6 +13,7 @@ const STORAGE_KEY = NAMESPACE + ":settings";
 const defaultSettings = () =>
   ({
     difficulty: "basic",
+    activeCategory: "all",
   }) as PlayerSettings;
 
 @scoped(Lifecycle.ContainerScoped)

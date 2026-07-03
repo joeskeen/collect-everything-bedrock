@@ -1,6 +1,5 @@
-import { capitalCase } from "change-case";
 import entities from "./entities";
-import { formatId } from "../../shared/formatting";
+import { capitalCase, formatId } from "../../shared/formatting";
 
 export function getEntityDisplayName(entityIdWithVariants: string): string {
   const [entityId, ...variantParts] = entityIdWithVariants.split("+");

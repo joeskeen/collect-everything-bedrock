@@ -7,8 +7,11 @@ import { PlayerNotifier } from "../player/player-notifier";
 import { PlayerSettingsService } from "../player/player-settings";
 import { WOOD_SWORD } from "../shared/emoji";
 import { BLUE, BOLD, GRAY, GREEN, ITALIC, RED } from "../shared/format-codes";
-import { PLAYER_LOOKUP_RETRY_INTERVAL_TICKS } from "../shared/ticks";
 import { COLLECTOR, Collector } from "../player/collection-constants";
+
+const FIBONACCI_SEQUENCE = [1, 1, 2, 3, 5, 8, 13, 21];
+const FIBONACCI_SEED_TICKS = 10;
+const FIBONACCI_BACKOFF = FIBONACCI_SEQUENCE.map((i) => i * FIBONACCI_SEED_TICKS);
 
 @singleton()
 export class PlayerManager {
@@ -32,26 +35,24 @@ export class PlayerManager {
     this.world.afterEvents.playerLeave.subscribe((e) => this.removePlayer(e.playerName));
   }
 
-  async initializePlayer(playerName: string) {
+  async initializePlayer(playerName: string, attempt: number = 0) {
     this.logger.log(`${WOOD_SWORD} Player joined: ${BOLD + BLUE + playerName}`);
 
-    const immediatePlayer = this.world.getPlayers({ name: playerName })[0];
-    if (immediatePlayer) {
-      immediatePlayer.sendMessage(`${GRAY}${ITALIC}(Collect Everything!) Initializing...`);
-    }
-
-    let player = immediatePlayer;
-    let retries = 0;
-    while (!player && retries < 5) {
-      await new Promise((resolve) =>
-        this.system.runTimeout(() => resolve(undefined), PLAYER_LOOKUP_RETRY_INTERVAL_TICKS)
-      );
-      player = this.world.getPlayers({ name: playerName })[0];
-      retries++;
+    const player = this.world.getPlayers({ name: playerName })[0];
+    if (player && attempt === 0) {
+      player.sendMessage(`${GRAY}${ITALIC}(Collect Everything!) Initializing...`);
     }
 
     if (!player) {
-      this.logger.warn(`Player ${playerName} not found in the world. Cannot initialize.`);
+      if (attempt >= FIBONACCI_BACKOFF.length) {
+        this.logger.error(`Player ${playerName} not found in the world after ${attempt} attempts. Cannot initialize.`);
+        return;
+      }
+
+      this.logger.debug(
+        `Player ${playerName} not found (attempt ${attempt + 1}/${FIBONACCI_BACKOFF.length}). Retrying in ${FIBONACCI_BACKOFF[attempt]} ticks...`
+      );
+      this.system.runTimeout(() => this.initializePlayer(playerName, attempt + 1), FIBONACCI_BACKOFF[attempt]);
       return;
     }
     if (this.players.has(playerName)) {

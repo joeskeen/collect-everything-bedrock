@@ -4,7 +4,7 @@ import type { ItemEnchantableComponent } from "@minecraft/server";
 import { formatId, toRoman } from "../../shared/formatting";
 import { DifficultyLevel } from "../../player/player-settings";
 import { ENCHANTMENT } from "../../player/collection-constants";
-import type { Registry } from "../registry";
+import type { Registry, Thing } from "../registry";
 import { getItemTexture } from "../item/item-texture";
 import { ItemRegistry } from "../item/item.registry";
 import enchantmentOverrides from "./enchantment-overrides";
@@ -22,6 +22,8 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
   private enchantmentMaxLevels = new Map<string, number>();
   private enchantmentsByDifficulty: Record<string, string[]> = { basic: [], committed: [], insane: [] };
   private allVariantSuffixes = new Set<string>();
+  private formatCache = new Map<string, string>();
+  private cachedAllCache = new Map<DifficultyLevel, Thing[]>();
 
   constructor(
     @inject(ENCHANTMENT_TYPES_TOKEN)
@@ -85,6 +87,27 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
     return displayName;
   }
 
+  all(difficulty: DifficultyLevel): Thing[] {
+    if (!this.cachedAllCache.has(difficulty)) {
+      this.ensureInitialized();
+      const rawIds = this.enchantmentsByDifficulty[difficulty];
+      const prefixedIds = rawIds.map((id) => `${this.key};${id}`);
+      const formatted = prefixedIds.map((id) => this.format(id));
+      const indices = Array.from({ length: prefixedIds.length }, (_, i) => i);
+      indices.sort((a, b) => formatted[a].toLowerCase().localeCompare(formatted[b].toLowerCase()));
+      this.cachedAllCache.set(
+        difficulty,
+        indices.map((i) => ({
+          id: prefixedIds[i],
+          displayName: formatted[i],
+          texture: this.resolveTexture(prefixedIds[i]),
+          registry: this,
+        }))
+      );
+    }
+    return this.cachedAllCache.get(difficulty)!;
+  }
+
   findByKeyword(word: string): string[] {
     this.ensureInitialized();
     return this.enchantments.filter((id) => id.includes(word)).map((id) => `${this.key};${id}`);
@@ -134,11 +157,6 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
     this.ensureInitialized();
     const maxLevel = this.enchantmentMaxLevels.get(id);
     return maxLevel && maxLevel > 1 ? maxLevel + 1 : 1;
-  }
-
-  all(difficultyLevel: DifficultyLevel) {
-    this.ensureInitialized();
-    return this.enchantmentsByDifficulty[difficultyLevel].map((id) => `${this.key};${id}`);
   }
 
   enchantmentCount(difficultyLevel: DifficultyLevel) {
