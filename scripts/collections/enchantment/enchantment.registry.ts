@@ -21,6 +21,7 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
   private enchantments: string[] = [];
   private enchantmentMaxLevels = new Map<string, number>();
   private enchantmentsByDifficulty: Record<string, string[]> = { basic: [], committed: [], insane: [] };
+  private allVariantSuffixes = new Set<string>();
 
   constructor(
     @inject(ENCHANTMENT_TYPES_TOKEN)
@@ -54,6 +55,8 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
       }
 
       this.enchantmentsByDifficulty = { basic, committed, insane };
+      for (const id of basic) this.allVariantSuffixes.add(id);
+      for (const id of insane) this.allVariantSuffixes.add(id);
       this._initialized = true;
     }
   }
@@ -109,13 +112,12 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
 
   getExtra(collectedKeys: string[]) {
     this.ensureInitialized();
-    const allKnown = new Set<string>();
-    for (const id of this.enchantments) {
-      for (const variant of this.enumerateVariants(id)) {
-        allKnown.add(variant.includes(";") ? variant.split(";")[1] : variant);
-      }
-    }
-    return collectedKeys.filter((key) => !allKnown.has(key)).map((key) => `${this.key};${key}`);
+    return collectedKeys
+      .filter((key) => {
+        const suffix = key.includes(";") ? key.split(";")[1] : key;
+        return !this.allVariantSuffixes.has(suffix);
+      })
+      .map((key) => `${this.key};${key}`);
   }
 
   enumerateVariants(id: string): string[] {

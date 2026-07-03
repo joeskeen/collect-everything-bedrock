@@ -22,6 +22,7 @@ export class ItemRegistry implements Registry<ItemStack> {
   private _customItemCount = 0;
   private items: string[] = [];
   private variantCounter = createItemVariantCounter();
+  private allItemVariants = new Set<string>();
 
   constructor(
     @inject(ITEM_TYPES_TOKEN) private readonly itemTypes: typeof ItemTypes,
@@ -38,6 +39,11 @@ export class ItemRegistry implements Registry<ItemStack> {
         .getAll()
         .map((i) => i.id)
         .filter((i) => !i.startsWith("minecraft:")).length;
+      for (const id of this.items) {
+        for (const variant of this.variantCounter.enumerateItemVariants(id)) {
+          this.allItemVariants.add(variant);
+        }
+      }
       this._initialized = true;
     }
   }
@@ -91,14 +97,12 @@ export class ItemRegistry implements Registry<ItemStack> {
 
   getExtra(collectedKeys: string[]) {
     this.ensureInitialized();
-    const allKnown = new Set<string>();
-    for (const baseItem of this.items) {
-      for (const variant of this.enumerateVariants(baseItem)) {
-        const rawId = variant.includes(";") ? variant.split(";")[1] : variant;
-        allKnown.add(rawId);
-      }
-    }
-    return collectedKeys.filter((key) => !allKnown.has(key)).map((key) => `${this.key};${key}`);
+    return collectedKeys
+      .filter((key) => {
+        const suffix = key.includes(";") ? key.split(";")[1] : key;
+        return !this.allItemVariants.has(suffix);
+      })
+      .map((key) => `${this.key};${key}`);
   }
 
   all(difficultyLevel: DifficultyLevel = "basic") {
