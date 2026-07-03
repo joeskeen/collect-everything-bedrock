@@ -35,17 +35,13 @@ export function createVariantCounter(entitiesOverride?: Record<string, EntityDat
     return key.replace(/^(c\.|p\.)/, "");
   }
 
+  const booleanDisplayValues = new Map<string, string>();
+
   function formatVariantValue(key: string, value: string): string | null {
     const normalized = normalizeKey(key);
-
-    if (normalized.startsWith("is_")) {
-      if (value === "true") {
-        return normalized.substring(3);
-      }
-      return null;
-    }
-    if (["charged", "sheared", "tamed", "illagerCaptain"].includes(normalized)) {
-      return normalized;
+    const displayValue = booleanDisplayValues.get(normalized);
+    if (displayValue !== undefined) {
+      return value === "true" ? displayValue : null;
     }
     return `${normalized}:${value}`;
   }
@@ -91,6 +87,7 @@ export function createVariantCounter(entitiesOverride?: Record<string, EntityDat
   function enumerateEntityDataVariants(entityData: EntityData, difficulty: DifficultyLevel = "insane"): string[] {
     if (!entityData.variants) return [];
 
+    booleanDisplayValues.clear();
     const variantKeys = Object.keys(entityData.variants).filter((k) => !k.includes(","));
     const variantDefinitions: { key: string; values: string[] }[] = [];
 
@@ -98,6 +95,7 @@ export function createVariantCounter(entitiesOverride?: Record<string, EntityDat
       const value = entityData.variants[key];
       if (typeof value === "string") {
         variantDefinitions.push({ key, values: ["true", "false"] });
+        booleanDisplayValues.set(normalizeKey(key), value);
       } else if (typeof value === "object" && value !== null) {
         variantDefinitions.push({ key, values: Object.keys(value) });
       }
@@ -141,9 +139,35 @@ export function createVariantCounter(entitiesOverride?: Record<string, EntityDat
       return results;
     }
 
-    let combinations = generateCombinations(0, []);
+    function getSubsetCombinations(arr: string[], size: number): string[][] {
+      if (size === 1) return arr.map((item) => [item]);
+      if (size >= arr.length) return [arr];
 
-    return applyExclusions(combinations, exclusions);
+      const results: string[][] = [];
+      for (let i = 0; i <= arr.length - size; i++) {
+        const first = arr[i];
+        const rest = getSubsetCombinations(arr.slice(i + 1), size - 1);
+        for (const combo of rest) {
+          results.push([first, ...combo]);
+        }
+      }
+      return results;
+    }
+
+    let combinations = generateCombinations(0, []);
+    combinations = applyExclusions(combinations, exclusions);
+
+    const allSubsets = new Set<string>();
+    for (const combo of combinations) {
+      const parts = combo.split("+");
+      for (let i = 1; i <= parts.length; i++) {
+        const subsetCombos = getSubsetCombinations(parts, i);
+        for (const subset of subsetCombos) {
+          allSubsets.add(subset.sort().join("+"));
+        }
+      }
+    }
+    return Array.from(allSubsets);
   }
 
   function countEntityDataVariants(entityData: EntityData, difficulty: DifficultyLevel = "insane"): number {
@@ -153,11 +177,11 @@ export function createVariantCounter(entitiesOverride?: Record<string, EntityDat
   function enumerateEntityVariants(entityId: string, difficulty: DifficultyLevel = "insane"): string[] {
     const data = entities[entityId];
     if (!data) return [entityId];
-    const variants = enumerateEntityDataVariants(data, difficulty);
     if (difficulty === "basic") {
       return [entityId];
     }
-    return variants.length ? variants.map((v) => (v ? `${entityId}+${v}` : entityId)) : [entityId];
+    const variants = enumerateEntityDataVariants(data, difficulty);
+    return variants.length ? [entityId, ...variants.map((v) => (v ? `${entityId}+${v}` : entityId))] : [entityId];
   }
 
   function countEntityVariants(entityId: string, difficulty: DifficultyLevel = "insane"): number {

@@ -29,7 +29,10 @@ export class PlayerAllCommand implements CommandHandler {
       const collection = this.collection.getCollection();
       const allData = this.registries.registries.map((registry) => ({
         category: registry.key,
-        isCollected: (k: string) => !!collection[registry.key as keyof PlayerCollectionData]?.[k],
+        isCollected: (k: string) => {
+          const rawId = k.includes(";") ? k.split(";")[1] : k;
+          return !!collection[registry.key as keyof PlayerCollectionData]?.[rawId];
+        },
         allEntries: () =>
           registry
             .all()

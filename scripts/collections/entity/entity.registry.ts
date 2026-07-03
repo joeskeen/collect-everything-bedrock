@@ -68,12 +68,22 @@ export class EntityRegistry implements Registry<Entity> {
     return this.baseEntities.filter((et) => et.includes(word)).map((et) => `${this.key};${et}`);
   }
 
-  count(items: string[]) {
+  count(items: string[], _difficulty?: string) {
     this.ensureInitialized();
     const rawItems = items.map((i) => (i.includes(";") ? i.split(";")[1] : i));
     const allValidEntities = this.entitiesByDifficulty.basic;
     const collected = rawItems.filter((e) => allValidEntities.includes(e)).length;
     return { collected, extra: items.length - collected, total: allValidEntities.length };
+  }
+
+  getExtra(collectedKeys: string[]) {
+    this.ensureInitialized();
+    const allKnown = new Set([
+      ...this.entitiesByDifficulty.basic,
+      ...this.entitiesByDifficulty.committed,
+      ...this.entitiesByDifficulty.insane,
+    ]);
+    return collectedKeys.filter((key) => !allKnown.has(key)).map((key) => `${this.key};${key}`);
   }
 
   all(difficultyLevel: DifficultyLevel = "basic"): string[] {
@@ -91,6 +101,14 @@ export class EntityRegistry implements Registry<Entity> {
   }
 
   countEntityVariants(entityId: string, difficulty: DifficultyLevel = "basic"): number {
+    return this.variantCounter.countEntityVariants(entityId, difficulty);
+  }
+
+  enumerateVariants(entityId: string, difficulty: DifficultyLevel = "insane"): string[] {
+    return this.variantCounter.enumerateEntityVariants(entityId, difficulty).map((id) => `${this.key};${id}`);
+  }
+
+  countVariants(entityId: string, difficulty: DifficultyLevel = "insane"): number {
     return this.variantCounter.countEntityVariants(entityId, difficulty);
   }
 

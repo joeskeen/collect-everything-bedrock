@@ -84,24 +84,28 @@ export class BrowserModal {
 
   private getRegistries(): Registry[] {
     const difficulty = this.playerSettingsService.get().difficulty;
-    const entityRegistry = this.registryCollection.getEntity();
-    const wrappedEntityRegistry: Registry = {
-      key: entityRegistry.key,
-      getIcon: () => entityRegistry.getIcon(),
-      all: () => entityRegistry.all(difficulty),
-      count: (items) => entityRegistry.count(items),
-      identify: (input) => entityRegistry.identify(input as any),
-      format: (id) => entityRegistry.format(id),
-      findByKeyword: (word) => entityRegistry.findByKeyword(word),
-      resolveTexture: (id) => entityRegistry.resolveTexture(id),
-    };
+
+    const wrapWithDifficulty = (reg: Registry): Registry => ({
+      key: reg.key,
+      getIcon: () => reg.getIcon(),
+      all: () => reg.all(difficulty),
+      count: (items) => reg.count(items, difficulty),
+      getExtra: (collectedKeys) => reg.getExtra(collectedKeys),
+      enumerateVariants: (id, diff) => reg.enumerateVariants(id, diff),
+      countVariants: (id, diff) => reg.countVariants(id, diff),
+      identify: (input) => reg.identify(input as any),
+      format: (id) => reg.format(id),
+      findByKeyword: (word) => reg.findByKeyword(word),
+      resolveTexture: (id) => reg.resolveTexture(id),
+    });
+
     return [
-      this.allRegistry,
+      wrapWithDifficulty(this.allRegistry),
       this.registryCollection.getItem(),
       this.registryCollection.getBiome(),
-      wrappedEntityRegistry,
-      this.registryCollection.getEffect(),
-      this.registryCollection.getEnchantment(),
+      wrapWithDifficulty(this.registryCollection.getEntity()),
+      wrapWithDifficulty(this.registryCollection.getEffect()),
+      wrapWithDifficulty(this.registryCollection.getEnchantment()),
       this.registryCollection.getUnobtainable(),
     ];
   }
@@ -115,13 +119,17 @@ export class BrowserModal {
     const buttons: Array<Parameters<typeof collectionForm.button>> = [];
 
     const totalCollected = registries.reduce((sum, reg) => {
-      const prefixedKeys = Object.keys(collection[reg.key as keyof PlayerCollectionData] ?? {}).map((k) => `${reg.key};${k}`);
+      const prefixedKeys = Object.keys(collection[reg.key as keyof PlayerCollectionData] ?? {}).map(
+        (k) => `${reg.key};${k}`
+      );
       return sum + reg.count(prefixedKeys).collected;
     }, 0);
     const totalItems = registries.reduce((sum, reg) => sum + reg.all().length, 0);
 
     for (const reg of registries) {
-      const prefixedKeys = Object.keys(collection[reg.key as keyof PlayerCollectionData] ?? {}).map((k) => `${reg.key};${k}`);
+      const prefixedKeys = Object.keys(collection[reg.key as keyof PlayerCollectionData] ?? {}).map(
+        (k) => `${reg.key};${k}`
+      );
       const { collected } = reg.count(prefixedKeys);
       const total = reg.all().length;
       buttons.push([
@@ -155,17 +163,23 @@ export class BrowserModal {
     });
 
     collectionForm.itemsCount(thingsToShow.length);
-    collectionForm.activeTab(registries.findIndex((r) => r.key === registry?.key));
+    const activeIndex = registries.findIndex((r) => r.key === registry?.key);
+    if (activeIndex >= 0) {
+      collectionForm.activeTab(activeIndex);
+    }
 
     for (const [id, reg] of thingsToShow) {
       const texture = reg.resolveTexture(id);
       const name = reg.format(id);
       const key = reg.key as RegistryKey;
       const rawId = id.includes(";") ? id.split(";")[1] : id;
-      const percentComplete = key === "all" ? 0 : (this.playerCollection.hasCollected(key, rawId) ? 100 : 0);
+      const percentComplete = key === "all" ? 0 : this.playerCollection.hasCollected(key, rawId) ? 100 : 0;
       buttons.push([
         { text: name },
-        [{ text: `${ITALIC}${THEME[reg.key as keyof typeof THEME] ?? GRAY}${capitalCase(reg.key)}${RESET}` }, { text: `${ITALIC}${GRAY}${rawId}` }],
+        [
+          { text: `${ITALIC}${THEME[reg.key as keyof typeof THEME] ?? GRAY}${capitalCase(reg.key)}${RESET}` },
+          { text: `${ITALIC}${GRAY}${rawId}` },
+        ],
         texture ?? "textures/ui/降_alert",
         undefined,
         percentComplete,
@@ -188,8 +202,10 @@ export class BrowserModal {
 
         if (selection in this.actions) {
           this.actions[selection](selection);
-        } else {
+        } else if (registries.some((r) => r.key === selection)) {
           this.actions.category(selection);
+        } else {
+          this.actions.details(selection);
         }
       })
       .catch((err) => {

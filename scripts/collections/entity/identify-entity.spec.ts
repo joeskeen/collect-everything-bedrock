@@ -261,6 +261,15 @@ describe("IdentifyEntity", () => {
       expect(result).toEqual(["minecraft:creeper", "minecraft:creeper+charged"]);
     });
 
+    it("should identify a pillager captain correctly", () => {
+      const entity = createMockEntity("minecraft:pillager", { is_illager_captain: true });
+      const result = IdentifyEntity(entity as any);
+
+      expect(result).toContain("minecraft:pillager");
+      expect(result).toContain("minecraft:pillager+captain");
+      expect(result).toEqual(["minecraft:pillager", "minecraft:pillager+captain"]);
+    });
+
     it("should identify a sheared sheep correctly", () => {
       const entity = createMockEntity("minecraft:sheep", { is_sheared: true, color: 4 });
       const result = IdentifyEntity(entity as any);

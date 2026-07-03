@@ -11,7 +11,13 @@ export interface Registry<TIdentifyInput = unknown> {
 
   all(difficulty?: string): string[];
 
-  count(items: string[]): CollectedCount;
+  count(items: string[], difficulty?: string): CollectedCount;
+
+  getExtra(collectedKeys: string[]): string[];
+
+  enumerateVariants(id: string, difficulty?: string): string[];
+
+  countVariants(id: string, difficulty?: string): number;
 
   identify(input?: TIdentifyInput): string[];
 

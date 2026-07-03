@@ -25,7 +25,7 @@ describe("countEntityVariants", () => {
           "c.variant": { "0": "red", "1": "blue" },
         },
       })
-    ).toBe(4);
+    ).toBe(5);
   });
 
   it("multiplies counts for three variants", () => {
@@ -37,7 +37,7 @@ describe("countEntityVariants", () => {
           "c.mark_variant": { "0": "x", "1": "y" },
         },
       })
-    ).toBe(12);
+    ).toBe(23);
   });
 
   it("subtracts impossible combinations from exclusions", () => {
@@ -139,7 +139,7 @@ describe("countEntityVariants", () => {
       exclusions: ["!c.is_baby+c.variant"],
     };
     const count = emptyCounter.countEntityDataVariants(data, "insane");
-    expect(count).toBe(112);
+    expect(count).toBe(135);
   });
 
   it("returns count when exclusion references non-existent variant", () => {
@@ -175,7 +175,7 @@ describe("countEntityVariants", () => {
       },
     };
     const customCounter = createVariantCounter(testEntities);
-    expect(customCounter.countEntityVariants("minecraft:villager_v2")).toBe(3);
+    expect(customCounter.countEntityVariants("minecraft:villager_v2")).toBe(4);
   });
 });
 
@@ -260,7 +260,7 @@ describe("difficulty levels", () => {
   describe("insane difficulty (default)", () => {
     it("enumerates all valid combinations", () => {
       const variants = emptyCounter.enumerateEntityDataVariants(villagerData, "insane");
-      expect(variants).toHaveLength(8);
+      expect(variants).toHaveLength(14);
     });
 
     it("excludes impossible combinations", () => {
@@ -282,7 +282,8 @@ describe("enumerateEntityVariants", () => {
         "c.variant": { "0": "a", "1": "b" },
       },
     });
-    expect(variants).toHaveLength(4);
+    expect(variants).toHaveLength(5);
+    expect(variants).toContain("baby");
     expect(variants).toContain("baby+variant:0");
     expect(variants).toContain("baby+variant:1");
     expect(variants).toContain("variant:0");
@@ -314,13 +315,12 @@ describe("enumerateEntityVariants", () => {
       },
       exclusions: ["!c.is_baby+c.variant"],
     });
-    expect(variants).toHaveLength(6);
+    expect(variants).toHaveLength(11);
     const babyVariants = variants.filter((v) => v.includes("baby"));
     const adultVariants = variants.filter((v) => !v.includes("baby"));
-    expect(babyVariants).toHaveLength(2);
-    expect(adultVariants).toHaveLength(4);
-    expect(babyVariants.every((v) => v.includes("mark_variant:") && !v.match(/\bvariant:\d+/))).toBe(true);
-    expect(adultVariants.every((v) => v.match(/\bvariant:\d+/) && v.includes("mark_variant:"))).toBe(true);
+    expect(babyVariants).toHaveLength(3);
+    expect(adultVariants).toHaveLength(8);
+    expect(babyVariants.every((v) => !v.match(/\bvariant:\d+/))).toBe(true);
   });
 
   it("returns base item id for unknown entity id", () => {
@@ -339,7 +339,8 @@ describe("enumerateEntityVariants", () => {
     };
     const customCounter = createVariantCounter(testEntities);
     const variants = customCounter.enumerateEntityVariants("minecraft:villager_v2");
-    expect(variants).toHaveLength(3);
+    expect(variants).toHaveLength(4);
+    expect(variants).toContain("minecraft:villager_v2");
     expect(variants).toContain("minecraft:villager_v2+baby");
     expect(variants).toContain("minecraft:villager_v2+variant:0");
     expect(variants).toContain("minecraft:villager_v2+variant:1");

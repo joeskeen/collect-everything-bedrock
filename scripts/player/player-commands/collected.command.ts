@@ -26,7 +26,10 @@ export class PlayerCollectedCommand implements CommandHandler {
       for (const registry of this.registries.registries) {
         const entries = registry
           .all()
-          .filter((k: string) => collection[registry.key as keyof PlayerCollectionData]?.[k])
+          .filter((k: string) => {
+            const rawId = k.includes(";") ? k.split(";")[1] : k;
+            return !!collection[registry.key as keyof PlayerCollectionData]?.[rawId];
+          })
           .sort()
           .map((k: string) => registry.format(k));
         

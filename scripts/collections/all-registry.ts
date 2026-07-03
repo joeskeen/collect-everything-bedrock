@@ -47,21 +47,37 @@ export class AllRegistry implements Registry<string> {
     return this.getRegistryByKey(category) ?? this.itemRegistry;
   }
 
-  all(): string[] {
-    return this.registries.flatMap((r) => r.all());
+  all(difficulty?: string): string[] {
+    return this.registries.flatMap((r) => r.all(difficulty));
   }
 
-  count(ids: string[]): CollectedCount {
+  count(ids: string[], difficulty?: string): CollectedCount {
     const result: CollectedCount = { collected: 0, extra: 0, total: 0 };
 
     for (const registry of this.registries) {
-      const { collected, extra, total } = registry.count(ids);
+      const { collected, extra, total } = registry.count(ids, difficulty);
       result.collected += collected;
       result.total += total;
       result.extra += extra;
     }
 
     return result;
+  }
+
+  getExtra(collectedKeys: string[]) {
+    return this.registries.flatMap((r) => r.getExtra(collectedKeys));
+  }
+
+  enumerateVariants(id: string): string[] {
+    const [category] = id.includes(";") ? id.split(";") : [""];
+    const registry = this.getRegistryByKey(category);
+    return registry ? registry.enumerateVariants(id) : [`${this.key};${id}`];
+  }
+
+  countVariants(id: string): number {
+    const [category] = id.includes(";") ? id.split(";") : [""];
+    const registry = this.getRegistryByKey(category);
+    return registry ? registry.countVariants(id) : 1;
   }
 
   identify(): string[] {

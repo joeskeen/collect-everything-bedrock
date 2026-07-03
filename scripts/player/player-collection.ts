@@ -4,6 +4,7 @@ import {
   COLLECTOR,
   COLLECTORS_TOKEN,
   Collector,
+  ENTITY,
   PlayerCollectionData,
   THEME,
   emptyCollection,
@@ -20,6 +21,7 @@ import { EntityTamedCollector } from "../collections/entity/entity-tamed.collect
 import { ItemCollector } from "../collections/item/item.collector";
 import { UnobtainableCollector } from "../collections/unobtainable/unobtainable.collector";
 import { PlayerNotifier } from "./player-notifier";
+import { PlayerSettingsService } from "./player-settings";
 import { SOLID_STAR } from "../shared/emoji";
 import { BOLD, GRAY, ITALIC } from "../shared/format-codes";
 import { capitalCase } from "change-case";
@@ -53,6 +55,7 @@ export class PlayerCollection {
     @inject(CollectionScoreboard) private collectionScoreboard: CollectionScoreboard,
     @inject(COLLECTOR) collector: Collector,
     @inject(PlayerNotifier) private readonly playerNotifier: PlayerNotifier,
+    @inject(PlayerSettingsService) private readonly playerSettingsService: PlayerSettingsService,
     @inject(PLAYER_TOKEN) private readonly player: Player,
     @inject(PlayerStorage) private readonly playerStorage: PlayerStorage,
     @injectAll(COLLECTORS_TOKEN) private readonly collectors: Runnable[],
@@ -73,7 +76,7 @@ export class PlayerCollection {
 
   onCollect(id: string, formatted: RawMessage) {
     const [category, what] = id.includes(";") ? id.split(";") : ["", id];
-    if (!category || !what || !this.collection[category as keyof PlayerCollectionData]?.[what]) {
+    if (!category || !what || this.collection[category as keyof PlayerCollectionData]?.[what]) {
       return;
     }
     try {
@@ -81,22 +84,38 @@ export class PlayerCollection {
 
       this.save();
 
-      const fullMessage: RawMessage = {
-        rawtext: [
-          { text: `${SOLID_STAR} ${THEME[category] ?? ""}Collected ${capitalCase(category)}: ${BOLD}` },
-          formatted,
-        ],
-      };
-      this.logger.log(fullMessage);
-      this.playerNotifier.toast(fullMessage);
-      this.world.sendMessage({
-        rawtext: [{ text: `${GRAY}${ITALIC}${this.player.name} collected ` }, formatted],
-      });
+      if (!this.shouldSuppressNotification(category, what)) {
+        const fullMessage: RawMessage = {
+          rawtext: [
+            { text: `${SOLID_STAR} ${THEME[category] ?? ""}Collected ${capitalCase(category)}: ${BOLD}` },
+            formatted,
+          ],
+        };
+        this.logger.log(fullMessage);
+        this.playerNotifier.toast(fullMessage);
+        this.world.sendMessage({
+          rawtext: [{ text: `${GRAY}${ITALIC}${this.player.name} collected ` }, formatted],
+        });
+      }
 
       this.updateScore();
     } catch (err) {
       this.logger.error("error collecting", category, what, err, (err as Error).stack);
     }
+  }
+
+  private shouldSuppressNotification(category: string, what: string): boolean {
+    if (category !== ENTITY) return false;
+
+    const plusIndex = what.indexOf("+");
+    if (plusIndex === -1) return false;
+
+    const difficulty = this.playerSettingsService.get().difficulty;
+    if (difficulty === "insane") return false;
+    if (difficulty === "basic") return true;
+
+    const variantParts = what.substring(plusIndex + 1).split("+");
+    return variantParts.length >= 2;
   }
 
   updateScore() {

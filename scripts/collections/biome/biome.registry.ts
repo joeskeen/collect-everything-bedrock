@@ -63,11 +63,28 @@ export class BiomeRegistry implements Registry {
       .map((bt) => `${this.key};${bt.id}`);
   }
 
-  count(items: string[]) {
+  count(items: string[], _difficulty?: string) {
     this.ensureInitialized();
     const rawItems = items.map((i) => (i.includes(";") ? i.split(";")[1] : i));
     const builtInCount = rawItems.filter((b) => this.biomes.includes(b)).length;
     return { collected: builtInCount, extra: items.length - builtInCount, total: this.biomes.length };
+  }
+
+  getExtra(collectedKeys: string[]) {
+    this.ensureInitialized();
+    const allKnown = new Set<string>();
+    for (const id of this.all()) {
+      allKnown.add(id.includes(";") ? id.split(";")[1] : id);
+    }
+    return collectedKeys.filter((key) => !allKnown.has(key)).map((key) => `${this.key};${key}`);
+  }
+
+  enumerateVariants(id: string): string[] {
+    return [`${this.key};${id}`];
+  }
+
+  countVariants(id: string): number {
+    return 1;
   }
 
   all(difficultyLevel: DifficultyLevel = "basic") {

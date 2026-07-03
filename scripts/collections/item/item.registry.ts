@@ -7,6 +7,8 @@ import { DifficultyLevel } from "../../player/player-settings";
 import { ITEM } from "../../player/collection-constants";
 import type { Registry } from "../registry";
 import { getItemTexture } from "./item-texture";
+import { IdentifyItem } from "./identify-item";
+import { createItemVariantCounter } from "./item-variants";
 
 @singleton()
 export class ItemRegistry implements Registry<ItemStack> {
@@ -19,6 +21,7 @@ export class ItemRegistry implements Registry<ItemStack> {
   private _initialized = false;
   private _customItemCount = 0;
   private items: string[] = [];
+  private variantCounter = createItemVariantCounter();
 
   constructor(
     @inject(ITEM_TYPES_TOKEN) private readonly itemTypes: typeof ItemTypes,
@@ -41,26 +44,21 @@ export class ItemRegistry implements Registry<ItemStack> {
 
   customItemCount() {
     this.ensureInitialized();
-
     return this._customItemCount;
   }
 
   identify(itemStack: ItemStack): string[] {
-    const { Potion } = this.itemComponentTypes;
-    const potionComponent = itemStack.getComponent(Potion);
-    if (potionComponent) {
-      return [
-        `${this.key};${itemStack.typeId}`,
-        `${this.key};${itemStack.typeId}+${potionComponent.potionDeliveryType.id}`,
-        `${this.key};${itemStack.typeId}+${potionComponent.potionEffectType.id}`,
-        `${this.key};${itemStack.typeId}+${potionComponent.potionDeliveryType.id}+${potionComponent.potionEffectType.id}`,
-      ];
-    } else if (itemStack.typeId === "minecraft:bed") {
-      const color = /^item\.bed\.(.+)\.name$/.exec(itemStack.localizationKey)?.[1];
-      return [`${this.key};${itemStack.typeId}`, `${this.key};${itemStack.typeId}+${color}`];
-    } else {
-      return [`${this.key};${itemStack.typeId}`];
-    }
+    return IdentifyItem(itemStack, this.itemComponentTypes).map((id) => `${this.key};${id}`);
+  }
+
+  enumerateVariants(id: string): string[] {
+    this.ensureInitialized();
+    return this.variantCounter.enumerateItemVariants(id).map((variant) => `${this.key};${variant}`);
+  }
+
+  countVariants(id: string): number {
+    this.ensureInitialized();
+    return this.variantCounter.countItemVariants(id);
   }
 
   format(fullItemId: string): string {
@@ -80,7 +78,7 @@ export class ItemRegistry implements Registry<ItemStack> {
       .map((it) => `${this.key};${it.id}`);
   }
 
-  count(items: string[]) {
+  count(items: string[], _difficulty?: string) {
     this.ensureInitialized();
     const rawItems = items.map((i) => (i.includes(";") ? i.split(";")[1] : i));
     const builtInCount = rawItems.filter((i) => this.items.includes(i)).length;
@@ -89,6 +87,18 @@ export class ItemRegistry implements Registry<ItemStack> {
       extra: items.length - builtInCount,
       total: this.items.length,
     };
+  }
+
+  getExtra(collectedKeys: string[]) {
+    this.ensureInitialized();
+    const allKnown = new Set<string>();
+    for (const baseItem of this.items) {
+      for (const variant of this.enumerateVariants(baseItem)) {
+        const rawId = variant.includes(";") ? variant.split(";")[1] : variant;
+        allKnown.add(rawId);
+      }
+    }
+    return collectedKeys.filter((key) => !allKnown.has(key)).map((key) => `${this.key};${key}`);
   }
 
   all(difficultyLevel: DifficultyLevel = "basic") {
