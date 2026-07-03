@@ -1,19 +1,14 @@
 import { inject, Lifecycle, scoped } from "tsyringe";
 import type { Player, System } from "@minecraft/server";
-import {
-  CREATE_ACTION_FORM_TOKEN,
-  CREATE_MESSAGE_FORM_TOKEN,
-  CreateActionFormFn,
-  CreateMessageFormFn,
-  PLAYER_TOKEN,
-  SYSTEM_TOKEN,
-} from "../../shared/global-tokens";
+import { CREATE_ACTION_FORM_TOKEN, CreateActionFormFn, PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import { Logger } from "../../shared/logging/logger";
+import { SearchModal } from "./search.modal";
 import { THEME, PlayerCollectionData, RegistryKey } from "../collection-constants";
 import { RegistryCollection } from "../../collections/index";
 import { AllRegistry } from "../../collections/all-registry";
 import { PlayerCollection } from "../player-collection";
 import { CollectionFormData } from "../../ui/forms";
+import type { Thing } from "../../collections/registry";
 import { capitalCase, percent } from "../../shared/formatting";
 import { BOLD, GRAY, ITALIC, RESET } from "../../shared/format-codes";
 import { PlayerSettingsService } from "../player-settings";
@@ -27,14 +22,22 @@ const GRID_ROW_LENGTH = 17;
 
 @scoped(Lifecycle.ContainerScoped)
 export class BrowserModal {
+  private previousCategory: string = "all";
   private readonly actions: Record<string, (id: string) => void | Promise<void>> = {
     category: (id) => {
       this.playerSettingsService.change({ ...this.playerSettingsService.get(), activeCategory: id });
       this.system.run(() => this.show());
     },
     search: async () => {
-      const form = this.createMessageForm().title("Search Collection").body("This feature is not yet implemented.");
-      await form.show(this.player);
+      const { activeCategory } = this.playerSettingsService.get();
+      const currentSearch = activeCategory.startsWith("search:") ? activeCategory.slice("search:".length) : "";
+      const text = await this.searchModal.show(currentSearch);
+      if (text) {
+        this.playerSettingsService.change({ ...this.playerSettingsService.get(), activeCategory: `search:${text}` });
+      } else {
+        const fallback = this.previousCategory.startsWith("search:") ? "all" : this.previousCategory;
+        this.playerSettingsService.change({ ...this.playerSettingsService.get(), activeCategory: fallback });
+      }
       this.system.run(() => this.show());
     },
     recent: async () => {
@@ -77,7 +80,7 @@ export class BrowserModal {
     @inject(RegistryCollection) private readonly registryCollection: RegistryCollection,
     @inject(AllRegistry) private readonly allRegistry: AllRegistry,
     @inject(CREATE_ACTION_FORM_TOKEN) private readonly createActionForm: CreateActionFormFn,
-    @inject(CREATE_MESSAGE_FORM_TOKEN) private readonly createMessageForm: CreateMessageFormFn,
+    @inject(SearchModal) private readonly searchModal: SearchModal,
     @inject(SettingsModal) private readonly settingsModal: SettingsModal,
     @inject(HelpModal) private readonly helpModal: HelpModal,
     @inject(SessionModal) private readonly sessionModal: SessionModal,
@@ -88,9 +91,29 @@ export class BrowserModal {
   show() {
     const { difficulty, activeCategory } = this.playerSettingsService.get();
     const registries = this.registryCollection.registries;
-    const collectionForm = new CollectionFormData(this.createActionForm, this.logger).title(
-      `Collection - ${BOLD}${THEME[activeCategory as keyof typeof THEME] ?? ""}${capitalCase(activeCategory)}`
-    );
+    const isSearch = activeCategory.startsWith("search:");
+
+    if (!isSearch) {
+      this.previousCategory = activeCategory;
+    }
+
+    let title: string;
+    let thingsToShow: Thing[];
+
+    if (isSearch) {
+      const keywords = activeCategory.slice("search:".length);
+      const wordList = keywords.toLowerCase().split(/\s+/).filter(Boolean);
+      thingsToShow = this.allRegistry
+        .all(difficulty)
+        .filter((thing) => wordList.every((word) => thing.displayName.toLowerCase().includes(word)));
+      title = `Collection - ${BOLD}"${keywords}"`;
+    } else {
+      const registry = registries.find((r) => r.key === activeCategory);
+      thingsToShow = registry ? registry.all(difficulty) : this.allRegistry.all(difficulty);
+      title = `Collection - ${BOLD}${THEME[activeCategory as keyof typeof THEME] ?? ""}${capitalCase(activeCategory)}`;
+    }
+
+    const collectionForm = new CollectionFormData(this.createActionForm, this.logger).title(title);
     const buttons: Array<Parameters<typeof collectionForm.button>> = [];
 
     for (const reg of registries) {
@@ -116,13 +139,18 @@ export class BrowserModal {
       buttons.push(filler);
     }
 
-    const registry = registries.find((r) => r.key === activeCategory);
-    const thingsToShow = registry ? registry.all(difficulty) : this.allRegistry.all(difficulty);
-
     collectionForm.itemsCount(thingsToShow.length);
-    const activeIndex = registries.findIndex((r) => r.key === registry?.key);
-    if (activeIndex >= 0) {
-      collectionForm.activeTab(activeIndex);
+    if (isSearch) {
+      const searchIndex = buttons.findIndex((b) => b[0] === "Search");
+      if (searchIndex >= 0) {
+        collectionForm.activeTab(searchIndex);
+      }
+    } else {
+      const registry = registries.find((r) => r.key === activeCategory);
+      const activeIndex = registries.findIndex((r) => r.key === registry?.key);
+      if (activeIndex >= 0) {
+        collectionForm.activeTab(activeIndex);
+      }
     }
 
     for (const { id, displayName, texture, registry: reg } of thingsToShow) {
