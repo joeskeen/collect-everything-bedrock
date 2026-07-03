@@ -207,6 +207,7 @@ export class PlayerCollection {
         this.playerStorage.deleteKey(key);
       }
     }
+    this.playerStorage.deleteKey("biome;lastVisited");
     this.collection = emptyCollection();
     this.updateScore();
   }
