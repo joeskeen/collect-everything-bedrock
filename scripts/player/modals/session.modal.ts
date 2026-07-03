@@ -5,9 +5,11 @@ import { DDUI_TOKEN } from "../../ui/ui.tokens";
 import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME, UNOBTAINABLE } from "../collection-constants";
 import { PlayerCollection } from "../player-collection";
 import { capitalCase } from "change-case";
-import { formatId, timeAgo } from "../../shared/formatting";
+import { timeAgo } from "../../shared/formatting";
 import { GRAY, RESET } from "../../shared/format-codes";
 import type { DDUI } from "../../ui/ui.tokens";
+import { PlayerSettingsService } from "../player-settings";
+import { AllRegistry } from "../../collections/all-registry";
 
 @scoped(Lifecycle.ContainerScoped)
 export class SessionModal {
@@ -16,11 +18,15 @@ export class SessionModal {
     @inject(PLAYER_TOKEN) private readonly player: Player,
     @inject(DDUI_TOKEN) private readonly ddui: DDUI,
     @inject(PlayerCollection) private readonly collection: PlayerCollection,
-    @inject(PLAYER_SESSION_TOKEN) private readonly playerSession: PlayerSession
+    @inject(PLAYER_SESSION_TOKEN) private readonly playerSession: PlayerSession,
+    @inject(PlayerSettingsService) private readonly playerSettingsService: PlayerSettingsService,
+    @inject(AllRegistry) private readonly allRegistry: AllRegistry
   ) {}
 
   async show(): Promise<void> {
     const currentTick = this.system.currentTick;
+    const difficulty = this.playerSettingsService.get().difficulty;
+    const validIds = this.allRegistry.validIds(difficulty);
 
     type Entry = { what: string; tick: number };
     const collectionProgress: { category: string; collected: Entry[] }[] = [
@@ -67,15 +73,17 @@ export class SessionModal {
     const form = new this.ddui.CustomForm(this.player, `Recently Collected (${totalCollected})`);
 
     for (const progress of collectionProgress) {
-      if (progress.collected.length > 0) {
-        const lines = progress.collected
+      const sessionCollected = progress.collected.filter((entry) => validIds.has(`${progress.category};${entry.what}`));
+      if (sessionCollected.length > 0) {
+        const lines = sessionCollected
           .map(
-            (entry) => `${GRAY}- ${RESET}${formatId(entry.what)} ${GRAY}(${timeAgo(entry.tick, currentTick)})${RESET}`
+            (entry) =>
+              `${GRAY}- ${RESET}${this.allRegistry.format(`${progress.category};${entry.what}`)} ${GRAY}(${timeAgo(entry.tick, currentTick)})${RESET}`
           )
           .join("\n");
         form.divider();
         form.label(
-          `${THEME[progress.category]}${capitalCase(progress.category)}${RESET} ${GRAY}(${progress.collected.length})${RESET}:\n${lines}`
+          `${THEME[progress.category]}${capitalCase(progress.category)}${RESET} ${GRAY}(${sessionCollected.length})${RESET}:\n${lines}`
         );
       }
     }
