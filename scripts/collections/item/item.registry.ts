@@ -112,11 +112,26 @@ export class ItemRegistry implements Registry<ItemStack> {
   count(items: string[], _difficulty?: string) {
     this.ensureInitialized();
     const rawItems = items.map((i) => (i.includes(";") ? i.split(";")[1] : i));
-    const builtInCount = rawItems.filter((i) => this.items.includes(i)).length;
+    let collected = 0;
+    let unknownCount = 0;
+    let ignoredCount = 0;
+    for (const rawId of rawItems) {
+      if (this.items.includes(rawId)) {
+        collected++;
+      } else {
+        const baseId = rawId.split("+")[0];
+        if (!this.items.includes(baseId)) {
+          unknownCount++;
+        } else {
+          ignoredCount++;
+        }
+      }
+    }
     return {
-      collected: builtInCount,
-      extra: items.length - builtInCount,
+      collected,
+      extra: unknownCount,
       total: this.items.length,
+      ignored: ignoredCount,
     };
   }
 

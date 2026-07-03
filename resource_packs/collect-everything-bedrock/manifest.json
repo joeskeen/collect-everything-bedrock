@@ -1,13 +1,13 @@
 {
   "format_version": 2,
   "header": {
-    "name": "Collect Everything! v0.3.9 Resource Pack",
+    "name": "Collect Everything! v0.3.10 Resource Pack",
     "description": "Resource pack for the Collect Everything add-on",
     "uuid": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
     "version": [
       0,
       3,
-      9
+      10
     ],
     "min_engine_version": [
       1,
@@ -22,7 +22,7 @@
       "version": [
         0,
         3,
-        9
+        10
       ]
     }
   ],
@@ -32,7 +32,7 @@
       "version": [
         0,
         3,
-        9
+        10
       ]
     }
   ]

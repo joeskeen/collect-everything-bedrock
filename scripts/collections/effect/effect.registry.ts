@@ -126,6 +126,7 @@ export class EffectRegistry implements Registry<Effect> {
     const targetSet = new Set(targetList);
     let collected = 0;
     let unknownCount = 0;
+    let ignoredCount = 0;
     for (const rawId of rawItems) {
       if (targetSet.has(rawId)) {
         collected++;
@@ -133,10 +134,12 @@ export class EffectRegistry implements Registry<Effect> {
         const baseId = rawId.split("+")[0];
         if (!this.effects.includes(baseId)) {
           unknownCount++;
+        } else {
+          ignoredCount++;
         }
       }
     }
-    return { collected, extra: unknownCount, total: targetList.length };
+    return { collected, extra: unknownCount, total: targetList.length, ignored: ignoredCount };
   }
 
   getExtra(collectedKeys: string[]) {

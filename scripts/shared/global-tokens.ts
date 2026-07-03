@@ -6,6 +6,7 @@ import type {
   EquipmentSlot,
   ItemComponentTypes,
   ItemEnchantableComponent,
+  ItemStack,
   ItemTypes,
   EntityTypes,
   BlockTypes,
@@ -62,3 +63,5 @@ export const CREATE_ACTION_FORM_TOKEN: InjectionToken<CreateActionFormFn> = Symb
 
 export type CreateMessageFormFn = () => MessageFormData;
 export const CREATE_MESSAGE_FORM_TOKEN: InjectionToken<CreateMessageFormFn> = Symbol("message form creation function");
+
+export const ITEM_STACK_TOKEN: InjectionToken<typeof ItemStack> = Symbol("ItemStack class from @minecraft/server");

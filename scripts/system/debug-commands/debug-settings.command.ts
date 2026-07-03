@@ -1,7 +1,7 @@
 import { inject, singleton } from "tsyringe";
 import type { CustomCommandOrigin, CustomCommandResult, Entity, Player, System } from "@minecraft/server";
 import { SYSTEM_TOKEN } from "../../shared/global-tokens";
-import { AdminSettingsModal } from "../../player/modals/admin-settings.modal";
+import { DebugSettingsModal } from "../../player/modals/debug-settings.modal";
 import { addOnCommand, CommandHandler, commandPermissionLevels, customCommandStatuses } from "../add-on-command";
 
 function isPlayer(entity?: Entity): entity is Player {
@@ -9,10 +9,10 @@ function isPlayer(entity?: Entity): entity is Player {
 }
 
 @singleton()
-export class AdminSettingsCommandHandler implements CommandHandler {
+export class DebugSettingsCommandHandler implements CommandHandler {
   constructor(
     @inject(SYSTEM_TOKEN) private readonly system: System,
-    @inject(AdminSettingsModal) private readonly adminSettingsModal: AdminSettingsModal
+    @inject(DebugSettingsModal) private readonly debugSettingsModal: DebugSettingsModal
   ) {}
 
   handleCommand(origin: CustomCommandOrigin): CustomCommandResult {
@@ -22,15 +22,15 @@ export class AdminSettingsCommandHandler implements CommandHandler {
     }
 
     this.system.run(() => {
-      this.adminSettingsModal.show(player);
+      this.debugSettingsModal.show(player);
     });
     return { status: customCommandStatuses.Success };
   }
 }
 
-export const adminSettingsCommand = addOnCommand({
-  name: "_admin_settings",
-  description: "opens the admin settings panel",
+export const debugSettingsCommand = addOnCommand({
+  name: "__debug_settings",
+  description: "opens the debug log settings panel",
   permissionLevel: commandPermissionLevels.GameDirectors,
-  handlerClass: AdminSettingsCommandHandler,
+  handlerClass: DebugSettingsCommandHandler,
 });

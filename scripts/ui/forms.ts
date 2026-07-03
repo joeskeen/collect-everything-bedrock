@@ -3,6 +3,7 @@ import type { CreateActionFormFn } from "../shared/global-tokens";
 import { DataSchema, encodeItemData } from "./data-encoder";
 import { RESET } from "../shared/format-codes";
 import type { ActionFormResponse } from "@minecraft/server-ui";
+import type { Logger } from "../shared/logging/logger";
 
 export const COLLECTION_FORM_KEY = "__collection_form__";
 export const formDataSchema: DataSchema = {
@@ -25,7 +26,10 @@ export class CollectionFormData {
   private itemCount: number = 0;
   private buttonArray: ButtonData[] = [];
 
-  constructor(private readonly createActionForm: CreateActionFormFn) {}
+  constructor(
+    private readonly createActionForm: CreateActionFormFn,
+    private readonly logger?: Logger
+  ) {}
 
   title(text: string): this {
     this.titleText = text;
@@ -63,7 +67,7 @@ export class CollectionFormData {
   async show(player: Player): Promise<CollectionFormResponse> {
     const fullTitle =
       encodeItemData({ activeIndex: this.activeIndex, itemCount: this.itemCount }, formDataSchema) + this.titleText;
-    console.log("titleData", fullTitle.replace(/§/g, "$"));
+    this.logger?.debug("titleData", fullTitle.replace(/§/g, "$"));
     const form = this.createActionForm().title(fullTitle);
     for (const button of this.buttonArray) {
       form.button(button[0], button[1]?.toString());

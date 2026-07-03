@@ -22,7 +22,7 @@ export class EntityRegistry implements Registry<Entity> {
 
   private _initialized = false;
   private baseEntities: string[] = [];
-  private entitiesByDifficulty: Record<DifficultyLevel, string[]> = {
+  private entitiesByDifficulty: Record<string, string[]> = {
     basic: [],
     committed: [],
     insane: [],
@@ -94,12 +94,27 @@ export class EntityRegistry implements Registry<Entity> {
     return this.baseEntities.filter((et) => et.includes(word)).map((et) => `${this.key};${et}`);
   }
 
-  count(items: string[], _difficulty?: string) {
+  count(items: string[], difficulty?: string) {
     this.ensureInitialized();
     const rawItems = items.map((i) => (i.includes(";") ? i.split(";")[1] : i));
-    const allValidEntities = this.entitiesByDifficulty.basic;
-    const collected = rawItems.filter((e) => allValidEntities.includes(e)).length;
-    return { collected, extra: items.length - collected, total: allValidEntities.length };
+    const targetList = this.entitiesByDifficulty[difficulty ?? "basic"] ?? this.entitiesByDifficulty.basic;
+    const targetSet = new Set(targetList);
+    let collected = 0;
+    let unknownCount = 0;
+    let ignoredCount = 0;
+    for (const rawId of rawItems) {
+      if (targetSet.has(rawId)) {
+        collected++;
+      } else {
+        const baseId = rawId.split("+")[0];
+        if (!this.baseEntities.includes(baseId)) {
+          unknownCount++;
+        } else {
+          ignoredCount++;
+        }
+      }
+    }
+    return { collected, extra: unknownCount, total: targetList.length, ignored: ignoredCount };
   }
 
   getExtra(collectedKeys: string[]) {

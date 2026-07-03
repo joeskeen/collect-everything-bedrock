@@ -4,6 +4,7 @@ export interface CollectedCount {
   collected: number;
   extra: number;
   total: number;
+  ignored: number;
 }
 
 export interface Thing {

@@ -91,8 +91,16 @@ export class BiomeRegistry implements Registry {
   count(items: string[], _difficulty?: string) {
     this.ensureInitialized();
     const rawItems = items.map((i) => (i.includes(";") ? i.split(";")[1] : i));
-    const builtInCount = rawItems.filter((b) => this.biomes.includes(b)).length;
-    return { collected: builtInCount, extra: items.length - builtInCount, total: this.biomes.length };
+    let collected = 0;
+    let unknownCount = 0;
+    for (const rawId of rawItems) {
+      if (this.biomes.includes(rawId)) {
+        collected++;
+      } else {
+        unknownCount++;
+      }
+    }
+    return { collected, extra: unknownCount, total: this.biomes.length, ignored: 0 };
   }
 
   getExtra(collectedKeys: string[]) {

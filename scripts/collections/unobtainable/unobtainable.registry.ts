@@ -61,8 +61,16 @@ export class UnobtainableRegistry implements Registry {
 
   count(items: string[], _difficulty?: string) {
     const rawItems = items.map((i) => (i.includes(";") ? i.split(";")[1] : i));
-    const builtInCount = rawItems.filter((u) => this.unobtainables.includes(u)).length;
-    return { collected: builtInCount, extra: items.length - builtInCount, total: this.unobtainables.length };
+    let collected = 0;
+    let unknownCount = 0;
+    for (const rawId of rawItems) {
+      if (this.unobtainables.includes(rawId)) {
+        collected++;
+      } else {
+        unknownCount++;
+      }
+    }
+    return { collected, extra: unknownCount, total: this.unobtainables.length, ignored: 0 };
   }
 
   getExtra(collectedKeys: string[]) {

@@ -1,12 +1,12 @@
-// import { container } from "tsyringe";
-// import { ADD_ON_COMMANDS_TOKEN } from "../system/add-on-command";
-// import { debugDumpCommand } from "./dump.command";
+import { container } from "tsyringe";
+import { ADD_ON_COMMANDS_TOKEN } from "../system/add-on-command";
+import { debugSettingsCommand } from "../system/debug-commands/debug-settings.command";
 // import { world, Player, ItemStack, Block, system } from "@minecraft/server";
 // import { EntityRegistry } from "../collections/entity/entity.registry";
 // import { EffectRegistry } from "../collections/effect/effect.registry";
 
 export function registerDebugProviders() {
-  // container.registerInstance(ADD_ON_COMMANDS_TOKEN, debugDumpCommand);
+  container.registerInstance(ADD_ON_COMMANDS_TOKEN, debugSettingsCommand);
 }
 
 // system.run(() => {

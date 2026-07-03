@@ -59,13 +59,14 @@ export class AllRegistry implements Registry<string> {
   }
 
   count(ids: string[], difficulty: DifficultyLevel): CollectedCount {
-    const result: CollectedCount = { collected: 0, extra: 0, total: 0 };
+    const result: CollectedCount = { collected: 0, extra: 0, total: 0, ignored: 0 };
 
     for (const registry of this.registries) {
-      const { collected, extra, total } = registry.count(ids, difficulty);
+      const { collected, extra, total, ignored } = registry.count(ids, difficulty);
       result.collected += collected;
       result.total += total;
       result.extra += extra;
+      result.ignored += ignored;
     }
 
     return result;

@@ -46,10 +46,12 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
       for (const id of this.enchantments) {
         basic.push(id);
         committed.push(id);
+        this.allVariantSuffixes.add(id);
         const maxLevel = this.enchantmentMaxLevels.get(id) ?? 1;
         if (maxLevel > 1) {
           for (let level = 1; level <= maxLevel; level++) {
             insane.push(`${id}+${level}`);
+            this.allVariantSuffixes.add(`${id}+${level}`);
           }
         } else {
           insane.push(id);
@@ -57,8 +59,6 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
       }
 
       this.enchantmentsByDifficulty = { basic, committed, insane };
-      for (const id of basic) this.allVariantSuffixes.add(id);
-      for (const id of insane) this.allVariantSuffixes.add(id);
       this._initialized = true;
     }
   }
@@ -67,9 +67,11 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
     if (!enchantComponent) {
       return [];
     }
-    return enchantComponent
-      .getEnchantments()
-      .flatMap((e) => [`${this.key};${e.type.id}`, `${this.key};${e.type.id}+${e.level}`]);
+    return enchantComponent.getEnchantments().flatMap((e) => {
+      const maxLevel = this.enchantmentMaxLevels.get(e.type.id) ?? 1;
+      if (maxLevel <= 1) return [`${this.key};${e.type.id}`];
+      return [`${this.key};${e.type.id}`, `${this.key};${e.type.id}+${e.level}`];
+    });
   }
 
   format(id: string): string {
@@ -120,6 +122,7 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
     const targetSet = new Set(targetList);
     let collected = 0;
     let unknownCount = 0;
+    let ignoredCount = 0;
     for (const rawId of rawItems) {
       if (targetSet.has(rawId)) {
         collected++;
@@ -127,10 +130,12 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
         const baseId = rawId.split("+")[0];
         if (!this.enchantments.includes(baseId)) {
           unknownCount++;
+        } else {
+          ignoredCount++;
         }
       }
     }
-    return { collected, extra: unknownCount, total: targetList.length };
+    return { collected, extra: unknownCount, total: targetList.length, ignored: ignoredCount };
   }
 
   getExtra(collectedKeys: string[]) {
@@ -146,6 +151,7 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
   enumerateVariants(id: string): string[] {
     this.ensureInitialized();
     const maxLevel = this.enchantmentMaxLevels.get(id) ?? 1;
+    if (maxLevel <= 1) return [`${this.key};${id}`];
     const variants: string[] = [`${this.key};${id}`];
     for (let level = 1; level <= maxLevel; level++) {
       variants.push(`${this.key};${id}+${level}`);

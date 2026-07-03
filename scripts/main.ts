@@ -4,6 +4,7 @@ import {
   system,
   world,
   BiomeTypes,
+  ItemStack,
   ItemTypes,
   EffectTypes,
   EnchantmentTypes,
@@ -30,6 +31,7 @@ import {
   EQUIPMENT_SLOT_TOKEN,
   ITEM_COMPONENT_TYPES_TOKEN,
   ITEM_ENCHANTABLE_COMPONENT_TOKEN,
+  ITEM_STACK_TOKEN,
   ITEM_TYPES_TOKEN,
   SYSTEM_TOKEN,
   WORLD_TOKEN,
@@ -70,6 +72,7 @@ container.registerInstance(ITEM_COMPONENT_TYPES_TOKEN, ItemComponentTypes);
 container.registerInstance(ENTITY_COMPONENT_TYPES_TOKEN, EntityComponentTypes);
 container.registerInstance(EQUIPMENT_SLOT_TOKEN, EquipmentSlot);
 container.registerInstance(ITEM_ENCHANTABLE_COMPONENT_TOKEN, ItemEnchantableComponent);
+container.registerInstance(ITEM_STACK_TOKEN, ItemStack);
 const logger = container.resolve(Logger);
 
 logger.log(`${CRAFTING_TABLE} ${AQUA}Initializing Collect Everything Add-On...`);

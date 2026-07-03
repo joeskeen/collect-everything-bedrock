@@ -56,7 +56,11 @@ export class Logger {
     }
     if (this.settings().logToChat) {
       try {
-        this.world.sendMessage(fullMessage);
+        for (const player of this.world.getPlayers()) {
+          if (player.commandPermissionLevel >= 1) {
+            player.sendMessage(fullMessage);
+          }
+        }
       } catch (err) {
         console.warn(`can't send world message in early execution: ${fullMessage}`);
       }

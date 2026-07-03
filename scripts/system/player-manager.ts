@@ -5,6 +5,7 @@ import { Logger } from "../shared/logging/logger";
 import { PlayerCollection } from "../player/player-collection";
 import { PlayerNotifier } from "../player/player-notifier";
 import { PlayerSettingsService } from "../player/player-settings";
+import { StarterKitService } from "../player/starter-kit";
 import { WOOD_SWORD } from "../shared/emoji";
 import { BLUE, BOLD, GRAY, GREEN, ITALIC, RED } from "../shared/format-codes";
 import { COLLECTOR, Collector } from "../player/collection-constants";
@@ -69,6 +70,9 @@ export class PlayerManager {
 
       const settings = playerContainer.resolve(PlayerSettingsService);
       settings.run();
+
+      const starterKit = playerContainer.resolve(StarterKitService);
+      starterKit.run();
 
       const notifier = playerContainer.resolve(PlayerNotifier);
       notifier.run();

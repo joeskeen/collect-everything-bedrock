@@ -8,6 +8,7 @@ import {
   PLAYER_TOKEN,
   SYSTEM_TOKEN,
 } from "../../shared/global-tokens";
+import { Logger } from "../../shared/logging/logger";
 import { THEME, PlayerCollectionData, RegistryKey } from "../collection-constants";
 import { RegistryCollection } from "../../collections/index";
 import { AllRegistry } from "../../collections/all-registry";
@@ -80,13 +81,14 @@ export class BrowserModal {
     @inject(SettingsModal) private readonly settingsModal: SettingsModal,
     @inject(HelpModal) private readonly helpModal: HelpModal,
     @inject(SessionModal) private readonly sessionModal: SessionModal,
-    @inject(DetailsModal) private readonly detailsModal: DetailsModal
+    @inject(DetailsModal) private readonly detailsModal: DetailsModal,
+    @inject(Logger) private readonly logger: Logger
   ) {}
 
   show() {
     const { difficulty, activeCategory } = this.playerSettingsService.get();
     const registries = this.registryCollection.registries;
-    const collectionForm = new CollectionFormData(this.createActionForm).title(
+    const collectionForm = new CollectionFormData(this.createActionForm, this.logger).title(
       `Collection - ${BOLD}${THEME[activeCategory as keyof typeof THEME] ?? ""}${capitalCase(activeCategory)}`
     );
     const buttons: Array<Parameters<typeof collectionForm.button>> = [];
@@ -162,7 +164,7 @@ export class BrowserModal {
         }
       })
       .catch((err) => {
-        console.log("error", err);
+        this.logger.debug("error", err);
       });
   }
 }

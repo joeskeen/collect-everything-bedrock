@@ -23,7 +23,7 @@ import { EntityTamedCollector } from "../collections/entity/entity-tamed.collect
 import { ItemCollector } from "../collections/item/item.collector";
 import { UnobtainableCollector } from "../collections/unobtainable/unobtainable.collector";
 import { PlayerNotifier } from "./player-notifier";
-import { PlayerSettingsService } from "./player-settings";
+import { PlayerSettingsService, WorldSettingsService } from "./player-settings";
 import { SOLID_STAR } from "../shared/emoji";
 import { BOLD, GRAY, ITALIC } from "../shared/format-codes";
 import { capitalCase } from "../shared/formatting";
@@ -58,6 +58,7 @@ export class PlayerCollection {
     @inject(COLLECTOR) collector: Collector,
     @inject(PlayerNotifier) private readonly playerNotifier: PlayerNotifier,
     @inject(PlayerSettingsService) private readonly playerSettingsService: PlayerSettingsService,
+    @inject(WorldSettingsService) private readonly worldSettings: WorldSettingsService,
     @inject(PLAYER_TOKEN) private readonly player: Player,
     @inject(PlayerStorage) private readonly playerStorage: PlayerStorage,
     @injectAll(COLLECTORS_TOKEN) private readonly collectors: Runnable[],
@@ -169,7 +170,9 @@ export class PlayerCollection {
         const notification = `${SOLID_STAR} ${THEME[category] ?? ""}Collected ${capitalCase(category)}: ${BOLD}${formatted}`;
         this.logger.log(notification);
         this.playerNotifier.toast(notification);
-        this.world.sendMessage(`${GRAY}${ITALIC}${this.player.name} collected ${formatted}`);
+        if (this.worldSettings.getBroadcastCollectionEvents()) {
+          this.world.sendMessage(`${GRAY}${ITALIC}${this.player.name} collected ${formatted}`);
+        }
       }
 
       this.updateScore();
