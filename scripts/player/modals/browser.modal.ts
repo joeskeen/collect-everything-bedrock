@@ -14,13 +14,15 @@ import { AllRegistry } from "../../collections/all-registry";
 import { PlayerCollection } from "../player-collection";
 import { capitalCase } from "change-case";
 import { CollectionFormData } from "../../ui/forms";
-import { trimNamespace as removeNamespace } from "../../shared/formatting";
+import { percent, trimNamespace as removeNamespace } from "../../shared/formatting";
 import { BOLD, GRAY, ITALIC, RESET } from "../../shared/format-codes";
 import { PlayerSettingsService } from "../player-settings";
 import { SettingsModal } from "./settings.modal";
 import { HelpModal } from "./help.modal";
 import { SessionModal } from "./session.modal";
+import { DetailsModal } from "./details.modal";
 import type { Registry } from "../../collections/registry";
+import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
 
 const GRID_ROW_LENGTH = 17;
 
@@ -62,9 +64,10 @@ export class BrowserModal {
       });
     },
     details: async (id) => {
-      const form = this.createMessageForm().title(id).body(`This feature is not yet implemented.`);
-      await form.show(this.player);
-      this.system.run(() => this.show());
+      this.system.run(async () => {
+        await this.detailsModal.show(id);
+        this.show();
+      });
     },
   };
 
@@ -79,62 +82,25 @@ export class BrowserModal {
     @inject(CREATE_MESSAGE_FORM_TOKEN) private readonly createMessageForm: CreateMessageFormFn,
     @inject(SettingsModal) private readonly settingsModal: SettingsModal,
     @inject(HelpModal) private readonly helpModal: HelpModal,
-    @inject(SessionModal) private readonly sessionModal: SessionModal
+    @inject(SessionModal) private readonly sessionModal: SessionModal,
+    @inject(DetailsModal) private readonly detailsModal: DetailsModal
   ) {}
 
-  private getRegistries(): Registry[] {
-    const difficulty = this.playerSettingsService.get().difficulty;
-
-    const wrapWithDifficulty = (reg: Registry): Registry => ({
-      key: reg.key,
-      getIcon: () => reg.getIcon(),
-      all: () => reg.all(difficulty),
-      count: (items) => reg.count(items, difficulty),
-      getExtra: (collectedKeys) => reg.getExtra(collectedKeys),
-      enumerateVariants: (id, diff) => reg.enumerateVariants(id, diff),
-      countVariants: (id, diff) => reg.countVariants(id, diff),
-      identify: (input) => reg.identify(input as any),
-      format: (id) => reg.format(id),
-      findByKeyword: (word) => reg.findByKeyword(word),
-      resolveTexture: (id) => reg.resolveTexture(id),
-    });
-
-    return [
-      wrapWithDifficulty(this.allRegistry),
-      this.registryCollection.getItem(),
-      this.registryCollection.getBiome(),
-      wrapWithDifficulty(this.registryCollection.getEntity()),
-      wrapWithDifficulty(this.registryCollection.getEffect()),
-      wrapWithDifficulty(this.registryCollection.getEnchantment()),
-      this.registryCollection.getUnobtainable(),
-    ];
-  }
-
   show() {
-    const collection = this.playerCollection.getCollection();
-    const registries = this.getRegistries();
+    const difficulty = this.playerSettingsService.get().difficulty;
+    const registries = this.registryCollection.registries;
     const collectionForm = new CollectionFormData(this.createActionForm).title(
       `Collection - ${BOLD}${THEME[this.activeCategory as keyof typeof THEME] ?? ""}${capitalCase(this.activeCategory)}`
     );
     const buttons: Array<Parameters<typeof collectionForm.button>> = [];
 
-    const totalCollected = registries.reduce((sum, reg) => {
-      const prefixedKeys = Object.keys(collection[reg.key as keyof PlayerCollectionData] ?? {}).map(
-        (k) => `${reg.key};${k}`
-      );
-      return sum + reg.count(prefixedKeys).collected;
-    }, 0);
-    const totalItems = registries.reduce((sum, reg) => sum + reg.all().length, 0);
-
     for (const reg of registries) {
-      const prefixedKeys = Object.keys(collection[reg.key as keyof PlayerCollectionData] ?? {}).map(
-        (k) => `${reg.key};${k}`
-      );
-      const { collected } = reg.count(prefixedKeys);
-      const total = reg.all().length;
+      const collection = this.playerCollection.getCollection(reg.key as keyof PlayerCollectionData);
+      const prefixedKeys = Object.keys(collection ?? {}).map((k) => `${reg.key};${k}`);
+      const { collected, total } = reg.count(prefixedKeys, difficulty);
       buttons.push([
         { text: capitalCase(reg.key) },
-        [{ text: `${GRAY}${collected}/${total}` }],
+        [{ text: `${GRAY}${collected}/${total} (${percent(collected, total, false)})` }],
         reg.getIcon(),
         undefined,
         Math.floor((collected / total) * 100),
@@ -154,8 +120,8 @@ export class BrowserModal {
     const registry = registries.find((r) => r.key === this.activeCategory);
     const formatRegistry = registry ?? this.allRegistry;
     const allItems = registry
-      ? registry.all().map((id) => [id, registry] as const)
-      : registries.flatMap((r) => r.all().map((id) => [id, r] as const));
+      ? registry.all(difficulty).map((id) => [id, registry] as const)
+      : registries.flatMap((r) => r.all(difficulty).map((id) => [id, r] as const));
     const thingsToShow = allItems.sort((a, b) => {
       const nameA = formatRegistry.format(a[0]);
       const nameB = formatRegistry.format(b[0]);
@@ -171,16 +137,16 @@ export class BrowserModal {
     for (const [id, reg] of thingsToShow) {
       const texture = reg.resolveTexture(id);
       const name = reg.format(id);
-      const key = reg.key as RegistryKey;
-      const rawId = id.includes(";") ? id.split(";")[1] : id;
-      const percentComplete = key === "all" ? 0 : this.playerCollection.hasCollected(key, rawId) ? 100 : 0;
+      const [categoryKey, rawId] = id.includes(";") ? id.split(";") : [reg.key, id];
+      const collected = this.playerCollection.hasCollected(categoryKey as keyof PlayerCollectionData, rawId);
+      const percentComplete = collected ? 100 : 0;
       buttons.push([
         { text: name },
         [
-          { text: `${ITALIC}${THEME[reg.key as keyof typeof THEME] ?? GRAY}${capitalCase(reg.key)}${RESET}` },
-          { text: `${ITALIC}${GRAY}${rawId}` },
+          { text: `${ITALIC}${THEME[categoryKey as keyof typeof THEME] ?? GRAY}${capitalCase(categoryKey)}${RESET}` },
+          { text: collected ? "Collected" : "Not Collected" },
         ],
-        texture ?? "textures/ui/降_alert",
+        texture ?? UNKNOWN_TEXTURE,
         undefined,
         percentComplete,
         id,

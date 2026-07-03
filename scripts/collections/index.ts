@@ -7,6 +7,7 @@ import { EnchantmentRegistry } from "./enchantment/enchantment.registry";
 import { UnobtainableRegistry } from "./unobtainable/unobtainable.registry";
 import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, UNOBTAINABLE } from "../player/collection-constants";
 import type { Registry } from "./registry";
+import { AllRegistry } from "./all-registry";
 
 export const REGISTRY_COLLECTION_TOKEN = Symbol("Aggregate registry collection");
 
@@ -20,9 +21,11 @@ export class RegistryCollection {
     @inject(EntityRegistry) entityRegistry: EntityRegistry,
     @inject(EffectRegistry) effectRegistry: EffectRegistry,
     @inject(EnchantmentRegistry) enchantmentRegistry: EnchantmentRegistry,
-    @inject(UnobtainableRegistry) unobtainableRegistry: UnobtainableRegistry
+    @inject(UnobtainableRegistry) unobtainableRegistry: UnobtainableRegistry,
+    @inject(AllRegistry) allRegistry: AllRegistry
   ) {
     this.registries = [
+      allRegistry,
       itemRegistry,
       biomeRegistry,
       entityRegistry,

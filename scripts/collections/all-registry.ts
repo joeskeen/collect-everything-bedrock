@@ -6,7 +6,7 @@ import { EffectRegistry } from "./effect/effect.registry";
 import { EnchantmentRegistry } from "./enchantment/enchantment.registry";
 import { UnobtainableRegistry } from "./unobtainable/unobtainable.registry";
 import type { Registry, CollectedCount } from "./registry";
-import type { PlayerCollectionData } from "../player/collection-constants";
+import { DifficultyLevel } from "../player/player-settings";
 
 export const ALL_REGISTRY_TOKEN = Symbol("AllRegistry aggregate registry");
 
@@ -47,11 +47,11 @@ export class AllRegistry implements Registry<string> {
     return this.getRegistryByKey(category) ?? this.itemRegistry;
   }
 
-  all(difficulty?: string): string[] {
+  all(difficulty: DifficultyLevel): string[] {
     return this.registries.flatMap((r) => r.all(difficulty));
   }
 
-  count(ids: string[], difficulty?: string): CollectedCount {
+  count(ids: string[], difficulty: DifficultyLevel): CollectedCount {
     const result: CollectedCount = { collected: 0, extra: 0, total: 0 };
 
     for (const registry of this.registries) {
@@ -68,16 +68,16 @@ export class AllRegistry implements Registry<string> {
     return this.registries.flatMap((r) => r.getExtra(collectedKeys));
   }
 
-  enumerateVariants(id: string): string[] {
+  enumerateVariants(id: string, difficulty: DifficultyLevel): string[] {
     const [category] = id.includes(";") ? id.split(";") : [""];
     const registry = this.getRegistryByKey(category);
-    return registry ? registry.enumerateVariants(id) : [`${this.key};${id}`];
+    return registry ? registry.enumerateVariants(id, difficulty) : [`${this.key};${id}`];
   }
 
-  countVariants(id: string): number {
+  countVariants(id: string, difficulty: DifficultyLevel): number {
     const [category] = id.includes(";") ? id.split(";") : [""];
     const registry = this.getRegistryByKey(category);
-    return registry ? registry.countVariants(id) : 1;
+    return registry ? registry.countVariants(id, difficulty) : 1;
   }
 
   identify(): string[] {

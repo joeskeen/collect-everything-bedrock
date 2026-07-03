@@ -7,6 +7,7 @@ import { GOLD, GRAY, RESET } from "../../shared/format-codes";
 import { capitalCase } from "change-case";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import { RegistryCollection } from "../../collections/index";
+import { PlayerSettingsService } from "../player-settings";
 
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerUncollectedCommand implements CommandHandler {
@@ -14,24 +15,26 @@ export class PlayerUncollectedCommand implements CommandHandler {
     @inject(SYSTEM_TOKEN) private readonly system: System,
     @inject(PlayerCollection) private readonly collection: PlayerCollection,
     @inject(RegistryCollection) private readonly registries: RegistryCollection,
-    @inject(PLAYER_TOKEN) private readonly player: Player
+    @inject(PLAYER_TOKEN) private readonly player: Player,
+    @inject(PlayerSettingsService) private readonly playerSettingsService: PlayerSettingsService
   ) {}
 
   handleCommand(event: any): CustomCommandResult {
     this.system.run(() => {
-      const collection = this.collection.getCollection();
+      const difficulty = this.playerSettingsService.get().difficulty;
       const uncollectedData: Array<{ category: string; entries: string[] }> = [];
 
       for (const registry of this.registries.registries) {
+        const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
         const entries = registry
-          .all()
+          .all(difficulty)
           .filter((k: string) => {
             const rawId = k.includes(";") ? k.split(";")[1] : k;
-            return !collection[registry.key as keyof PlayerCollectionData]?.[rawId];
+            return !collection[rawId];
           })
           .sort()
           .map((k: string) => registry.format(k));
-        
+
         if (entries.length > 0) {
           uncollectedData.push({ category: registry.key, entries });
         }

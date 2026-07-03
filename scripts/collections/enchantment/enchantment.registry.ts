@@ -136,12 +136,12 @@ export class EnchantmentRegistry implements Registry<ItemEnchantableComponent | 
     return maxLevel && maxLevel > 1 ? maxLevel + 1 : 1;
   }
 
-  all(difficultyLevel: DifficultyLevel = "basic") {
+  all(difficultyLevel: DifficultyLevel) {
     this.ensureInitialized();
     return this.enchantmentsByDifficulty[difficultyLevel].map((id) => `${this.key};${id}`);
   }
 
-  enchantmentCount(difficultyLevel: DifficultyLevel = "basic") {
+  enchantmentCount(difficultyLevel: DifficultyLevel) {
     this.ensureInitialized();
     return this.enchantmentsByDifficulty[difficultyLevel].length;
   }

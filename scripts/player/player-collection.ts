@@ -6,6 +6,7 @@ import {
   Collector,
   ENTITY,
   PlayerCollectionData,
+  RegistryKey,
   THEME,
   emptyCollection,
 } from "./collection-constants";
@@ -126,8 +127,14 @@ export class PlayerCollection {
     this.collectionScoreboard.update(this.player, score);
   }
 
-  getCollection() {
-    return this.collection;
+  getCollection(registryKey: RegistryKey): Record<string, number> {
+    if (registryKey === "all") {
+      return Object.keys(this.collection).reduce(
+        (prev, curr) => ({ ...prev, ...this.collection[curr as keyof PlayerCollectionData] }),
+        {} as Record<string, number>
+      );
+    }
+    return this.collection[registryKey as keyof PlayerCollectionData];
   }
 
   save() {

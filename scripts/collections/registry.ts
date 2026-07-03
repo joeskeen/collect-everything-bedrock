@@ -1,3 +1,5 @@
+import { DifficultyLevel } from "../player/player-settings";
+
 export interface CollectedCount {
   collected: number;
   extra: number;
@@ -9,15 +11,15 @@ export interface Registry<TIdentifyInput = unknown> {
 
   getIcon(): string | number;
 
-  all(difficulty?: string): string[];
+  all(difficulty: DifficultyLevel): string[];
 
-  count(items: string[], difficulty?: string): CollectedCount;
+  count(items: string[], difficulty: DifficultyLevel): CollectedCount;
 
   getExtra(collectedKeys: string[]): string[];
 
-  enumerateVariants(id: string, difficulty?: string): string[];
+  enumerateVariants(id: string, difficulty: DifficultyLevel): string[];
 
-  countVariants(id: string, difficulty?: string): number;
+  countVariants(id: string, difficulty: DifficultyLevel): number;
 
   identify(input?: TIdentifyInput): string[];
 

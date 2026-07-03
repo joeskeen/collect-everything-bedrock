@@ -13,7 +13,9 @@ export abstract class StorageBase {
     return value as T | undefined;
   }
   set<T>(key: string, value: T | undefined): void {
-    this.storageSource.setDynamicProperty(key, JSON.stringify(value));
+    const text = JSON.stringify(value);
+    this.storageSource.setDynamicProperty(key, text);
+    console.log(`saved ${key}: ${text.length} characters`);
   }
 }
 

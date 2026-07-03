@@ -12,6 +12,7 @@ import { GRAY, MINECOIN_GOLD, RESET } from "../../shared/format-codes";
 import { capitalCase } from "change-case";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import { RegistryCollection } from "../../collections/index";
+import { PlayerSettingsService } from "../player-settings";
 
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerAllCommand implements CommandHandler {
@@ -19,27 +20,32 @@ export class PlayerAllCommand implements CommandHandler {
     @inject(SYSTEM_TOKEN) private readonly system: System,
     @inject(PlayerCollection) private readonly collection: PlayerCollection,
     @inject(RegistryCollection) private readonly registries: RegistryCollection,
-    @inject(PLAYER_TOKEN) private readonly player: Player
+    @inject(PLAYER_TOKEN) private readonly player: Player,
+    @inject(PlayerSettingsService) private readonly playerSettingsService: PlayerSettingsService
   ) {}
 
   handleCommand(event: CustomCommandOrigin, args: any[]): CustomCommandResult {
     const filter = (String(args[0]) || "").toLowerCase();
 
     this.system.run(() => {
-      const collection = this.collection.getCollection();
-      const allData = this.registries.registries.map((registry) => ({
-        category: registry.key,
-        isCollected: (k: string) => {
-          const rawId = k.includes(";") ? k.split(";")[1] : k;
-          return !!collection[registry.key as keyof PlayerCollectionData]?.[rawId];
-        },
-        allEntries: () =>
-          registry
-            .all()
-            .sort()
-            .filter((e: string) => e.includes(filter)),
-        format: (k: string) => registry.format(k),
-      }));
+      const difficulty = this.playerSettingsService.get().difficulty;
+
+      const allData = this.registries.registries.map((registry) => {
+        const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
+        return {
+          category: registry.key,
+          isCollected: (k: string) => {
+            const rawId = k.includes(";") ? k.split(";")[1] : k;
+            return !!collection?.[rawId];
+          },
+          allEntries: () =>
+            registry
+              .all(difficulty)
+              .sort()
+              .filter((e: string) => e.includes(filter)),
+          format: (k: string) => registry.format(k),
+        };
+      });
 
       const message: RawMessage = {
         rawtext: [

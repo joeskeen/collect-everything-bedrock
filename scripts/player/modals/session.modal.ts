@@ -5,8 +5,8 @@ import { DDUI_TOKEN } from "../../ui/ui.tokens";
 import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, THEME, UNOBTAINABLE } from "../collection-constants";
 import { PlayerCollection } from "../player-collection";
 import { capitalCase } from "change-case";
-import { formatId } from "../../shared/formatting";
-import { RESET } from "../../shared/format-codes";
+import { formatId, timeAgo } from "../../shared/formatting";
+import { GRAY, RESET } from "../../shared/format-codes";
 import type { DDUI } from "../../ui/ui.tokens";
 
 @scoped(Lifecycle.ContainerScoped)
@@ -20,43 +20,45 @@ export class SessionModal {
   ) {}
 
   async show(): Promise<void> {
-    const collection = this.collection.getCollection();
-    const collectionProgress = [
+    const currentTick = this.system.currentTick;
+
+    type Entry = { what: string; tick: number };
+    const collectionProgress: { category: string; collected: Entry[] }[] = [
       {
         category: BIOME,
-        collected: Object.entries(collection[BIOME])
-          .filter(([_what, when]) => when > this.playerSession.startTick)
-          .map(([what]) => what),
+        collected: Object.entries(this.collection.getCollection(BIOME))
+          .filter(([, when]) => when > this.playerSession.startTick)
+          .map(([what, tick]) => ({ what, tick })),
       },
       {
         category: ENTITY,
-        collected: Object.entries(collection[ENTITY])
-          .filter(([_what, when]) => when > this.playerSession.startTick)
-          .map(([what]) => what),
+        collected: Object.entries(this.collection.getCollection(ENTITY))
+          .filter(([, when]) => when > this.playerSession.startTick)
+          .map(([what, tick]) => ({ what, tick })),
       },
       {
         category: ITEM,
-        collected: Object.entries(collection[ITEM])
-          .filter(([_what, when]) => when > this.playerSession.startTick)
-          .map(([what]) => what),
+        collected: Object.entries(this.collection.getCollection(ITEM))
+          .filter(([, when]) => when > this.playerSession.startTick)
+          .map(([what, tick]) => ({ what, tick })),
       },
       {
         category: EFFECT,
-        collected: Object.entries(collection[EFFECT])
-          .filter(([_what, when]) => when > this.playerSession.startTick)
-          .map(([what]) => what),
+        collected: Object.entries(this.collection.getCollection(EFFECT))
+          .filter(([, when]) => when > this.playerSession.startTick)
+          .map(([what, tick]) => ({ what, tick })),
       },
       {
         category: ENCHANTMENT,
-        collected: Object.entries(collection[ENCHANTMENT])
-          .filter(([_what, when]) => when > this.playerSession.startTick)
-          .map(([what]) => what),
+        collected: Object.entries(this.collection.getCollection(ENCHANTMENT))
+          .filter(([, when]) => when > this.playerSession.startTick)
+          .map(([what, tick]) => ({ what, tick })),
       },
       {
         category: UNOBTAINABLE,
-        collected: Object.entries(collection[UNOBTAINABLE])
-          .filter(([_what, when]) => when > this.playerSession.startTick)
-          .map(([what]) => what),
+        collected: Object.entries(this.collection.getCollection(UNOBTAINABLE))
+          .filter(([, when]) => when > this.playerSession.startTick)
+          .map(([what, tick]) => ({ what, tick })),
       },
     ];
 
@@ -66,12 +68,18 @@ export class SessionModal {
 
     for (const progress of collectionProgress) {
       if (progress.collected.length > 0) {
+        const lines = progress.collected
+          .map(
+            (entry) => `${GRAY}- ${RESET}${formatId(entry.what)} ${GRAY}(${timeAgo(entry.tick, currentTick)})${RESET}`
+          )
+          .join("\n");
         form.divider();
         form.label(
-          `${THEME[progress.category]}${capitalCase(progress.category)}${RESET}(${progress.collected.length}): ${progress.collected.map(formatId).join(", ")}`
+          `${THEME[progress.category]}${capitalCase(progress.category)}${RESET} ${GRAY}(${progress.collected.length})${RESET}:\n${lines}`
         );
       }
     }
+    form.divider();
 
     await form.show();
   }

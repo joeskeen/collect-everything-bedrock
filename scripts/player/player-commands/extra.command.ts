@@ -19,11 +19,11 @@ export class PlayerExtraCommand implements CommandHandler {
 
   handleCommand(event: any): CustomCommandResult {
     this.system.run(() => {
-      const collection = this.collection.getCollection();
       const extraData: Array<{ category: string; entries: { name: string; rawId: string }[] }> = [];
 
       for (const registry of this.registries.registries) {
-        const collectedKeys = Object.keys(collection[registry.key as keyof PlayerCollectionData] ?? {});
+        const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
+        const collectedKeys = Object.keys(collection ?? {});
         const entries = registry
           .getExtra(collectedKeys)
           .sort()

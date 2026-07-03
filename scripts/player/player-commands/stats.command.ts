@@ -8,6 +8,7 @@ import { percent } from "../../shared/formatting";
 import { GOLD, GRAY, RESET } from "../../shared/format-codes";
 import { PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
 import { RegistryCollection } from "../../collections/index";
+import { PlayerSettingsService } from "../player-settings";
 
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerStatsCommand implements CommandHandler {
@@ -15,16 +16,21 @@ export class PlayerStatsCommand implements CommandHandler {
     @inject(SYSTEM_TOKEN) private readonly system: System,
     @inject(PLAYER_TOKEN) private readonly player: Player,
     @inject(PlayerCollection) private readonly collection: PlayerCollection,
-    @inject(RegistryCollection) private readonly registries: RegistryCollection
+    @inject(RegistryCollection) private readonly registries: RegistryCollection,
+    @inject(PlayerSettingsService) private readonly playerSettingsService: PlayerSettingsService
   ) {}
 
   handleCommand(event: any): CustomCommandResult {
     this.system.run(() => {
-      const collection = this.collection.getCollection();
-      const collectionProgress = this.registries.registries.map((registry) => ({
-        category: registry.key,
-        ...registry.count(Object.keys(collection[registry.key as keyof PlayerCollectionData] ?? {})),
-      }));
+      const difficulty = this.playerSettingsService.get().difficulty;
+
+      const collectionProgress = this.registries.registries.map((registry) => {
+        const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
+        return {
+          category: registry.key,
+          ...registry.count(Object.keys(collection ?? {}), difficulty),
+        };
+      });
 
       const totalProgress = {
         collected: collectionProgress.reduce((prev, curr) => prev + curr.collected, 0),
