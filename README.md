@@ -8,8 +8,8 @@ Collect Everything! turns Minecraft Bedrock into a completionist's dream - a bui
 
 Collect Everything! tracks six categories of discoveries:
 
-- **Items** - Pick up anything in survival, from diamond swords to suspicious stew, and watch every variant (all 16 bed colors, every potion combination) get logged automatically.
-- **Entities** - Kill, tame, name, or saddle a mob to add it to your collection. Each variant counts separately - try tracking down all 35 horse color-and-marking combos, every villager profession, and all five axolotl colors.
+- **Items** - Pick up anything in survival, from diamond swords to suspicious stew, and watch everything get logged automatically.
+- **Entities** - Kill, tame, or name, or leash a mob to add it to your collection. Each variant counts separately - try tracking down all 35 horse color-and-marking combos, every villager profession, and all five axolotl colors.
 - **Biomes** - Just explore! Every new biome you set foot in is recorded. With over 60 biomes to discover, adventuring has never been more rewarding.
 - **Effects** - Drink a potion, catch a lingering arrow, or eat suspicious stew to log each status effect. On harder difficulty settings, even each amplifier level counts.
 - **Enchantments** - Enchant a tool, find an enchanted book, or trade with a villager to record the enchantment. Higher difficulties track each level separately.
@@ -19,26 +19,33 @@ Collect Everything! tracks six categories of discoveries:
 
 The collection browser is the star of the show - a sleek, tabbed interface that displays everything you've found with per-category progress bars, search, and a session view showing what you've collected in your current play session.
 
-_[Screenshot: collection browser main UI showing tabs and grid]_
+![Collection Browser](docs/images/browser-all.png)
 
-_[Screenshot: session modal showing recently collected items]_
+![Recently Collected](docs/images/recently-collected.png)
+
+![Search](docs/images/search-planks.png)
 
 You can open it a few ways:
 
 - Hold the **checklist item** in your hand and use it.
-- Place the **checklist block** and interact with it.
+- Place the **checklist on a block** and interact with it.
 - **Craft it yourself** with planks, paper, and any metal nugget (iron, gold, or copper).
-- Or type **`/collecteverything:browse`** - no operator permissions required, so no cheats needed.
+- Or type **`/collecteverything:browse`** - no operator permissions required, and no cheats needed.
 
 > **Power user tip:** bind `/collecteverything:browse` to a keyboard macro for one-button access to your collection.
+
+![Collection Checklist item](docs/images/collection-checklist-item.jpg)
 
 ## Difficulty Levels
 
 Configure your difficulty right from the collection browser's settings modal (or via `/collecteverything:settings`). This controls how granular entity variant tracking is:
 
 - **Basic** - One entry per entity type (e.g., just "horse"). Easiest to complete.
+  ![Entity tab of collection browser on Basic difficulty](docs/images/entity-basic.png)
 - **Committed** - Each variant dimension tracked independently (e.g., "horse+color:brown" and "horse+pattern:spotted" as separate entries). A solid middle ground.
+  ![Entity tab of collection browser on Committed difficulty](docs/images/entity-committed.png)
 - **Insane** - Every valid combination (e.g., 35 horse color/pattern combos, 2000+ tropical fish!). Only for the truly dedicated.
+  ![Entity tab of collection browser on Insane difficulty](docs/images/entity-insane.png)
 
 ## Commands
 
@@ -123,4 +130,4 @@ This add-on is actively being improved, fully open-source, and built with care f
 
 A massive shout-out to **Knarfy** for creating the original Collect Everything mod on Java Edition - this Bedrock port wouldn't exist without your brilliant idea. Go check out the original on [Modrinth](https://modrinth.com/mod/collect-everything) and follow along on YouTube ([@Knarfy](https://www.youtube.com/@Knarfy) and [@CollectEverythingMC](https://www.youtube.com/@CollectEverythingMC)).
 
-And a huge thank-you to the **Bedrock Add-On community** - everyone who shares examples, answers questions in the trenches, and makes this ecosystem such an awesome place to create.
+And a huge thank-you to the **Bedrock Add-On community** - everyone who shares examples, answers questions in the Discord, and makes this ecosystem such an awesome place to create.
