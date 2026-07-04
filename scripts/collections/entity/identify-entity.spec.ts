@@ -117,12 +117,14 @@ describe("IdentifyEntity", () => {
   });
 
   describe("compound variants (comma-separated keys)", () => {
-    it("should return 2-part compound variant when components match", () => {
+    it("should return 2-part compound variant as individual parts when components match", () => {
       const entity = createMockEntity("minecraft:tropicalfish", { variant: 0, mark_variant: 1 });
       const result = IdentifyEntity(entity as any);
 
       expect(result).toContain("minecraft:tropicalfish");
-      expect(result).toContain("minecraft:tropicalfish+variant:0+mark_variant:1+sunstreak");
+      expect(result).toContain("minecraft:tropicalfish+variant:0");
+      expect(result).toContain("minecraft:tropicalfish+mark_variant:1");
+      expect(result).toContain("minecraft:tropicalfish+mark_variant:1+variant:0");
     });
 
     it("should return base typeId when 2-part compound component is missing", () => {

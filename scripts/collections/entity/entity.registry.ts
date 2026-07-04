@@ -5,6 +5,7 @@ import { EXCLUDED_ENTITIES } from "./entity-exclusions";
 import { IdentifyEntity } from "./identify-entity";
 import { getEntityDisplayName } from "./entity-name";
 import { createVariantCounter } from "./entity-variants";
+import { enumerateTropicalFishVariants, countTropicalFishVariants } from "./tropicalfish-variants";
 import { DifficultyLevel } from "../../player/player-settings";
 import { ENTITY } from "../../player/collection-constants";
 import type { Registry, Thing } from "../registry";
@@ -33,6 +34,20 @@ export class EntityRegistry implements Registry<Entity> {
 
   constructor(@inject(ENTITY_TYPES_TOKEN) private readonly entityTypes: typeof EntityTypes) {}
 
+  private enumerateEntity(entityId: string, difficulty: DifficultyLevel): string[] {
+    if (entityId === "minecraft:tropicalfish") {
+      return enumerateTropicalFishVariants(entityId, difficulty);
+    }
+    return this.variantCounter.enumerateEntityVariants(entityId, difficulty);
+  }
+
+  private countEntity(entityId: string, difficulty: DifficultyLevel): number {
+    if (entityId === "minecraft:tropicalfish") {
+      return countTropicalFishVariants(entityId, difficulty);
+    }
+    return this.variantCounter.countEntityVariants(entityId, difficulty);
+  }
+
   private ensureInitialized() {
     if (!this._initialized) {
       const runtimeEntities = this.entityTypes
@@ -46,9 +61,13 @@ export class EntityRegistry implements Registry<Entity> {
       for (const difficulty of difficulties) {
         const allVariants: string[] = [];
         for (const entityId of runtimeEntities) {
-          const variants = this.variantCounter.enumerateEntityVariants(entityId, difficulty);
+          const variants = this.enumerateEntity(entityId, difficulty);
+          if (entityId === "minecraft:tropicalfish") {
+            console.log(`[tropicalfish] ${difficulty}: ${variants.length} variants`);
+          }
           allVariants.push(...variants);
         }
+        console.log(`[entity.registry] ${difficulty}: ${allVariants.length} total variants`);
         this.entitiesByDifficulty[difficulty] = allVariants;
       }
 
@@ -133,19 +152,19 @@ export class EntityRegistry implements Registry<Entity> {
   }
 
   enumerateEntityVariants(entityId: string, difficulty: DifficultyLevel = "basic"): string[] {
-    return this.variantCounter.enumerateEntityVariants(entityId, difficulty);
+    return this.enumerateEntity(entityId, difficulty);
   }
 
   countEntityVariants(entityId: string, difficulty: DifficultyLevel = "basic"): number {
-    return this.variantCounter.countEntityVariants(entityId, difficulty);
+    return this.countEntity(entityId, difficulty);
   }
 
   enumerateVariants(entityId: string, difficulty: DifficultyLevel = "insane"): string[] {
-    return this.variantCounter.enumerateEntityVariants(entityId, difficulty).map((id) => `${this.key};${id}`);
+    return this.enumerateEntity(entityId, difficulty).map((id) => `${this.key};${id}`);
   }
 
   countVariants(entityId: string, difficulty: DifficultyLevel = "insane"): number {
-    return this.variantCounter.countEntityVariants(entityId, difficulty);
+    return this.countEntity(entityId, difficulty);
   }
 
   resolveTexture(id: string): string | number {

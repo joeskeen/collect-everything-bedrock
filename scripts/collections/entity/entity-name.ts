@@ -1,8 +1,14 @@
 import entities from "./entities";
 import { capitalCase, formatId } from "../../shared/formatting";
+import { getTropicalFishDisplayName } from "./tropicalfish-variants";
 
 export function getEntityDisplayName(entityIdWithVariants: string): string {
   const [entityId, ...variantParts] = entityIdWithVariants.split("+");
+
+  if (entityId === "minecraft:tropicalfish" && variantParts.length > 0) {
+    const specialName = getTropicalFishDisplayName(variantParts);
+    if (specialName !== undefined) return specialName;
+  }
   const entityData = (entities as Record<string, { name?: string; variants?: Record<string, unknown> }>)[entityId];
 
   const baseName = entityData?.name ? capitalCase(entityData.name) : formatId(entityId);

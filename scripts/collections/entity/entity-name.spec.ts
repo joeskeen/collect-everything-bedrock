@@ -54,9 +54,24 @@ describe("getEntityDisplayName", () => {
       expect(result).toBe("Tropical Fish (Flopper)");
     });
 
-    it("should return name with 4-part compound variant", () => {
+    it("should return name with 4-part compound variant (insane format)", () => {
       const result = getEntityDisplayName("minecraft:tropicalfish+color:7+color2:4+mark_variant:0+variant:1");
-      expect(result).toBe("Tropical Fish (Flopper, Gray, Yellow)");
+      expect(result).toBe("Tropical Fish (Gray-Yellow Flopper)");
+    });
+
+    it("should return name with same colors collapsed (insane format)", () => {
+      const result = getEntityDisplayName("minecraft:tropicalfish+color:4+color2:4+mark_variant:0+variant:0");
+      expect(result).toBe("Tropical Fish (Yellow Kob)");
+    });
+
+    it("should return name with color-only base color suffix", () => {
+      const result = getEntityDisplayName("minecraft:tropicalfish+color:7");
+      expect(result).toBe("Tropical Fish (Gray base color)");
+    });
+
+    it("should return name with color2-only pattern color suffix", () => {
+      const result = getEntityDisplayName("minecraft:tropicalfish+color2:4");
+      expect(result).toBe("Tropical Fish (Yellow pattern color)");
     });
   });
 

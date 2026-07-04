@@ -15,9 +15,11 @@ export function IdentifyEntity(entity: Entity): string[] {
 
   for (const [key, value] of Object.entries(entityData.variants)) {
     if (key.includes(",")) {
-      const variantResult = evaluateCompoundVariant(entity, key, value);
-      if (variantResult !== undefined) {
-        activeVariants.push(variantResult);
+      if (key.split(",").length <= 2) {
+        const variantResults = evaluateCompoundVariant(entity, key, value);
+        if (variantResults) {
+          activeVariants.push(...variantResults);
+        }
       }
     } else if (key.startsWith("c.")) {
       const componentName = key.slice(2);
@@ -90,7 +92,7 @@ function evaluatePropertyVariant(entity: Entity, propertyName: string, value: un
   }
 }
 
-function evaluateCompoundVariant(entity: Entity, key: string, value: unknown): string | undefined {
+function evaluateCompoundVariant(entity: Entity, key: string, value: unknown): string[] | undefined {
   if (typeof value !== "object" || value === null) return undefined;
 
   const componentNames = key.split(",");
@@ -120,11 +122,9 @@ function evaluateCompoundVariant(entity: Entity, key: string, value: unknown): s
 
   const lookupKey = keys.join(",");
   const lookup = value as Record<string, string>;
-  const lookupValue = lookup[lookupKey];
-  if (!lookupValue) return undefined;
+  if (!lookup[lookupKey]) return undefined;
 
-  parts.push(lookupValue);
-  return parts.join("+");
+  return parts;
 }
 
 function getCombinations(arr: string[], size: number): string[][] {
