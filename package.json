@@ -4,6 +4,7 @@
   "productName": "Collect Everything!",
   "description": "Inspired by Knarfy's Collect Everything mod for Java Edition, this add-on allows you to collect everything in Minecraft Bedrock Edition.",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "watch": "npx concurrently -n 'build,test' --kill-others-on-fail \"npm run watch:deploy\" \"npm run watch:test\"",
     "watch:deploy": "just-scripts local-deploy --watch",
