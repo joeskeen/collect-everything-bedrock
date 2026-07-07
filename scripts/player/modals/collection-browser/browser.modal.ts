@@ -25,16 +25,20 @@ import { UNKNOWN_TEXTURE } from "../../../ui/shared-textures";
 
 const GRID_COLUMNS = 17;
 const GRID_ROWS = 7;
+const MAX_ITEMS_PER_PAGE = GRID_COLUMNS * GRID_ROWS;
 
 @scoped(Lifecycle.ContainerScoped)
 export class BrowserModal {
   private previousCategory: string = "all";
+  private currentPage: number = 0;
   private readonly actions: Record<string, (id: string) => void | Promise<void>> = {
     category: (id) => {
+      this.currentPage = 0;
       this.playerSettingsService.change({ ...this.playerSettingsService.get(), activeCategory: id });
       this.system.run(() => this.show());
     },
     search: async () => {
+      this.currentPage = 0;
       const { activeCategory } = this.playerSettingsService.get();
       const currentSearch = activeCategory.startsWith("search:") ? activeCategory.slice("search:".length) : "";
       const text = await this.searchModal.show(currentSearch);
@@ -76,8 +80,16 @@ export class BrowserModal {
         this.show();
       });
     },
-    "previous-page": () => {},
-    "next-page": () => {},
+    "previous-page": () => {
+      if (this.currentPage > 0) {
+        this.currentPage--;
+        this.system.run(() => this.show());
+      }
+    },
+    "next-page": () => {
+      this.currentPage++;
+      this.system.run(() => this.show());
+    },
   };
 
   constructor(
@@ -163,7 +175,13 @@ export class BrowserModal {
       }
     }
 
-    const page = thingsToShow.slice(0, GRID_COLUMNS * GRID_ROWS);
+    const totalPages = Math.ceil(thingsToShow.length / MAX_ITEMS_PER_PAGE);
+    const hasPrevious = this.currentPage > 0;
+    const hasNext = this.currentPage < totalPages - 1;
+    collectionForm.difficultyLevel(difficulty).pagination(this.currentPage, totalPages, hasPrevious, hasNext);
+
+    const startIndex = this.currentPage * MAX_ITEMS_PER_PAGE;
+    const page = thingsToShow.slice(startIndex, startIndex + MAX_ITEMS_PER_PAGE);
     for (const { id, displayName, texture, registry: reg } of page) {
       const [categoryKey, rawId] = id.includes(";") ? id.split(";") : [reg.key, id];
       const collected = this.playerCollection.hasCollected(categoryKey as keyof PlayerCollectionData, rawId);

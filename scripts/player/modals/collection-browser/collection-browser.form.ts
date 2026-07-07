@@ -1,6 +1,7 @@
 import type { Player } from "@minecraft/server";
 import type { CreateActionFormFn } from "../../../shared/global-tokens";
 import { DataSchema, encodeItemData } from "../../../ui/data-encoder";
+import { DIFFICULTY_INDEX_MAP } from "../../player-settings";
 import { RESET } from "../../../shared/format-codes";
 import type { ActionFormResponse } from "@minecraft/server-ui";
 import type { Logger } from "../../../shared/logging/logger";
@@ -20,6 +21,11 @@ export class CollectionBrowserFormData {
   private titleText: string = RESET;
   private activeIndex: number = 0;
   private itemCount: number = 0;
+  private difficulty: number = 0;
+  private pageNumber: number = 0;
+  private totalPages: number = 0;
+  private hasPrevious: boolean = false;
+  private hasNext: boolean = false;
   private buttonArray: ButtonData[] = [];
 
   constructor(
@@ -39,6 +45,19 @@ export class CollectionBrowserFormData {
 
   itemsCount(count: number): this {
     this.itemCount = count;
+    return this;
+  }
+
+  difficultyLevel(level: "basic" | "committed" | "insane"): this {
+    this.difficulty = DIFFICULTY_INDEX_MAP[level] ?? 0;
+    return this;
+  }
+
+  pagination(pageNumber: number, totalPages: number, hasPrevious: boolean, hasNext: boolean): this {
+    this.pageNumber = pageNumber;
+    this.totalPages = totalPages;
+    this.hasPrevious = hasPrevious;
+    this.hasNext = hasNext;
     return this;
   }
 
@@ -62,7 +81,18 @@ export class CollectionBrowserFormData {
 
   async show(player: Player): Promise<CollectionFormResponse> {
     const fullTitle =
-      encodeItemData({ activeIndex: this.activeIndex, itemCount: this.itemCount }, FORM_DATA_SCHEMA) + this.titleText;
+      encodeItemData(
+        {
+          activeIndex: this.activeIndex,
+          itemCount: this.itemCount,
+          difficulty: this.difficulty,
+          pageNumber: this.pageNumber,
+          totalPages: this.totalPages,
+          hasPrevious: this.hasPrevious ? 1 : 0,
+          hasNext: this.hasNext ? 1 : 0,
+        },
+        FORM_DATA_SCHEMA
+      ) + this.titleText;
     this.logger?.debug("titleData", fullTitle.replace(/§/g, "$"));
     const form = this.createActionForm().title(fullTitle);
     for (const button of this.buttonArray) {

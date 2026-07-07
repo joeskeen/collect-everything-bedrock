@@ -3,6 +3,18 @@ import { PlayerStorage, WorldStorage } from "../shared/storage";
 import { BROADCAST_COLLECTION_EVENTS_KEY, DISPLAY_SCOREBOARD_KEY, NAMESPACE } from "../shared/constants";
 
 export type DifficultyLevel = "basic" | "committed" | "insane";
+
+export const DIFFICULTY_INDEX_MAP: Record<DifficultyLevel, number> = {
+  basic: 0,
+  committed: 1,
+  insane: 2,
+};
+
+export const DIFFICULTY_FROM_INDEX: Record<number, DifficultyLevel> = {
+  0: "basic",
+  1: "committed",
+  2: "insane",
+};
 export interface PlayerSettings {
   difficulty: DifficultyLevel;
   activeCategory: string;
