@@ -1,24 +1,30 @@
 import { inject, Lifecycle, scoped } from "tsyringe";
 import type { Player, System } from "@minecraft/server";
-import { CREATE_ACTION_FORM_TOKEN, CreateActionFormFn, PLAYER_TOKEN, SYSTEM_TOKEN } from "../../shared/global-tokens";
-import { Logger } from "../../shared/logging/logger";
-import { SearchModal } from "./search.modal";
-import { THEME, PlayerCollectionData, RegistryKey } from "../collection-constants";
-import { RegistryCollection } from "../../collections/index";
-import { AllRegistry } from "../../collections/all-registry";
-import { PlayerCollection } from "../player-collection";
-import { CollectionFormData } from "../../ui/forms";
-import type { Thing } from "../../collections/registry";
-import { capitalCase, percent } from "../../shared/formatting";
-import { BOLD, GRAY, ITALIC, RESET } from "../../shared/format-codes";
-import { PlayerSettingsService } from "../player-settings";
-import { SettingsModal } from "./settings.modal";
-import { HelpModal } from "./help.modal";
-import { SessionModal } from "./session.modal";
-import { DetailsModal } from "./details.modal";
-import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
+import {
+  CREATE_ACTION_FORM_TOKEN,
+  CreateActionFormFn,
+  PLAYER_TOKEN,
+  SYSTEM_TOKEN,
+} from "../../../shared/global-tokens";
+import { Logger } from "../../../shared/logging/logger";
+import { SearchModal } from "../search.modal";
+import { THEME, PlayerCollectionData, RegistryKey } from "../../collection-constants";
+import { RegistryCollection } from "../../../collections/index";
+import { AllRegistry } from "../../../collections/all-registry";
+import { PlayerCollection } from "../../player-collection";
+import { CollectionBrowserFormData } from "./collection-browser.form";
+import type { Thing } from "../../../collections/registry";
+import { capitalCase, percent } from "../../../shared/formatting";
+import { BOLD, GRAY, ITALIC, RESET } from "../../../shared/format-codes";
+import { PlayerSettingsService } from "../../player-settings";
+import { SettingsModal } from "../settings.modal";
+import { HelpModal } from "../help.modal";
+import { SessionModal } from "../session.modal";
+import { DetailsModal } from "../details.modal";
+import { UNKNOWN_TEXTURE } from "../../../ui/shared-textures";
 
-const GRID_ROW_LENGTH = 17;
+const GRID_COLUMNS = 17;
+const GRID_ROWS = 7;
 
 @scoped(Lifecycle.ContainerScoped)
 export class BrowserModal {
@@ -70,6 +76,8 @@ export class BrowserModal {
         this.show();
       });
     },
+    "previous-page": () => {},
+    "next-page": () => {},
   };
 
   constructor(
@@ -113,7 +121,7 @@ export class BrowserModal {
       title = `Collection - ${BOLD}${THEME[activeCategory as keyof typeof THEME] ?? ""}${capitalCase(activeCategory)}`;
     }
 
-    const collectionForm = new CollectionFormData(this.createActionForm, this.logger).title(title);
+    const collectionForm = new CollectionBrowserFormData(this.createActionForm, this.logger).title(title);
     const buttons: Array<Parameters<typeof collectionForm.button>> = [];
 
     for (const reg of registries) {
@@ -130,12 +138,14 @@ export class BrowserModal {
       ]);
     }
 
+    buttons.push(["Previous Page", [], "", undefined, undefined, "previous-page"]);
+    buttons.push(["Next Page", [], "", undefined, undefined, "next-page"]);
     buttons.push(["Search", [], "", undefined, undefined, "search"]);
     buttons.push(["Recent", [], "", undefined, undefined, "recent"]);
     buttons.push(["Settings", [], "", undefined, undefined, "settings"]);
     buttons.push(["Help", [], "", undefined, undefined, "help"]);
     const filler: Parameters<typeof collectionForm.button> = ["", [], "", undefined, undefined, undefined];
-    while (buttons.length < GRID_ROW_LENGTH) {
+    while (buttons.length % GRID_COLUMNS !== 0) {
       buttons.push(filler);
     }
 
@@ -153,7 +163,8 @@ export class BrowserModal {
       }
     }
 
-    for (const { id, displayName, texture, registry: reg } of thingsToShow) {
+    const page = thingsToShow.slice(0, GRID_COLUMNS * GRID_ROWS);
+    for (const { id, displayName, texture, registry: reg } of page) {
       const [categoryKey, rawId] = id.includes(";") ? id.split(";") : [reg.key, id];
       const collected = this.playerCollection.hasCollected(categoryKey as keyof PlayerCollectionData, rawId);
       const percentComplete = collected ? 100 : 0;

@@ -1,5 +1,5 @@
 import { inject, singleton } from "tsyringe";
-import { BrowserModal } from "../player/modals/browser.modal";
+import { BrowserModal } from "../player/modals/collection-browser/browser.modal";
 import { WORLD_TOKEN } from "../shared/global-tokens";
 import type {
   World,

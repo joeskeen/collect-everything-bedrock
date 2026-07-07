@@ -1,0 +1,4 @@
+{
+  "count": { "digits": 2, "default": 0 },
+  "percent": { "digits": 3, "default": 0 }
+}

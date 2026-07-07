@@ -1,26 +1,22 @@
 import type { Player } from "@minecraft/server";
-import type { CreateActionFormFn } from "../shared/global-tokens";
-import { DataSchema, encodeItemData } from "./data-encoder";
-import { RESET } from "../shared/format-codes";
+import type { CreateActionFormFn } from "../../../shared/global-tokens";
+import { DataSchema, encodeItemData } from "../../../ui/data-encoder";
+import { RESET } from "../../../shared/format-codes";
 import type { ActionFormResponse } from "@minecraft/server-ui";
-import type { Logger } from "../shared/logging/logger";
+import type { Logger } from "../../../shared/logging/logger";
 
-export const COLLECTION_FORM_KEY = "__collection_form__";
-export const formDataSchema: DataSchema = {
-  _prefix: COLLECTION_FORM_KEY,
-  activeIndex: { digits: 2, default: 0 },
-  itemCount: { digits: 5, default: 0 },
-};
-export const formButtonDataSchema: DataSchema = {
-  count: { digits: 2, default: 0 },
-  percent: { digits: 3, default: 0 },
-};
+// any time these schemas change, we need to also change the form
+// use this tool to help:
+// https://joe.skeen.rocks/bedrock-json-ui-data-helper/
+import FORM_DATA_SCHEMA from "./form-data.schema.json";
+import BUTTON_DATA_SCHEMA from "./button-data.schema.json";
+
 export interface CollectionFormResponse extends ActionFormResponse {
   selectedButtonValue?: unknown;
 }
 export type ButtonData = [text: string, texture: number | string | undefined, value: unknown];
 
-export class CollectionFormData {
+export class CollectionBrowserFormData {
   private titleText: string = RESET;
   private activeIndex: number = 0;
   private itemCount: number = 0;
@@ -54,7 +50,7 @@ export class CollectionFormData {
     percent = 0,
     buttonValue: unknown = undefined
   ): this {
-    const header = encodeItemData({ count, percent }, formButtonDataSchema);
+    const header = encodeItemData({ count, percent }, BUTTON_DATA_SCHEMA);
     let buttonText = `${header}${itemName}${RESET}`;
     if (Array.isArray(itemDesc) && itemDesc.length > 0) {
       buttonText += "\n" + itemDesc.join("\n");
@@ -66,7 +62,7 @@ export class CollectionFormData {
 
   async show(player: Player): Promise<CollectionFormResponse> {
     const fullTitle =
-      encodeItemData({ activeIndex: this.activeIndex, itemCount: this.itemCount }, formDataSchema) + this.titleText;
+      encodeItemData({ activeIndex: this.activeIndex, itemCount: this.itemCount }, FORM_DATA_SCHEMA) + this.titleText;
     this.logger?.debug("titleData", fullTitle.replace(/§/g, "$"));
     const form = this.createActionForm().title(fullTitle);
     for (const button of this.buttonArray) {

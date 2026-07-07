@@ -1,4 +1,5 @@
 {
+  "$separator": "§~§r",
   "$collect_everything_data_prefix": "__collection_form__",
-  "$category_count": 7
+  "$hidden_rows": 1
 }

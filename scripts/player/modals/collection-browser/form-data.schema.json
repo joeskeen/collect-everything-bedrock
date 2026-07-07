@@ -1,0 +1,10 @@
+{
+  "_prefix": "__collection_form__",
+  "difficulty": { "digits": 1, "default": 0 },
+  "activeIndex": { "digits": 2, "default": 0 },
+  "itemCount": { "digits": 5, "default": 0 },
+  "pageNumber": { "digits": 2, "default": 0 },
+  "totalPages": { "digits": 2, "default": 0 },
+  "hasPrevious": { "digits": 1, "default": 0 },
+  "hasNext": { "digits": 1, "default": 0 }
+}
