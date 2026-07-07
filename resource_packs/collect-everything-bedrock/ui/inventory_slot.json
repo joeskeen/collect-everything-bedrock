@@ -182,7 +182,7 @@
     "renderer": "gradient_renderer",
     "color1": [0, 0, 0, 1],
     "color2": [0, 0, 0, 1],
-    "size": [14, 2],
+    "size": [16, 2],
     "anchor_from": "bottom_middle",
     "anchor_to": "bottom_middle",
     "offset": [0, -1.5],
@@ -209,7 +209,7 @@
         "bar": {
           "type": "image",
           "layer": 7,
-          "texture": "textures/ui/d_g",
+          "texture": "textures/ui/bar_foreground",
           "size": ["100%", "50%"],
           "offset": [0, -0.5],
           "clip_pixelperfect": false,
@@ -229,7 +229,7 @@
             {
               "binding_type": "view",
               // extract 'percent' field value
-              "source_property_name": "(('%.23s' * #form_button_text) - ('%.20s' * #form_button_text)",
+              "source_property_name": "(('%.23s' * #form_button_text) - ('%.18s' * #form_button_text)",
               "target_property_name": "#ratio"
             },
             {

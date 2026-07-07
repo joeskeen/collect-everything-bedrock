@@ -196,11 +196,19 @@
   "difficulty_label": {
     "type": "label",
     "$text|default": "",
+    "$value|default": "",
     "text": "$text",
     "color": "$title_text_color",
     "anchor_from": "top_right",
     "anchor_to": "top_right",
-    "offset": [7, 7]
+    "offset": [-11, 0],
+    "bindings": [
+      {
+        "binding_type": "view",
+        "source_property_name": "((('%.49s' * #title_text) - ('%.48s' * #title_text)) = $value)",
+        "target_property_name": "#visible"
+      }
+    ]
   },
 
   "category_buttons": {
@@ -349,21 +357,36 @@
   "main_panel": {
     "type": "image",
     "texture": "textures/ui/dialog_background_opaque",
-    "size": ["100%", "default"],
+    "size": ["100%", "100%"],
     "layer": 0,
     "controls": [
       {
         "main_contents": {
           "type": "panel",
-          "size": ["100%c", "default"],
+          "size": ["100%", "100%"],
           "offset": [6, 9],
           "anchor_from": "top_left",
           "anchor_to": "top_left",
           "controls": [
             { "modal_title@modal_title": {} },
-            { "basic_difficulty_label@difficulty_label": { "$text": "Basic" } },
-            { "committed_difficulty_label@difficulty_label": { "$text": "Committed" } },
-            { "insane_difficulty_label@difficulty_label": { "$text": "Insane" } },
+            {
+              "basic_difficulty_label@difficulty_label": {
+                "$text": "Basic",
+                "$value": 0
+              }
+            },
+            {
+              "committed_difficulty_label@difficulty_label": {
+                "$text": "Committed",
+                "$value": 1
+              }
+            },
+            {
+              "insane_difficulty_label@difficulty_label": {
+                "$text": "Insane",
+                "$value": 2
+              }
+            },
             { "@gap": { "size": [0, 3] } },
             { "@collection_browser_items_panel": {} }
           ]
@@ -378,14 +401,14 @@
     "offset": [0, 12],
     "anchor_from": "top_left",
     "anchor_to": "top_left",
-    "size": [313, 134],
+    "size": [313, 136],
     "controls": [{ "@collection_browser_grid_wrapper": {} }]
   },
 
   "collection_browser_grid_wrapper": {
     "type": "panel",
-    "size": [309, 133],
-    "offset": [0, 2],
+    "size": [306, 126],
+    "offset": [3, 3],
     "anchor_from": "top_left",
     "anchor_to": "top_left",
     "clips_children": true,
@@ -394,16 +417,17 @@
 
   "collection_browser_grid": {
     "type": "grid",
-    "size": [309, 133],
-    "offset": [0, -17],
+    "size": [306, 144],
+    "min_size": [306, 144],
+    "max_size": [306, 144],
+    "offset": [0, -18],
     "anchor_from": "top_left",
     "anchor_to": "top_left",
     "grid_item_template": "collect_everything.inventory_slot_button",
     "collection_name": "form_buttons",
     "$item_collection_name": "form_buttons",
-    "grid_rescaling_type": "horizontal",
-    "grid_dimensions": [17, 8],
-    "maximum_grid_items": 136
+    "grid_rescaling_type": "none",
+    "grid_dimensions": [17, 8]
   },
 
   "gap": { "type": "panel" }
