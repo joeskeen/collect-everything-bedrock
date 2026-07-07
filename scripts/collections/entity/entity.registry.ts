@@ -62,12 +62,8 @@ export class EntityRegistry implements Registry<Entity> {
         const allVariants: string[] = [];
         for (const entityId of runtimeEntities) {
           const variants = this.enumerateEntity(entityId, difficulty);
-          if (entityId === "minecraft:tropicalfish") {
-            console.log(`[tropicalfish] ${difficulty}: ${variants.length} variants`);
-          }
           allVariants.push(...variants);
         }
-        console.log(`[entity.registry] ${difficulty}: ${allVariants.length} total variants`);
         this.entitiesByDifficulty[difficulty] = allVariants;
       }
 

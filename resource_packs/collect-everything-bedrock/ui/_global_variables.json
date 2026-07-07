@@ -1,5 +1,6 @@
 {
   "$separator": "§~§r",
   "$collect_everything_data_prefix": "__collection_form__",
-  "$hidden_rows": 1
+  "$hidden_rows": 1,
+  "$cells_per_row": 17
 }

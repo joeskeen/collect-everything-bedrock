@@ -11,7 +11,7 @@
   "collection_browser_modal": {
     "type": "stack_panel",
     "orientation": "vertical",
-    "size": [325, 162],
+    "size": [325, 177],
     "controls": [{ "top_panel@top_panel": {} }, { "main_panel@main_panel": {} }]
   },
 
@@ -401,8 +401,186 @@
     "offset": [0, 12],
     "anchor_from": "top_left",
     "anchor_to": "top_left",
-    "size": [313, 136],
-    "controls": [{ "@collection_browser_grid_wrapper": {} }]
+    "size": [313, 150],
+    "controls": [{ "@collection_browser_grid_wrapper": {} }, { "@collection_browser_pagination": {} }]
+  },
+
+  "collection_browser_pagination": {
+    "type": "panel",
+    "size": [55, 17],
+    "offset": [0, -3],
+    "anchor_from": "bottom_middle",
+    "anchor_to": "bottom_middle",
+    "controls": [
+      {
+        "previous_button@pagination_button": {
+          "$texture_path_default": "textures/ui/page_previous",
+          "$texture_path_active": "textures/ui/page_previous_active",
+          "anchor_from": "left_middle",
+          "anchor_to": "left_middle",
+          "property_bag": {
+            // IMPORTANT: these hardcoded indexes need
+            // to stay in sync with button insertion order
+            // from script side
+            "#collection_index": 7,
+            "#collection_name": "form_buttons"
+          },
+          "bindings": [
+            {
+              "binding_type": "view",
+              "source_property_name": "((#title_text - '|hasPrevious|:0') = #title_text)",
+              "target_property_name": "#visible"
+            }
+          ]
+        }
+      },
+      { "page_label@page_label": {} },
+      {
+        "next_button@pagination_button": {
+          "$texture_path_default": "textures/ui/page_next",
+          "$texture_path_active": "textures/ui/page_next_active",
+          "anchor_from": "right_middle",
+          "anchor_to": "right_middle",
+          "property_bag": {
+            // IMPORTANT: these hardcoded indexes need
+            // to stay in sync with button insertion order
+            // from script side
+            "#collection_index": 8,
+            "#collection_name": "form_buttons"
+          },
+          "bindings": [
+            {
+              "binding_type": "view",
+              "source_property_name": "((#title_text - '|hasNext|:0') = #title_text)",
+              "target_property_name": "#visible"
+            }
+          ]
+        }
+      }
+    ]
+  },
+
+  "pagination_button_image": {
+    "type": "image",
+    "$texture_path|default": "",
+    "texture": "$texture_path",
+    "size": [11, 17],
+    "layer": 10
+  },
+
+  "pagination_button@common.button": {
+    "$pressed_button_name": "button.form_button_click",
+    "$texture_path_default|default": "",
+    "$texture_path_active|default": "",
+    "size": [11, 17],
+    "layer": 10,
+    "default_control": "default",
+    "hover_control": "hover",
+    "pressed_control": "pressed",
+    "controls": [
+      { "default@pagination_button_image": { "$texture_path": "$texture_path_default" } },
+      { "hover@pagination_button_image": { "$texture_path": "$texture_path_active" } },
+      { "pressed@pagination_button_image": { "$texture_path": "$texture_path_active" } }
+    ],
+    "bindings": [
+      {
+        "binding_name": "#null",
+        "binding_type": "collection",
+        "binding_condition": "none",
+        "binding_collection_name": "form_buttons"
+      },
+      {
+        "binding_name": "#null",
+        "binding_type": "collection_details",
+        "binding_collection_name": "form_buttons"
+      },
+      {
+        "binding_name": "#form_button_text",
+        "binding_type": "collection",
+        "binding_collection_name": "form_buttons"
+      }
+    ]
+  },
+
+  // "previous_page_button": {
+  //   "type": "image",
+  //   "texture": "textures/ui/page_previous",
+  //   "anchor_from": "left_middle",
+  //   "anchor_to": "left_middle",
+  //   "bindings": [
+  //     {
+  //       "binding_type": "view",
+  //       "source_property_name": "((#title_text - '|hasPrevious|:0') = #title_text)",
+  //       "target_property_name": "#visible"
+  //     }
+  //   ]
+  // },
+
+  // "next_page_button": {
+  //   "type": "image",
+  //   "texture": "textures/ui/page_next",
+  //   "size": [11, 17],
+  //   "anchor_from": "right_middle",
+  //   "anchor_to": "right_middle",
+  //   "color": [1, 1, 1, 1],
+  //   "layer": 10,
+  //   "bindings": [
+  //     {
+  //       "binding_type": "view",
+  //       "source_property_name": "((#title_text - '|hasNext|:0') = #title_text)",
+  //       "target_property_name": "#visible"
+  //     }
+  //   ]
+  // },
+
+  "page_label": {
+    "type": "stack_panel",
+    "orientation": "horizontal",
+    "anchor_from": "center_middle",
+    "anchor_to": "center_middle",
+    "size": ["default", 7],
+    "offset": [0, -1],
+    "layer": 10,
+    "controls": [
+      {
+        "page_number_label": {
+          "type": "label",
+          "text": "#page_number",
+          "color": [1, 1, 1, 1],
+          "layer": 10,
+          "bindings": [
+            {
+              "binding_type": "view",
+              "source_property_name": "(('§z') + (('%.107s' * #title_text) - ('%.105s' * #title_text)))",
+              "target_property_name": "#page_number"
+            }
+          ]
+        }
+      },
+      {
+        "divider_label": {
+          "type": "label",
+          "text": "/",
+          "color": [1, 1, 1, 1],
+          "layer": 10
+        }
+      },
+      {
+        "total_pages_label": {
+          "type": "label",
+          "text": "#total_pages",
+          "color": [1, 1, 1, 1],
+          "layer": 10,
+          "bindings": [
+            {
+              "binding_type": "view",
+              "source_property_name": "(('§z') + (('%.122s' * #title_text) - ('%.120s' * #title_text)))",
+              "target_property_name": "#total_pages"
+            }
+          ]
+        }
+      }
+    ]
   },
 
   "collection_browser_grid_wrapper": {

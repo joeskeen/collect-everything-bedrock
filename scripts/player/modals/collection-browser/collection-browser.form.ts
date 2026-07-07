@@ -86,7 +86,7 @@ export class CollectionBrowserFormData {
           activeIndex: this.activeIndex,
           itemCount: this.itemCount,
           difficulty: this.difficulty,
-          pageNumber: this.pageNumber,
+          pageNumber: this.pageNumber + 1, // display pages starting with 1 not 0
           totalPages: this.totalPages,
           hasPrevious: this.hasPrevious ? 1 : 0,
           hasNext: this.hasNext ? 1 : 0,

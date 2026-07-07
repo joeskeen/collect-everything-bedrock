@@ -2,7 +2,6 @@
   "namespace": "collect_everything",
 
   "inventory_slot_button": {
-    "$is_hidden|default": false,
     "type": "panel",
     "size": [18, 18],
     "bindings": [
@@ -21,6 +20,12 @@
         "binding_name": "#form_button_text",
         "binding_type": "collection",
         "binding_collection_name": "form_buttons"
+      },
+      {
+        "binding_type": "view",
+        // don't render the first row, and don't render nonexistent buttons
+        "source_property_name": "((not (#collection_index < ($hidden_rows * $cells_per_row))) and (not (#form_button_text = '')))",
+        "target_property_name": "#visible"
       }
     ],
     "controls": [{ "@inventory_slot_button_internal": {} }]
@@ -229,7 +234,7 @@
             {
               "binding_type": "view",
               // extract 'percent' field value
-              "source_property_name": "(('%.23s' * #form_button_text) - ('%.18s' * #form_button_text)",
+              "source_property_name": "(('%.23s' * #form_button_text) - ('%.20s' * #form_button_text)",
               "target_property_name": "#ratio"
             },
             {

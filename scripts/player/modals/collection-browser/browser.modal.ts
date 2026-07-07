@@ -137,6 +137,7 @@ export class BrowserModal {
     const buttons: Array<Parameters<typeof collectionForm.button>> = [];
 
     for (const reg of registries) {
+      // button index 0-6
       const collection = this.playerCollection.getCollection(reg.key as keyof PlayerCollectionData);
       const prefixedKeys = Object.keys(collection ?? {}).map((k) => `${reg.key};${k}`);
       const { collected, total } = reg.count(prefixedKeys, difficulty);
@@ -150,12 +151,12 @@ export class BrowserModal {
       ]);
     }
 
-    buttons.push(["Previous Page", [], "", undefined, undefined, "previous-page"]);
-    buttons.push(["Next Page", [], "", undefined, undefined, "next-page"]);
-    buttons.push(["Search", [], "", undefined, undefined, "search"]);
-    buttons.push(["Recent", [], "", undefined, undefined, "recent"]);
-    buttons.push(["Settings", [], "", undefined, undefined, "settings"]);
-    buttons.push(["Help", [], "", undefined, undefined, "help"]);
+    buttons.push(["Previous Page", [], "", undefined, undefined, "previous-page"]); // button index 7
+    buttons.push(["Next Page", [], "", undefined, undefined, "next-page"]); // button index 8
+    buttons.push(["Search", [], "", undefined, undefined, "search"]); // button index 9
+    buttons.push(["Recent", [], "", undefined, undefined, "recent"]); // button index 10
+    buttons.push(["Settings", [], "", undefined, undefined, "settings"]); // button index 11
+    buttons.push(["Help", [], "", undefined, undefined, "help"]); // button index 12
     const filler: Parameters<typeof collectionForm.button> = ["", [], "", undefined, undefined, undefined];
     while (buttons.length % GRID_COLUMNS !== 0) {
       buttons.push(filler);
