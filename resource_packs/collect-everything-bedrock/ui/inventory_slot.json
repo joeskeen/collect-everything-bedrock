@@ -4,7 +4,7 @@
   "inventory_slot_button": {
     "$is_hidden|default": false,
     "type": "panel",
-    "size": ["100%c", "100%c"],
+    "size": [18, 18],
     "bindings": [
       {
         "binding_name": "#null",
@@ -28,7 +28,7 @@
 
   "inventory_slot_button_internal@common.button": {
     "$pressed_button_name": "button.form_button_click",
-    "size": ["100%c", "100%c"],
+    "size": [18, 18],
     "bindings": [
       {
         "binding_name": "#null",
@@ -63,8 +63,8 @@
     "$hover|default": false,
     "$pressed|default": false,
     "controls": [
-      { "item@inventory_item": {} },
       { "background@inventory_cell_background": {} },
+      { "item@inventory_item": {} },
       { "highlight@inventory_cell_highlight": { "visible": "($hover or $pressed)" } },
       { "focus_border@inventory_cell_focus_border": { "visible": "($hover or $pressed)" } }
     ]
@@ -126,6 +126,7 @@
       },
       // if texture is a texture path, it renders as an image
       { "@item_texture": {} },
+      { "collected_overlay@collected_overlay": {} },
       { "@inventory_item_bar": {} },
       { "@inventory_item_details": { "visible": "$hover" } }
     ]
@@ -136,6 +137,30 @@
     "texture": "textures/ui/item_background",
     "size": [18, 18],
     "layer": 2
+  },
+
+  "collected_overlay": {
+    "type": "image",
+    "texture": "textures/ui/collected-overlay",
+    "size": [18, 18],
+    "layer": 8,
+    "bindings": [
+      {
+        "binding_type": "collection_details",
+        "binding_collection_name": "form_buttons"
+      },
+      {
+        "binding_name": "#form_button_text",
+        "binding_type": "collection",
+        "binding_collection_name": "form_buttons"
+      },
+      {
+        "binding_type": "view",
+        // only show if percent is 100
+        "source_property_name": "(not ((#form_button_text - '|percent|:100') = #form_button_text))",
+        "target_property_name": "#visible"
+      }
+    ]
   },
 
   "inventory_cell_highlight": {
@@ -149,18 +174,8 @@
     "type": "image",
     "size": [18, 18],
     "texture": "textures/ui/focus_border_white",
-    "layer": 4
+    "layer": 9
   },
-
-  /*
-"button_highlight_dark_background_white_foreground": {
-    "type": "custom",
-    "renderer": "gradient_renderer",
-    "color1": [0.58, 0.58, 0.58, 1],
-    "color2": [0.58, 0.58, 0.58, 1],
-    "size": ["100%", "100%"]
-  },
-*/
 
   "inventory_item_bar": {
     "type": "custom",
@@ -184,8 +199,8 @@
       },
       {
         "binding_type": "view",
-        // only show if percent is not 0
-        "source_property_name": "((#form_button_text - '|percent|:000') = #form_button_text)",
+        // only show if percent is not 0 or 100
+        "source_property_name": "((not (#form_button_text = '')) and ((#form_button_text - '|percent|:000') = #form_button_text) and ((#form_button_text - '|percent|:100') = #form_button_text))",
         "target_property_name": "#visible"
       }
     ],
