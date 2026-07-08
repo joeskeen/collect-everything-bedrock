@@ -2,10 +2,18 @@
   "namespace": "collect_everything",
 
   "collection_browser_screen": {
-    "type": "screen",
+    "type": "panel",
     "size": ["100%", "100%"],
-    "close_on_player_hurt": true,
-    "controls": [{ "collection_browser_modal@collection_browser_modal": {} }]
+    "controls": [{ "collection_browser_modal@collection_browser_modal": {} }],
+    "bindings": [
+      { "binding_name": "#title_text" },
+      {
+        "binding_type": "view",
+        // only show when special data header is sent on the title
+        "source_property_name": "(not ((#title_text - $collect_everything_data_prefix) = #title_text))",
+        "target_property_name": "#visible"
+      }
+    ]
   },
 
   "collection_browser_modal": {
