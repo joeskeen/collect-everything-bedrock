@@ -4,7 +4,7 @@
   "collection_browser_screen": {
     "type": "panel",
     "size": ["100%", "100%"],
-    "controls": [{ "collection_browser_modal@collection_browser_modal": {} }],
+    "controls": [{ "collection_browser_modal@collect_everything.collection_browser_modal": {} }],
     "bindings": [
       { "binding_name": "#title_text" },
       {
@@ -20,7 +20,8 @@
     "type": "stack_panel",
     "orientation": "vertical",
     "size": [325, 177],
-    "controls": [{ "top_panel@top_panel": {} }, { "main_panel@main_panel": {} }]
+    "layer": 15,
+    "controls": [{ "top_panel@collect_everything.top_panel": {} }, { "main_panel@collect_everything.main_panel": {} }]
   },
 
   "top_panel": {
@@ -28,7 +29,10 @@
     "size": [325, 20],
     "anchor_from": "top_left",
     "anchor_to": "top_left",
-    "controls": [{ "category_buttons@category_buttons": {} }, { "top_right_panel@top_right_panel": {} }]
+    "controls": [
+      { "category_buttons@collect_everything.category_buttons": {} },
+      { "top_right_panel@collect_everything.top_right_panel": {} }
+    ]
   },
 
   "button_highlight_dark_background_white_foreground": {
@@ -78,16 +82,16 @@
       {
         "default_button": {
           "type": "panel",
-          "controls": [{ "icon@$icon_control": {} }]
+          "controls": [{ "icon@collect_everything.$icon_control": {} }]
         }
       },
       {
         "hover_button": {
           "type": "panel",
           "controls": [
-            { "highlight@button_highlight_dark_background_white_foreground": {} },
-            { "icon@$icon_control": {} },
-            { "tooltip@tooltip": { "$tooltip_text": "($tooltip_text)" } }
+            { "highlight@collect_everything.button_highlight_dark_background_white_foreground": {} },
+            { "icon@collect_everything.$icon_control": {} },
+            { "tooltip@collect_everything.tooltip": { "$tooltip_text": "($tooltip_text)" } }
           ]
         }
       },
@@ -95,8 +99,8 @@
         "pressed_button": {
           "type": "panel",
           "controls": [
-            { "highlight@button_highlight_dark_background_white_foreground": {} },
-            { "icon@$icon_control": {} }
+            { "highlight@collect_everything.button_highlight_dark_background_white_foreground": {} },
+            { "icon@collect_everything.$icon_control": {} }
           ]
         }
       }
@@ -149,28 +153,28 @@
             // to stay in sync with button insertion order
             // from script side
             {
-              "search_button@toolbar_button": {
+              "search_button@collect_everything.toolbar_button": {
                 "$icon_control": "search_icon",
                 "$tooltip_text": "Search",
                 "collection_index": 9
               }
             },
             {
-              "recent_button@toolbar_button": {
+              "recent_button@collect_everything.toolbar_button": {
                 "$icon_control": "recent_icon",
                 "$tooltip_text": "Recent",
                 "collection_index": 10
               }
             },
             {
-              "settings_button@toolbar_button": {
+              "settings_button@collect_everything.toolbar_button": {
                 "$icon_control": "settings_icon",
                 "$tooltip_text": "Settings",
                 "collection_index": 11
               }
             },
             {
-              "help_button@toolbar_button": {
+              "help_button@collect_everything.toolbar_button": {
                 "$icon_control": "help_icon",
                 "$tooltip_text": "Help",
                 "collection_index": 12
@@ -232,13 +236,13 @@
       // IMPORTANT: these use hard-coded indexes; we need to make sure these
       // stay in sync with the order they are added to the buttons array
       // on the script side
-      { "all_tab@inventory_slot_tab": { "collection_index": 0 } },
-      { "items_tab@inventory_slot_tab": { "collection_index": 1 } },
-      { "biomes_tab@inventory_slot_tab": { "collection_index": 2 } },
-      { "entities_tab@inventory_slot_tab": { "collection_index": 3 } },
-      { "effects_tab@inventory_slot_tab": { "collection_index": 4 } },
-      { "enchantments_tab@inventory_slot_tab": { "collection_index": 5 } },
-      { "unobtainables_tab@inventory_slot_tab": { "collection_index": 6 } }
+      { "all_tab@collect_everything.inventory_slot_tab": { "collection_index": 0 } },
+      { "items_tab@collect_everything.inventory_slot_tab": { "collection_index": 1 } },
+      { "biomes_tab@collect_everything.inventory_slot_tab": { "collection_index": 2 } },
+      { "entities_tab@collect_everything.inventory_slot_tab": { "collection_index": 3 } },
+      { "effects_tab@collect_everything.inventory_slot_tab": { "collection_index": 4 } },
+      { "enchantments_tab@collect_everything.inventory_slot_tab": { "collection_index": 5 } },
+      { "unobtainables_tab@collect_everything.inventory_slot_tab": { "collection_index": 6 } }
     ]
   },
 
@@ -262,9 +266,9 @@
       }
     ],
     "controls": [
-      { "inventory_tab_default_view@inventory_slot_tab_default": {} },
-      { "inventory_tab_hover_view@inventory_slot_tab_hover": { "$hover": true } },
-      { "inventory_tab_pressed_view@inventory_slot_tab_hover": { "$pressed": true } }
+      { "inventory_tab_default_view@collect_everything.inventory_slot_tab_default": {} },
+      { "inventory_tab_hover_view@collect_everything.inventory_slot_tab_hover": { "$hover": true } },
+      { "inventory_tab_pressed_view@collect_everything.inventory_slot_tab_hover": { "$pressed": true } }
     ]
   },
 
@@ -286,7 +290,7 @@
     ],
     "controls": [
       {
-        "inventory_slot_tab_inactive@inventory_slot_tab_inactive": {
+        "inventory_slot_tab_inactive@collect_everything.inventory_slot_tab_inactive": {
           "bindings": [
             {
               "binding_name": "#null",
@@ -309,7 +313,7 @@
         }
       },
       {
-        "inventory_slot_tab_active@inventory_slot_tab_active": {
+        "inventory_slot_tab_active@collect_everything.inventory_slot_tab_active": {
           "bindings": [
             {
               "binding_name": "#null",
@@ -341,7 +345,7 @@
     "size": ["100%", "100%"],
     "$hover|default": false,
     "$pressed|default": false,
-    "controls": [{ "item@inventory_item": { "offset": [0, -1] } }]
+    "controls": [{ "item@collect_everything.inventory_item": { "offset": [0, -1] } }]
   },
 
   "inventory_slot_tab_inactive": {
@@ -350,7 +354,7 @@
     "size": ["100%", "100%"],
     "$hover|default": false,
     "$pressed|default": false,
-    "controls": [{ "item@inventory_item": { "offset": [0, -1] } }]
+    "controls": [{ "item@collect_everything.inventory_item": { "offset": [0, -1] } }]
   },
 
   "inventory_slot_tab_hover": {
@@ -359,7 +363,7 @@
     "size": ["100%", "100%"],
     "$hover|default": false,
     "$pressed|default": false,
-    "controls": [{ "item@inventory_item": { "offset": [0, -1] } }]
+    "controls": [{ "item@collect_everything.inventory_item": { "offset": [0, -1] } }]
   },
 
   "main_panel": {
@@ -376,27 +380,27 @@
           "anchor_from": "top_left",
           "anchor_to": "top_left",
           "controls": [
-            { "modal_title@modal_title": {} },
+            { "modal_title@collect_everything.modal_title": {} },
             {
-              "basic_difficulty_label@difficulty_label": {
+              "basic_difficulty_label@collect_everything.difficulty_label": {
                 "$text": "Basic",
                 "$value": 0
               }
             },
             {
-              "committed_difficulty_label@difficulty_label": {
+              "committed_difficulty_label@collect_everything.difficulty_label": {
                 "$text": "Committed",
                 "$value": 1
               }
             },
             {
-              "insane_difficulty_label@difficulty_label": {
+              "insane_difficulty_label@collect_everything.difficulty_label": {
                 "$text": "Insane",
                 "$value": 2
               }
             },
-            { "@gap": { "size": [0, 3] } },
-            { "@collection_browser_items_panel": {} }
+            { "@collect_everything.gap": { "size": [0, 3] } },
+            { "@collect_everything.collection_browser_items_panel": {} }
           ]
         }
       }
@@ -410,7 +414,10 @@
     "anchor_from": "top_left",
     "anchor_to": "top_left",
     "size": [313, 150],
-    "controls": [{ "@collection_browser_grid_wrapper": {} }, { "@collection_browser_pagination": {} }]
+    "controls": [
+      { "@collect_everything.collection_browser_grid_wrapper": {} },
+      { "@collect_everything.collection_browser_pagination": {} }
+    ]
   },
 
   "collection_browser_pagination": {
@@ -421,7 +428,7 @@
     "anchor_to": "bottom_middle",
     "controls": [
       {
-        "previous_button@pagination_button": {
+        "previous_button@collect_everything.pagination_button": {
           "$texture_path_default": "textures/ui/page_previous",
           "$texture_path_active": "textures/ui/page_previous_active",
           "anchor_from": "left_middle",
@@ -442,9 +449,9 @@
           ]
         }
       },
-      { "page_label@page_label": {} },
+      { "page_label@collect_everything.page_label": {} },
       {
-        "next_button@pagination_button": {
+        "next_button@collect_everything.pagination_button": {
           "$texture_path_default": "textures/ui/page_next",
           "$texture_path_active": "textures/ui/page_next_active",
           "anchor_from": "right_middle",
@@ -486,9 +493,9 @@
     "hover_control": "hover",
     "pressed_control": "pressed",
     "controls": [
-      { "default@pagination_button_image": { "$texture_path": "$texture_path_default" } },
-      { "hover@pagination_button_image": { "$texture_path": "$texture_path_active" } },
-      { "pressed@pagination_button_image": { "$texture_path": "$texture_path_active" } }
+      { "default@collect_everything.pagination_button_image": { "$texture_path": "$texture_path_default" } },
+      { "hover@collect_everything.pagination_button_image": { "$texture_path": "$texture_path_active" } },
+      { "pressed@collect_everything.pagination_button_image": { "$texture_path": "$texture_path_active" } }
     ],
     "bindings": [
       {
@@ -509,37 +516,6 @@
       }
     ]
   },
-
-  // "previous_page_button": {
-  //   "type": "image",
-  //   "texture": "textures/ui/page_previous",
-  //   "anchor_from": "left_middle",
-  //   "anchor_to": "left_middle",
-  //   "bindings": [
-  //     {
-  //       "binding_type": "view",
-  //       "source_property_name": "((#title_text - '|hasPrevious|:0') = #title_text)",
-  //       "target_property_name": "#visible"
-  //     }
-  //   ]
-  // },
-
-  // "next_page_button": {
-  //   "type": "image",
-  //   "texture": "textures/ui/page_next",
-  //   "size": [11, 17],
-  //   "anchor_from": "right_middle",
-  //   "anchor_to": "right_middle",
-  //   "color": [1, 1, 1, 1],
-  //   "layer": 10,
-  //   "bindings": [
-  //     {
-  //       "binding_type": "view",
-  //       "source_property_name": "((#title_text - '|hasNext|:0') = #title_text)",
-  //       "target_property_name": "#visible"
-  //     }
-  //   ]
-  // },
 
   "page_label": {
     "type": "stack_panel",
@@ -598,7 +574,7 @@
     "anchor_from": "top_left",
     "anchor_to": "top_left",
     "clips_children": true,
-    "controls": [{ "grid@collection_browser_grid": { "size": [315, 134] } }]
+    "controls": [{ "grid@collect_everything.collection_browser_grid": { "size": [315, 134] } }]
   },
 
   "collection_browser_grid": {

@@ -28,7 +28,7 @@
         "target_property_name": "#visible"
       }
     ],
-    "controls": [{ "@inventory_slot_button_internal": {} }]
+    "controls": [{ "@collect_everything.inventory_slot_button_internal": {} }]
   },
 
   "inventory_slot_button_internal@common.button": {
@@ -56,9 +56,9 @@
     "hover_control": "inventory_slot_hover_view",
     "pressed_control": "inventory_slot_pressed_view",
     "controls": [
-      { "inventory_slot_default_view@inventory_cell": {} },
-      { "inventory_slot_hover_view@inventory_cell": { "$hover": true } },
-      { "inventory_slot_pressed_view@inventory_cell": { "$pressed": true } }
+      { "inventory_slot_default_view@collect_everything.inventory_cell": {} },
+      { "inventory_slot_hover_view@collect_everything.inventory_cell": { "$hover": true } },
+      { "inventory_slot_pressed_view@collect_everything.inventory_cell": { "$pressed": true } }
     ]
   },
 
@@ -68,10 +68,10 @@
     "$hover|default": false,
     "$pressed|default": false,
     "controls": [
-      { "background@inventory_cell_background": {} },
-      { "item@inventory_item": {} },
-      { "highlight@inventory_cell_highlight": { "visible": "($hover or $pressed)" } },
-      { "focus_border@inventory_cell_focus_border": { "visible": "($hover or $pressed)" } }
+      { "background@collect_everything.inventory_cell_background": {} },
+      { "item@collect_everything.inventory_item": {} },
+      { "highlight@collect_everything.inventory_cell_highlight": { "visible": "($hover or $pressed)" } },
+      { "focus_border@collect_everything.inventory_cell_focus_border": { "visible": "($hover or $pressed)" } }
     ]
   },
 
@@ -130,10 +130,10 @@
         }
       },
       // if texture is a texture path, it renders as an image
-      { "@item_texture": {} },
-      { "collected_overlay@collected_overlay": {} },
-      { "@inventory_item_bar": {} },
-      { "@inventory_item_details": { "visible": "$hover" } }
+      { "@collect_everything.item_texture": {} },
+      { "collected_overlay@collect_everything.collected_overlay": {} },
+      { "@collect_everything.inventory_item_bar": {} },
+      { "@collect_everything.inventory_item_details": { "visible": "$hover" } }
     ]
   },
 
