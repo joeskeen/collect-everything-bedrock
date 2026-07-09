@@ -12,7 +12,6 @@ export const UNOBTAINABLE_BUT_BREAKABLE = [
   "minecraft:infested_stone",
   "minecraft:infested_stone_bricks",
   "minecraft:mob_spawner",
-  "minecraft:ominous_vault",
   "minecraft:reinforced_deepslate",
   "minecraft:suspicious_gravel",
   "minecraft:suspicious_sand",

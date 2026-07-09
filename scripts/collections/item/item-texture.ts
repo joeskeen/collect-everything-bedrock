@@ -1,4 +1,4 @@
-import itemNumericalIds from "./item-numerical-ids";
+import itemNumericalIds from "./item-numerical-ids.json";
 import itemOverrides from "./item-overrides";
 import { UNKNOWN_TEXTURE } from "../../ui/shared-textures";
 
@@ -38,10 +38,8 @@ export function getItemTexture(itemId: string, enchanted = false, customItemCoun
     }
 
     const encoded =
-      (id +
-        (id <= VANILLA_MAX_ID_WITHOUT_MODIFICATION ? 0 : customItemCount) +
+      (id + (id <= VANILLA_MAX_ID_WITHOUT_MODIFICATION ? 0 : customItemCount)) *
         // these numbers were discovered by pure trial-and-error, and may change in future versions. Yuck.
-        (id <= VANILLA_MAX_ID_WITHOUT_MODIFICATION ? 0 : id < 603 ? 29 : id < 715 ? 28 : id < 811 ? 25 : 17)) *
         65536 +
       (enchanted ? 32768 : 0);
 
