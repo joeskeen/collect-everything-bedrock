@@ -456,6 +456,7 @@
           "$texture_path_active": "textures/ui/page_next_active",
           "anchor_from": "right_middle",
           "anchor_to": "right_middle",
+          "default_focus_precedence": 2,
           "property_bag": {
             // IMPORTANT: these hardcoded indexes need
             // to stay in sync with button insertion order
