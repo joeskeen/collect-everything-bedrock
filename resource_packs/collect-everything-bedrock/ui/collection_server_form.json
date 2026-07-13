@@ -19,6 +19,7 @@
   "collection_browser_modal": {
     "type": "stack_panel",
     "orientation": "vertical",
+    "anims": [],
     "size": [325, 177],
     "layer": 15,
     "controls": [{ "top_panel@collect_everything.top_panel": {} }, { "main_panel@collect_everything.main_panel": {} }]

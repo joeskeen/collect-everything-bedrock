@@ -120,11 +120,11 @@ Absolutely. Everything is stored per-player via Bedrock's dynamic properties. No
 
 **Can I contribute or suggest features?**
 
-Yes! The project is open-source at [github.com/joeskeen/collect-everything-bedrock](https://github.com/joeskeen/collect-everything-bedrock). Issues, pull requests, and ideas are always welcome.
+Yes! The project is open-source at [github.com/world-class-engineers/collect-everything-bedrock](https://github.com/world-class-engineers/collect-everything-bedrock). Issues, pull requests, and ideas are always welcome.
 
 ## Active Development
 
-This add-on is actively being improved, fully open-source, and built with care for the community. Bugs are squashed quickly, and new features are always on the way. Contributions, ideas, and feedback are always welcome - head over to [github.com/joeskeen/collect-everything-bedrock](https://github.com/joeskeen/collect-everything-bedrock) to open an issue or submit a pull request. If you'd like to support the project directly, you can sponsor development at [github.com/sponsors/joeskeen](https://github.com/sponsors/joeskeen) - sponsors even get a special shout-out in an upcoming in-game easter egg!
+This add-on is actively being improved, fully open-source, and built with care for the community. Bugs are squashed quickly, and new features are always on the way. Contributions, ideas, and feedback are always welcome - head over to [github.com/world-class-engineers/collect-everything-bedrock](https://github.com/world-class-engineers/collect-everything-bedrock) to open an issue or submit a pull request. If you'd like to support the project directly, you can sponsor development at [github.com/sponsors/joeskeen](https://github.com/sponsors/joeskeen) - sponsors even get a special shout-out in an upcoming in-game easter egg!
 
 ## Shout-Outs
 

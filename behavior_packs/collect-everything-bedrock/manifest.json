@@ -1,5 +1,13 @@
 {
   "format_version": 2,
+  "metadata": {
+    "product_type": "addon",
+    "license": "MIT",
+    "authors": [
+      "wcestudios",
+      "Joe Skeen, Jr."
+    ]
+  },
   "header": {
     "name": "Collect Everything! v1.2.1",
     "description": "Collect Everything add-on - tracks blocks, entities, biomes, and more!",

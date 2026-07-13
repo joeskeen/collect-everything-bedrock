@@ -15,6 +15,14 @@
       30
     ]
   },
+  "metadata": {
+    "product_type": "addon",
+    "license": "MIT",
+    "authors": [
+      "wcestudios",
+      "Joe Skeen, Jr."
+    ]
+  },
   "modules": [
     {
       "type": "resources",
