@@ -1,4 +1,4 @@
-import { ItemStack, ItemComponentTypes } from "@minecraft/server";
+import type { ItemStack, ItemComponentTypes } from "@minecraft/server";
 import itemsModule, { ItemData } from "./items";
 
 export function IdentifyItem(itemStack: ItemStack, itemComponentTypes: typeof ItemComponentTypes): string[] {

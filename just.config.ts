@@ -12,7 +12,6 @@ import {
   STANDARD_CLEAN_PATHS,
   DEFAULT_CLEAN_DIRECTORIES,
   watchTask,
-  updateWorldTask,
 } from "@minecraft/core-build-tasks";
 import path from "path";
 import fs from "fs";
@@ -25,11 +24,11 @@ const version = semver.parse(projectVersion);
 if (!version) {
   throw new Error("invalid package version");
 }
-const versionArray = [version.major, version.minor, version.patch];
+const versionString = `${version.major}.${version.minor}.${version.patch}`;
 
 const bundleTaskOptions: BundleTaskParameters = {
   entryPoint: path.join(__dirname, "./scripts/main.ts"),
-  external: ["@minecraft/math", "@minecraft/server", "@minecraft/server-ui", "@minecraft/vanilla-data"],
+  external: ["@minecraft/server", "@minecraft/server-ui"],
   outfile: path.resolve(__dirname, "./dist/scripts/main.js"),
   minifyWhitespace: true,
   sourcemap: false,
@@ -48,14 +47,17 @@ task("lint", coreLint(["scripts/**/*.ts"], argv().fix));
 task("typescript", tscTask());
 task("bundle", bundleTask(bundleTaskOptions));
 task("stamp", () => {
+  let rpGuid: string;
+
   (() => {
     const rpManifestPath = path.resolve(__dirname, "resource_packs", projectName, "manifest.json");
     const rpManifest = JSON.parse(fs.readFileSync(rpManifestPath).toString());
+    rpGuid = rpManifest.header.uuid;
     rpManifest.header.name = `${displayName} v${projectVersion} Resource Pack`;
-    rpManifest.header.version = versionArray;
+    rpManifest.header.version = versionString;
     // currently all modules and dependencies for the resource pack are internal, so we stamp all
-    rpManifest.modules.forEach((m: any) => (m.version = versionArray));
-    rpManifest.dependencies.forEach((m: any) => (m.version = versionArray));
+    rpManifest.modules.forEach((m: any) => (m.version = versionString));
+    rpManifest.dependencies.forEach((m: any) => (m.version = versionString));
     console.log("stamped resource pack manifest", JSON.stringify(rpManifest));
     fs.writeFileSync(rpManifestPath, JSON.stringify(rpManifest, null, 2));
   })();
@@ -64,10 +66,11 @@ task("stamp", () => {
     const bpManifestPath = path.resolve(__dirname, "behavior_packs", projectName, "manifest.json");
     const bpManifest = JSON.parse(fs.readFileSync(bpManifestPath).toString());
     bpManifest.header.name = `${displayName} v${projectVersion}`;
-    bpManifest.header.version = versionArray;
+    bpManifest.header.version = versionString;
     // currently all modules for the behavior pack are internal, so we stamp all
-    // but we DON'T stamp dependencies since they are external
-    bpManifest.modules.forEach((m: any) => (m.version = versionArray));
+    // but we DON'T stamp external dependencies
+    bpManifest.modules.forEach((m: any) => (m.version = versionString));
+    bpManifest.dependencies.filter((d: any) => !!d.uuid).forEach((d) => (d.version = versionString));
     console.log("stamped behavior pack manifest", JSON.stringify(bpManifest));
     fs.writeFileSync(bpManifestPath, JSON.stringify(bpManifest, null, 2));
   })();

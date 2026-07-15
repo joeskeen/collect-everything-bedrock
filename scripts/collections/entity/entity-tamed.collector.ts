@@ -2,12 +2,7 @@ import { inject, Lifecycle, scoped } from "tsyringe";
 import { Runnable } from "../../shared/runnable";
 import { Disposable } from "../../shared/disposable";
 import { ENTITY_COMPONENT_TYPES_TOKEN, PLAYER_TOKEN, WORLD_TOKEN } from "../../shared/global-tokens";
-import {
-  EntityComponentTypes,
-  type Player,
-  type PlayerInteractWithEntityAfterEvent,
-  type World,
-} from "@minecraft/server";
+import type { Player, PlayerInteractWithEntityAfterEvent, World, EntityComponentTypes } from "@minecraft/server";
 import { COLLECTOR, Collector, ENTITY } from "../../player/collection-constants";
 import { EntityRegistry } from "./entity.registry";
 

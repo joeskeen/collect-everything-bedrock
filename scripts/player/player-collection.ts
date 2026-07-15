@@ -20,6 +20,7 @@ import { EnderDragonCollector } from "../collections/entity/ender-dragon.collect
 import { EntityNamedCollector } from "../collections/entity/entity-named.collector";
 import { EntityLeashedCollector } from "../collections/entity/entity-leashed.collector";
 import { EntityTamedCollector } from "../collections/entity/entity-tamed.collector";
+import { VillagerTradedWithCollector } from "../collections/entity/villager-traded-with.collector";
 import { ItemCollector } from "../collections/item/item.collector";
 import { UnobtainableCollector } from "../collections/unobtainable/unobtainable.collector";
 import { PlayerNotifier } from "./player-notifier";
@@ -45,6 +46,7 @@ import { ItemRegistry } from "../collections/item/item.registry";
   { token: COLLECTORS_TOKEN, useClass: EntityTamedCollector },
   { token: COLLECTORS_TOKEN, useClass: ItemCollector },
   { token: COLLECTORS_TOKEN, useClass: UnobtainableCollector },
+  { token: COLLECTORS_TOKEN, useClass: VillagerTradedWithCollector },
 ])
 @scoped(Lifecycle.ContainerScoped)
 export class PlayerCollection {

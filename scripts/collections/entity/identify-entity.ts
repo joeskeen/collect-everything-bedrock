@@ -1,4 +1,4 @@
-import { Entity } from "@minecraft/server";
+import type { Entity } from "@minecraft/server";
 import entities from "./entities";
 
 export function IdentifyEntity(entity: Entity): string[] {

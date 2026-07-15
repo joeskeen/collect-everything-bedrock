@@ -1,14 +1,10 @@
 {
   "format_version": 2,
   "header": {
-    "name": "Collect Everything! v1.2.3 Resource Pack",
+    "name": "Collect Everything! v1.3.0 Resource Pack",
     "description": "Resource pack for the Collect Everything add-on",
     "uuid": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
-    "version": [
-      1,
-      2,
-      3
-    ],
+    "version": "1.3.0",
     "min_engine_version": [
       1,
       26,
@@ -27,21 +23,13 @@
     {
       "type": "resources",
       "uuid": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
-      "version": [
-        1,
-        2,
-        3
-      ]
+      "version": "1.3.0"
     }
   ],
   "dependencies": [
     {
       "uuid": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
-      "version": [
-        1,
-        2,
-        3
-      ]
+      "version": "1.3.0"
     }
   ],
   "capabilities": [

@@ -1,6 +1,6 @@
 {
   "name": "collect-everything-bedrock",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "productName": "Collect Everything!",
   "description": "Inspired by Knarfy's Collect Everything mod for Java Edition, this add-on allows you to collect everything in Minecraft Bedrock Edition.",
   "private": true,
@@ -24,10 +24,10 @@
     "@minecraft/math": "2.4.0",
     "@minecraft/server": "2.8.0",
     "@minecraft/server-ui": "2.1.0",
-    "@minecraft/vanilla-data": "1.26.30",
     "change-case": "^5.4.4",
     "mcbe-item-ids": "^0.1.1",
     "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
     "tsyringe": "^4.10.0"
   },
   "devDependencies": {
