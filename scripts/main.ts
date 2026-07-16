@@ -15,6 +15,7 @@ import {
   ItemEnchantableComponent,
   EntityComponentTypes,
   EquipmentSlot,
+  EntityDamageCause,
 } from "@minecraft/server";
 import { CollectEverythingAddOn } from "./system/collect-everything-add-on";
 import {
@@ -27,6 +28,7 @@ import {
   EFFECT_TYPES_TOKEN,
   ENCHANTMENT_TYPES_TOKEN,
   ENTITY_COMPONENT_TYPES_TOKEN,
+  ENTITY_DAMAGE_CAUSE_TOKEN,
   ENTITY_TYPES_TOKEN,
   EQUIPMENT_SLOT_TOKEN,
   ITEM_COMPONENT_TYPES_TOKEN,
@@ -73,6 +75,7 @@ container.registerInstance(ENTITY_COMPONENT_TYPES_TOKEN, EntityComponentTypes);
 container.registerInstance(EQUIPMENT_SLOT_TOKEN, EquipmentSlot);
 container.registerInstance(ITEM_ENCHANTABLE_COMPONENT_TOKEN, ItemEnchantableComponent);
 container.registerInstance(ITEM_STACK_TOKEN, ItemStack);
+container.registerInstance(ENTITY_DAMAGE_CAUSE_TOKEN, EntityDamageCause);
 const logger = container.resolve(Logger);
 
 logger.log(`${CRAFTING_TABLE} ${AQUA}Initializing Collect Everything Add-On...`);

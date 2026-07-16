@@ -1,11 +1,12 @@
 import { inject, singleton } from "tsyringe";
 import { ItemRegistry } from "./item/item.registry";
 import { BiomeRegistry } from "./biome/biome.registry";
+import { DeathRegistry } from "./death/death.registry";
 import { EntityRegistry } from "./entity/entity.registry";
 import { EffectRegistry } from "./effect/effect.registry";
 import { EnchantmentRegistry } from "./enchantment/enchantment.registry";
 import { UnobtainableRegistry } from "./unobtainable/unobtainable.registry";
-import { BIOME, EFFECT, ENCHANTMENT, ENTITY, ITEM, UNOBTAINABLE } from "../player/collection-constants";
+import { BIOME, DEATH, EFFECT, ENCHANTMENT, ENTITY, ITEM, UNOBTAINABLE } from "../player/collection-constants";
 import type { Registry } from "./registry";
 import { AllRegistry } from "./all-registry";
 
@@ -18,6 +19,7 @@ export class RegistryCollection {
   constructor(
     @inject(ItemRegistry) itemRegistry: ItemRegistry,
     @inject(BiomeRegistry) biomeRegistry: BiomeRegistry,
+    @inject(DeathRegistry) deathRegistry: DeathRegistry,
     @inject(EntityRegistry) entityRegistry: EntityRegistry,
     @inject(EffectRegistry) effectRegistry: EffectRegistry,
     @inject(EnchantmentRegistry) enchantmentRegistry: EnchantmentRegistry,
@@ -32,6 +34,7 @@ export class RegistryCollection {
       effectRegistry,
       enchantmentRegistry,
       unobtainableRegistry,
+      deathRegistry,
     ];
   }
 
@@ -45,6 +48,10 @@ export class RegistryCollection {
 
   getBiome(): BiomeRegistry {
     return this.getByKey(BIOME) as BiomeRegistry;
+  }
+
+  getDeath(): DeathRegistry {
+    return this.getByKey(DEATH) as DeathRegistry;
   }
 
   getEntity(): EntityRegistry {

@@ -35,6 +35,10 @@ export class PlayerEvents {
     this.onlyWhenCurrentPlayerIs((event) => event.damageSource.damagingEntity)
   );
 
+  readonly afterPlayerDie$ = fromBedrockEvent(this.world.afterEvents.entityDie).pipe(
+    this.onlyWhenCurrentPlayerIs((event) => event.deadEntity)
+  );
+
   readonly afterPlayerHitBlock$ = fromBedrockEvent(this.world.afterEvents.entityHitBlock).pipe(
     this.onlyWhenCurrentPlayerIs((event) => event.damagingEntity)
   );

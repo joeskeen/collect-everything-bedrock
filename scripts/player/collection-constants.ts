@@ -10,6 +10,7 @@ export const COLLECTOR: InjectionToken<Collector> = Symbol(
 export const COLLECTORS_TOKEN: InjectionToken<Runnable> = Symbol("All player-scoped collectors");
 
 export const BIOME = "biome";
+export const DEATH = "death";
 export const ENTITY = "entity";
 export const EFFECT = "effect";
 export const ENCHANTMENT = "enchantment";
@@ -18,6 +19,7 @@ export const ITEM = "item";
 
 export const THEME: Record<string, string> = {
   [BIOME]: DARK_GREEN,
+  [DEATH]: RED,
   [ENTITY]: RED,
   [EFFECT]: AQUA,
   [ENCHANTMENT]: LIGHT_PURPLE,
@@ -28,6 +30,7 @@ export const THEME: Record<string, string> = {
 
 export interface PlayerCollectionData {
   [BIOME]: Record<string, number>;
+  [DEATH]: Record<string, number>;
   [ENTITY]: Record<string, number>;
   [EFFECT]: Record<string, number>;
   [ENCHANTMENT]: Record<string, number>;
@@ -48,6 +51,7 @@ export interface CollectedMetadata {
 export function emptyCollection(): PlayerCollectionData {
   return {
     [BIOME]: {},
+    [DEATH]: {},
     [ENTITY]: {},
     [EFFECT]: {},
     [ENCHANTMENT]: {},

@@ -34,9 +34,11 @@ import { CollectionScoreboard } from "../system/scoreboard";
 import { PlayerStorage } from "../shared/storage";
 import { AllRegistry } from "../collections/all-registry";
 import { ItemRegistry } from "../collections/item/item.registry";
+import { DeathCollector } from "../collections/death/death.collector";
 
 @registry([
   { token: COLLECTORS_TOKEN, useClass: BiomeCollector },
+  { token: COLLECTORS_TOKEN, useClass: DeathCollector },
   { token: COLLECTORS_TOKEN, useClass: EffectCollector },
   { token: COLLECTORS_TOKEN, useClass: EnchantmentCollector },
   { token: COLLECTORS_TOKEN, useClass: EnderDragonCollector },

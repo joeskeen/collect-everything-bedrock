@@ -157,28 +157,28 @@
               "search_button@collect_everything.toolbar_button": {
                 "$icon_control": "search_icon",
                 "$tooltip_text": "Search",
-                "collection_index": 9
+                "collection_index": 10
               }
             },
             {
               "recent_button@collect_everything.toolbar_button": {
                 "$icon_control": "recent_icon",
                 "$tooltip_text": "Recent",
-                "collection_index": 10
+                "collection_index": 11
               }
             },
             {
               "settings_button@collect_everything.toolbar_button": {
                 "$icon_control": "settings_icon",
                 "$tooltip_text": "Settings",
-                "collection_index": 11
+                "collection_index": 12
               }
             },
             {
               "help_button@collect_everything.toolbar_button": {
                 "$icon_control": "help_icon",
                 "$tooltip_text": "Help",
-                "collection_index": 12
+                "collection_index": 13
               }
             },
             {
@@ -243,7 +243,8 @@
       { "entities_tab@collect_everything.inventory_slot_tab": { "collection_index": 3 } },
       { "effects_tab@collect_everything.inventory_slot_tab": { "collection_index": 4 } },
       { "enchantments_tab@collect_everything.inventory_slot_tab": { "collection_index": 5 } },
-      { "unobtainables_tab@collect_everything.inventory_slot_tab": { "collection_index": 6 } }
+      { "unobtainables_tab@collect_everything.inventory_slot_tab": { "collection_index": 6 } },
+      { "deaths_tab@collect_everything.inventory_slot_tab": { "collection_index": 7 } }
     ]
   },
 
@@ -438,7 +439,7 @@
             // IMPORTANT: these hardcoded indexes need
             // to stay in sync with button insertion order
             // from script side
-            "#collection_index": 7,
+            "#collection_index": 8,
             "#collection_name": "form_buttons"
           },
           "bindings": [
@@ -462,7 +463,7 @@
             // IMPORTANT: these hardcoded indexes need
             // to stay in sync with button insertion order
             // from script side
-            "#collection_index": 8,
+            "#collection_index": 9,
             "#collection_name": "form_buttons"
           },
           "bindings": [

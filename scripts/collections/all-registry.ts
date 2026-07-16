@@ -1,6 +1,7 @@
 import { inject, singleton } from "tsyringe";
 import { ItemRegistry } from "./item/item.registry";
 import { BiomeRegistry } from "./biome/biome.registry";
+import { DeathRegistry } from "./death/death.registry";
 import { EntityRegistry } from "./entity/entity.registry";
 import { EffectRegistry } from "./effect/effect.registry";
 import { EnchantmentRegistry } from "./enchantment/enchantment.registry";
@@ -25,6 +26,7 @@ export class AllRegistry implements Registry<string> {
   constructor(
     @inject(ItemRegistry) private readonly itemRegistry: ItemRegistry,
     @inject(BiomeRegistry) private readonly biomeRegistry: BiomeRegistry,
+    @inject(DeathRegistry) private readonly deathRegistry: DeathRegistry,
     @inject(EntityRegistry) private readonly entityRegistry: EntityRegistry,
     @inject(EffectRegistry) private readonly effectRegistry: EffectRegistry,
     @inject(EnchantmentRegistry) private readonly enchantmentRegistry: EnchantmentRegistry,
@@ -46,6 +48,7 @@ export class AllRegistry implements Registry<string> {
       this.effectRegistry,
       this.enchantmentRegistry,
       this.unobtainableRegistry,
+      this.deathRegistry,
     ];
   }
 

@@ -14,6 +14,7 @@ import type {
   System,
   World,
   EntityComponentTypes,
+  EntityDamageCause,
 } from "@minecraft/server";
 import type { ActionFormData, MessageFormData, ModalFormData } from "@minecraft/server-ui";
 import { InjectionToken } from "tsyringe";
@@ -65,3 +66,6 @@ export type CreateMessageFormFn = () => MessageFormData;
 export const CREATE_MESSAGE_FORM_TOKEN: InjectionToken<CreateMessageFormFn> = Symbol("message form creation function");
 
 export const ITEM_STACK_TOKEN: InjectionToken<typeof ItemStack> = Symbol("ItemStack class from @minecraft/server");
+export const ENTITY_DAMAGE_CAUSE_TOKEN: InjectionToken<typeof EntityDamageCause> = Symbol(
+  "EntityDamageCause enum from @minecraft/server"
+);

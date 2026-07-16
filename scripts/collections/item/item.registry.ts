@@ -151,7 +151,9 @@ export class ItemRegistry implements Registry<ItemStack> {
   }
 
   resolveTexture(id: string): string | number {
+    this.ensureInitialized();
     const rawId = id.includes(";") ? id.split(";")[1] : id;
-    return getItemTexture(rawId, false, this._customItemCount);
+    const textureId = getItemTexture(rawId, false, this._customItemCount);
+    return textureId;
   }
 }
