@@ -11,6 +11,14 @@ import { fromBedrockEvent } from "../../shared/rxjs-interop";
 import { Vector3Utils } from "@minecraft/math";
 import { Logger } from "../../shared/logging/logger";
 
+// this structure could be helpful for other purposes
+// later, although it should be noted that when you
+// are browsing/clicking through trades without actually
+// trading, it is moving things to and from your
+// inventory, which is possibly throwing off the
+// items gained/lost. If we ever use this for more
+// purposes than just VillagerTradedWithCollector, we
+// will need to revisit how those items are tracked.
 interface Trade {
   itemsGained: ItemStack[];
   itemsLost: ItemStack[];

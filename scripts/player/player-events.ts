@@ -174,4 +174,36 @@ export class PlayerEvents {
   readonly beforePlayerItemUse$ = fromBedrockEvent(this.world.beforeEvents.itemUse).pipe(
     this.onlyWhenCurrentPlayerIs((event) => event.source)
   );
+
+  readonly afterPlayerEffectAdd$ = fromBedrockEvent(this.world.afterEvents.effectAdd).pipe(
+    this.onlyWhenCurrentPlayerIs((event) => event.entity)
+  );
+
+  readonly afterPlayerHeal$ = fromBedrockEvent(this.world.afterEvents.entityHeal).pipe(
+    this.onlyWhenCurrentPlayerIs((event) => event.healedEntity)
+  );
+
+  readonly afterPlayerHealthChanged$ = fromBedrockEvent(this.world.afterEvents.entityHealthChanged).pipe(
+    this.onlyWhenCurrentPlayerIs((event) => event.entity)
+  );
+
+  readonly afterPlayerItemDrop$ = fromBedrockEvent(this.world.afterEvents.entityItemDrop).pipe(
+    this.onlyWhenCurrentPlayerIs((event) => event.entity)
+  );
+
+  readonly afterPlayerUpgrade$ = fromBedrockEvent(this.world.afterEvents.entityUpgrade).pipe(
+    this.onlyWhenCurrentPlayerIs((event) => event.entity)
+  );
+
+  readonly beforePlayerEffectAdd$ = fromBedrockEvent(this.world.beforeEvents.effectAdd).pipe(
+    this.onlyWhenCurrentPlayerIs((event) => event.entity)
+  );
+
+  readonly beforePlayerHeal$ = fromBedrockEvent(this.world.beforeEvents.entityHeal).pipe(
+    this.onlyWhenCurrentPlayerIs((event) => event.healedEntity)
+  );
+
+  readonly beforePlayerHurt$ = fromBedrockEvent(this.world.beforeEvents.entityHurt).pipe(
+    this.onlyWhenCurrentPlayerIs((event) => event.hurtEntity)
+  );
 }
