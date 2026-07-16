@@ -31,6 +31,7 @@ const MAX_ITEMS_PER_PAGE = GRID_COLUMNS * GRID_ROWS;
 export class BrowserModal {
   private previousCategory: string = "all";
   private currentPage: number = 0;
+  private totalPages: number = 0;
   private readonly actions: Record<string, (id: string) => void | Promise<void>> = {
     category: (id) => {
       this.currentPage = 0;
@@ -83,11 +84,13 @@ export class BrowserModal {
     "previous-page": () => {
       if (this.currentPage > 0) {
         this.currentPage--;
-        this.system.run(() => this.show());
+      } else {
+        this.currentPage = this.totalPages - 1;
       }
+      this.system.run(() => this.show());
     },
     "next-page": () => {
-      this.currentPage++;
+      this.currentPage = (this.currentPage + 1) % this.totalPages;
       this.system.run(() => this.show());
     },
   };
@@ -177,9 +180,9 @@ export class BrowserModal {
     }
 
     const totalPages = Math.ceil(thingsToShow.length / MAX_ITEMS_PER_PAGE);
-    const hasPrevious = this.currentPage > 0;
-    const hasNext = this.currentPage < totalPages - 1;
-    collectionForm.difficultyLevel(difficulty).pagination(this.currentPage, totalPages, hasPrevious, hasNext);
+    this.totalPages = totalPages;
+    const canPage = totalPages > 1;
+    collectionForm.difficultyLevel(difficulty).pagination(this.currentPage, totalPages, canPage, canPage);
 
     const startIndex = this.currentPage * MAX_ITEMS_PER_PAGE;
     const page = thingsToShow.slice(startIndex, startIndex + MAX_ITEMS_PER_PAGE);
