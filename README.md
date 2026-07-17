@@ -1,6 +1,6 @@
 # Collect Everything! - Bedrock Add-On
 
-<img src="./behavior_packs/collect-everything-bedrock/pack_icon.png" width="128" height="128" alt="Collect Everything Icon" />
+![Collect Everything! Add-On Pack Logo](https://raw.githubusercontent.com/world-class-engineers/collect-everything-bedrock/refs/heads/main/behavior_packs/collect-everything-bedrock/pack_icon.png)
 
 Collect Everything! turns Minecraft Bedrock into a completionist's dream - a built-in compendium that automatically tracks every item, mob, biome, enchantment, effect, and unobtainable block you've ever touched. Browse your progress through a sleek tabbed UI with search, per-category completion stats, and session tracking. With support for entity variants (colors, professions, baby forms), all 60 biomes, and even cooperative Ender Dragon credit, it gives veteran players a brand-new reason to explore every corner of the world.
 
@@ -14,16 +14,17 @@ Collect Everything! tracks six categories of discoveries:
 - **Effects** - Drink a potion, catch a lingering arrow, or eat suspicious stew to log each status effect. On harder difficulty settings, even each amplifier level counts.
 - **Enchantments** - Enchant a tool, find an enchanted book, or trade with a villager to record the enchantment. Higher difficulties track each level separately.
 - **Unobtainables** - Break a spawner, mine reinforced deepslate, or crack open a vault - blocks you can't normally get in survival are tracked here as a badge of honor.
+- **Death** - Either die due to a cause or hit a mob that is about to die to that cause
 
 ## The Collection Browser
 
 The collection browser is the star of the show - a sleek, tabbed interface that displays everything you've found with per-category progress bars, search, and a session view showing what you've collected in your current play session.
 
-![Collection Browser](docs/images/browser-all.png)
+![Collection Browser](https://raw.githubusercontent.com/world-class-engineers/collect-everything-bedrock/refs/heads/main/docs/images/browser-all.png)
 
-![Recently Collected](docs/images/recently-collected.png)
+![Recently Collected](https://raw.githubusercontent.com/world-class-engineers/collect-everything-bedrock/refs/heads/main/docs/images/recently-collected.png)
 
-![Search](docs/images/search-planks.png)
+![Search](https://raw.githubusercontent.com/world-class-engineers/collect-everything-bedrock/refs/heads/main/docs/images/search-planks.png)
 
 You can open it a few ways:
 
@@ -34,49 +35,46 @@ You can open it a few ways:
 
 > **Power user tip:** bind `/collecteverything:browse` to a keyboard macro for one-button access to your collection.
 
-![Collection Checklist item](docs/images/collection-checklist-item.jpg)
+![Collection Checklist item](https://raw.githubusercontent.com/world-class-engineers/collect-everything-bedrock/refs/heads/main/docs/images/collection-checklist-item.jpg)
 
 ## Difficulty Levels
 
 Configure your difficulty right from the collection browser's settings modal (or via `/collecteverything:settings`). This controls how granular entity variant tracking is:
 
-- **Basic** - One entry per entity type (e.g., just "horse"). Easiest to complete.
-  ![Entity tab of collection browser on Basic difficulty](docs/images/entity-basic.png)
-- **Committed** - Each variant dimension tracked independently (e.g., "horse+color:brown" and "horse+pattern:spotted" as separate entries). A solid middle ground.
-  ![Entity tab of collection browser on Committed difficulty](docs/images/entity-committed.png)
-- **Insane** - Every valid combination (e.g., 35 horse color/pattern combos, 2000+ tropical fish!). Only for the truly dedicated.
-  ![Entity tab of collection browser on Insane difficulty](docs/images/entity-insane.png)
+- **Basic** - One entry per entity type (e.g., just "horse"). Easiest to complete. ![Entity tab of collection browser on Basic difficulty](https://raw.githubusercontent.com/world-class-engineers/collect-everything-bedrock/refs/heads/main/docs/images/entity-basic.png)
+- **Committed** - Each variant dimension tracked independently (e.g., "horse+color:brown" and "horse+pattern:spotted" as separate entries). A solid middle ground. ![Entity tab of collection browser on Committed difficulty](https://raw.githubusercontent.com/world-class-engineers/collect-everything-bedrock/refs/heads/main/docs/images/entity-committed.png)
+- **Insane** - Every valid combination (e.g., 35 horse color/pattern combos, 2000+ tropical fish!). Only for the truly dedicated. ![Entity tab of collection browser on Insane difficulty](https://raw.githubusercontent.com/world-class-engineers/collect-everything-bedrock/refs/heads/main/docs/images/entity-insane.png)
 
 ## Commands
 
 All commands use the `collecteverything:` namespace and are available to any player with no operator permissions required. Keep your friends on their toes by running them anytime.
 
-| Command                           | What it does                                                                            |
-| --------------------------------- | --------------------------------------------------------------------------------------- |
-| `/collecteverything:browse`       | Open the collection browser UI                                                          |
-| `/collecteverything:stats`        | View per-category progress with counts and percentages                                  |
-| `/collecteverything:all [filter]` | List everything in the game, highlighting what you've found (optional text filter)      |
-| `/collecteverything:collected`    | List only what you've collected so far                                                  |
-| `/collecteverything:uncollected`  | List what you still need to find                                                        |
-| `/collecteverything:session`      | Show a summary of what you collected this session                                       |
-| `/collecteverything:settings`     | Change your difficulty level                                                            |
-| `/collecteverything:extra`        | Show items you've tracked that the add-on doesn't recognize (useful with other add-ons) |
+| Command                                      | What it does                                                                            |
+| -------------------------------------------- | --------------------------------------------------------------------------------------- |
+| <code>/collecteverything:browse</code>       | Open the collection browser UI                                                          |
+| <code>/collecteverything:stats</code>        | View per-category progress with counts and percentages                                  |
+| <code>/collecteverything:all [filter]</code> | List everything in the game, highlighting what you've found (optional text filter)      |
+| <code>/collecteverything:collected</code>    | List only what you've collected so far                                                  |
+| <code>/collecteverything:uncollected</code>  | List what you still need to find                                                        |
+| <code>/collecteverything:session</code>      | Show a summary of what you collected this session                                       |
+| <code>/collecteverything:settings</code>     | Change your difficulty level                                                            |
+| <code>/collecteverything:extra</code>        | Show items you've tracked that the add-on doesn't recognize (useful with other add-ons) |
 
 ### Admin commands
 
 These require operator permissions:
 
-| Command                               | What it does                                                                   |
-| ------------------------------------- | ------------------------------------------------------------------------------ |
-| `/collecteverything:_admin_settings`  | Open admin settings (world difficulty override, broadcast toggles, scoreboard) |
-| `/collecteverything:_reset_all`       | Reset collection progress for ALL players                                      |
-| `/collecteverything:__debug_settings` | Open the debug log configuration panel                                         |
+| Command                                            | What it does                                                                   |
+| -------------------------------------------------- | ------------------------------------------------------------------------------ |
+| <code>/collecteverything:\_admin_settings</code>   | Open admin settings (world difficulty override, broadcast toggles, scoreboard) |
+| <code>/collecteverything:\_reset_all</code>        | Reset collection progress for ALL players                                      |
+| <code>/collecteverything:\_\_debug_settings</code> | Open the debug log configuration panel                                         |
 
 ## FAQ
 
 **Is this Knarfy's Collect Everything mod from his YouTube videos?**
 
-No, but it is inspired by his mod, and has his blessing. Developing for Bedrock is completely different than for Java Edition, so this is the spiritual twin of Knarfy's original mod, operating under the constraints that Bedrock has.
+No, but it is inspired by his mod, and has his blessing (see [https://www.youtube.com/live/0TAF5TNOkfw?si=PNfcxfSjat8OZVbQ&t=733](https://www.youtube.com/live/0TAF5TNOkfw?si=PNfcxfSjat8OZVbQ&t=733)). Developing for Bedrock is completely different than for Java Edition, so this is the spiritual twin of Knarfy's original mod, operating under the constraints that Bedrock has.
 
 **Why aren't there as many categories as the Java version?**
 
