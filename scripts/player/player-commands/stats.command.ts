@@ -24,7 +24,7 @@ export class PlayerStatsCommand implements CommandHandler {
       const difficulty = this.playerSettingsService.get().difficulty;
 
       const collectionProgress = this.registries.registries
-        .filter((r) => r.key !== "all")
+        .filter((r) => r.key !== "everything")
         .map((registry) => {
           const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
           return {

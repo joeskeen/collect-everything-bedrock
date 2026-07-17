@@ -20,7 +20,7 @@ export class PlayerExtraCommand implements CommandHandler {
   handleCommand(event: any): CustomCommandResult {
     this.system.run(() => {
       const hasExtra = this.registries.registries
-        .filter((r) => r.key !== "all")
+        .filter((r) => r.key !== "everything")
         .some((registry) => {
           const collectedKeys = Object.keys(
             this.collection.getCollection(registry.key as keyof PlayerCollectionData) ?? {}
@@ -37,7 +37,7 @@ export class PlayerExtraCommand implements CommandHandler {
         `${GOLD}=== Extra ===\n${GRAY}The following items were collected but are not recognized by the Collect Everything! add-on:`
       );
 
-      for (const registry of this.registries.registries.filter((r) => r.key !== "all")) {
+      for (const registry of this.registries.registries.filter((r) => r.key !== "everything")) {
         const collectedKeys = Object.keys(
           this.collection.getCollection(registry.key as keyof PlayerCollectionData) ?? {}
         );

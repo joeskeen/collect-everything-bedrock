@@ -26,7 +26,7 @@ export const WORLD_DIFFICULTY_STORAGE_KEY = NAMESPACE + ":world_difficulty";
 const defaultSettings = () =>
   ({
     difficulty: "basic",
-    activeCategory: "all",
+    activeCategory: "everything",
   }) as PlayerSettings;
 
 @singleton()

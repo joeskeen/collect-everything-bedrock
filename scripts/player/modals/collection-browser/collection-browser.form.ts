@@ -26,6 +26,7 @@ export class CollectionBrowserFormData {
   private totalPages: number = 0;
   private hasPrevious: boolean = false;
   private hasNext: boolean = false;
+  private isFiltered: boolean = false;
   private buttonArray: ButtonData[] = [];
 
   constructor(
@@ -45,6 +46,11 @@ export class CollectionBrowserFormData {
 
   itemsCount(count: number): this {
     this.itemCount = count;
+    return this;
+  }
+
+  filtered(value: boolean): this {
+    this.isFiltered = value;
     return this;
   }
 
@@ -90,7 +96,8 @@ export class CollectionBrowserFormData {
           totalPages: this.totalPages,
           hasPrevious: this.hasPrevious ? 1 : 0,
           hasNext: this.hasNext ? 1 : 0,
-        },
+          all: this.isFiltered ? 1 : 0,
+        } as Record<keyof typeof FORM_DATA_SCHEMA, any>,
         FORM_DATA_SCHEMA
       ) + this.titleText;
     this.logger?.debug("titleData", fullTitle.replace(/§/g, "$"));

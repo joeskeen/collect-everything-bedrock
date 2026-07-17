@@ -32,7 +32,7 @@ export class PlayerAllCommand implements CommandHandler {
 
       this.player.sendMessage(`${MINECOIN_GOLD}=== All ${filter ? `"${filter}"` : ""} ===`);
 
-      for (const registry of this.registries.registries.filter((r) => r.key !== "all")) {
+      for (const registry of this.registries.registries.filter((r) => r.key !== "everything")) {
         const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
         const entries = registry
           .all(difficulty)

@@ -6,5 +6,6 @@
   "pageNumber": { "digits": 2, "default": 0 },
   "totalPages": { "digits": 2, "default": 0 },
   "hasPrevious": { "digits": 1, "default": 0 },
-  "hasNext": { "digits": 1, "default": 0 }
+  "hasNext": { "digits": 1, "default": 0 },
+  "all": { "digits": 1, "default": 1 }
 }

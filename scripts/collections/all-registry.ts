@@ -13,14 +13,14 @@ export const ALL_REGISTRY_TOKEN = Symbol("AllRegistry aggregate registry");
 
 @singleton()
 export class AllRegistry implements Registry<string> {
-  readonly key = "all";
+  readonly key = "everything";
 
   private validIdsCache = new Map<DifficultyLevel, Set<string>>();
   private formatCache = new Map<string, string>();
   private cachedAllCache = new Map<DifficultyLevel, Thing[]>();
 
   getIcon(): string | number {
-    return "textures/items/book_normal";
+    return "textures/ui/worldsIcon";
   }
 
   constructor(

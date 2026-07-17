@@ -25,7 +25,7 @@ export class PlayerCollectedCommand implements CommandHandler {
 
       this.player.sendMessage(`${GOLD}=== Collected ===`);
 
-      for (const registry of this.registries.registries.filter((r) => r.key !== "all")) {
+      for (const registry of this.registries.registries.filter((r) => r.key !== "everything")) {
         const collection = this.collection.getCollection(registry.key as keyof PlayerCollectionData);
         const entries = registry
           .all(difficulty)

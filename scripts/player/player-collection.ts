@@ -133,8 +133,9 @@ export class PlayerCollection {
     this.updateScore();
   }
 
-  hasCollected(category: keyof PlayerCollectionData, what: string) {
-    return !!this.collection[category]?.[what];
+  hasCollected(id: string) {
+    const [category, what] = id.includes(";") ? id.split(";") : ["", id];
+    return !!this.collection[category as keyof typeof this.collection]?.[what];
   }
 
   onCollect(id: string) {
@@ -199,7 +200,7 @@ export class PlayerCollection {
   }
 
   getCollection(registryKey: RegistryKey): Record<string, number> {
-    if (registryKey === "all") {
+    if (registryKey === "everything") {
       return Object.keys(this.collection).reduce(
         (prev, curr) => ({ ...prev, ...this.collection[curr as keyof PlayerCollectionData] }),
         {} as Record<string, number>

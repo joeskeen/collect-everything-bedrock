@@ -29,9 +29,11 @@ const MAX_ITEMS_PER_PAGE = GRID_COLUMNS * GRID_ROWS;
 
 @scoped(Lifecycle.ContainerScoped)
 export class BrowserModal {
-  private previousCategory: string = "all";
+  private previousCategory: string = "everything";
   private currentPage: number = 0;
   private totalPages: number = 0;
+  private onlyShowUncollected = false;
+
   private readonly actions: Record<string, (id: string) => void | Promise<void>> = {
     category: (id) => {
       this.currentPage = 0;
@@ -43,11 +45,14 @@ export class BrowserModal {
       const { activeCategory } = this.playerSettingsService.get();
       const currentSearch = activeCategory.startsWith("search:") ? activeCategory.slice("search:".length) : "";
       const text = await this.searchModal.show(currentSearch);
-      if (text) {
-        this.playerSettingsService.change({ ...this.playerSettingsService.get(), activeCategory: `search:${text}` });
-      } else {
-        const fallback = this.previousCategory.startsWith("search:") ? "all" : this.previousCategory;
-        this.playerSettingsService.change({ ...this.playerSettingsService.get(), activeCategory: fallback });
+      if (text !== currentSearch) {
+        this.currentPage = 0;
+        if (text) {
+          this.playerSettingsService.change({ ...this.playerSettingsService.get(), activeCategory: `search:${text}` });
+        } else {
+          const fallback = this.previousCategory.startsWith("search:") ? "everything" : this.previousCategory;
+          this.playerSettingsService.change({ ...this.playerSettingsService.get(), activeCategory: fallback });
+        }
       }
       this.system.run(() => this.show());
     },
@@ -93,6 +98,11 @@ export class BrowserModal {
       this.currentPage = (this.currentPage + 1) % this.totalPages;
       this.system.run(() => this.show());
     },
+    "toggle-filter": () => {
+      this.onlyShowUncollected = !this.onlyShowUncollected;
+      this.currentPage = 0;
+      this.system.run(() => this.show());
+    },
   };
 
   constructor(
@@ -136,7 +146,13 @@ export class BrowserModal {
       title = `Collection - ${BOLD}${THEME[activeCategory as keyof typeof THEME] ?? ""}${capitalCase(activeCategory)}`;
     }
 
-    const collectionForm = new CollectionBrowserFormData(this.createActionForm, this.logger).title(title);
+    thingsToShow = thingsToShow.filter((thing) =>
+      this.onlyShowUncollected ? !this.playerCollection.hasCollected(thing.id) : true
+    );
+
+    const collectionForm = new CollectionBrowserFormData(this.createActionForm, this.logger)
+      .title(title)
+      .filtered(this.onlyShowUncollected);
     const buttons: Array<Parameters<typeof collectionForm.button>> = [];
 
     for (const reg of registries) {
@@ -160,6 +176,7 @@ export class BrowserModal {
     buttons.push(["Recent", [], "", undefined, undefined, "recent"]); // button index 11
     buttons.push(["Settings", [], "", undefined, undefined, "settings"]); // button index 12
     buttons.push(["Help", [], "", undefined, undefined, "help"]); // button index 13
+    buttons.push(["Toggle Filter", [], "", undefined, undefined, "toggle-filter"]); // button index 14
     const filler: Parameters<typeof collectionForm.button> = ["", [], "", undefined, undefined, undefined];
     while (buttons.length % GRID_COLUMNS !== 0) {
       buttons.push(filler);
@@ -188,7 +205,7 @@ export class BrowserModal {
     const page = thingsToShow.slice(startIndex, startIndex + MAX_ITEMS_PER_PAGE);
     for (const { id, displayName, texture, registry: reg } of page) {
       const [categoryKey, rawId] = id.includes(";") ? id.split(";") : [reg.key, id];
-      const collected = this.playerCollection.hasCollected(categoryKey as keyof PlayerCollectionData, rawId);
+      const collected = this.playerCollection.hasCollected(id);
       const percentComplete = collected ? 100 : 0;
       buttons.push([
         displayName,

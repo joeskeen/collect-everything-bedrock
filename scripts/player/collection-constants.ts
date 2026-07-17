@@ -1,6 +1,6 @@
 import { InjectionToken } from "tsyringe";
 import { Runnable } from "../shared/runnable";
-import { DARK_GREEN, RED, AQUA, LIGHT_PURPLE, MATERIAL_COPPER, MATERIAL_DIAMOND } from "../shared/format-codes";
+import { DARK_GREEN, RED, AQUA, LIGHT_PURPLE, MATERIAL_COPPER, MATERIAL_DIAMOND, BLACK } from "../shared/format-codes";
 export type CollectFn = (id: string) => void;
 export type Collector = { collect: CollectFn };
 export const COLLECTOR: InjectionToken<Collector> = Symbol(
@@ -18,13 +18,13 @@ export const UNOBTAINABLE = "unobtainable";
 export const ITEM = "item";
 
 export const THEME: Record<string, string> = {
+  [ITEM]: MATERIAL_DIAMOND,
   [BIOME]: DARK_GREEN,
-  [DEATH]: RED,
   [ENTITY]: RED,
   [EFFECT]: AQUA,
   [ENCHANTMENT]: LIGHT_PURPLE,
-  [ITEM]: MATERIAL_DIAMOND,
   [UNOBTAINABLE]: MATERIAL_COPPER,
+  [DEATH]: BLACK,
   // [STRUCTURE]: DARK_PURPLE, // TODO: there is currently no way to detect structures
 };
 
@@ -38,7 +38,7 @@ export interface PlayerCollectionData {
   [UNOBTAINABLE]: Record<string, number>;
 }
 
-export type RegistryKey = keyof PlayerCollectionData | "all";
+export type RegistryKey = keyof PlayerCollectionData | "everything";
 
 export const COLLECTED_PREFIX = "collected;";
 
